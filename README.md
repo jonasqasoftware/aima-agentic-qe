@@ -41,6 +41,8 @@ Os relatórios gerados são:
 - `reports/aima-quality-report.json`
 - `reports/aima-quality-report.md`
 
+Para um passo a passo com cenário, comandos, leitura do relatório e resolução de erros, consulte o [Guia de uso](docs/USAGE.md).
+
 ## Exemplo de entrada
 
 ```json
@@ -107,6 +109,7 @@ A arquitetura executável, seus contratos e diagramas estão em [ARCHITECTURE.md
 Este repositório usa Markdown, Mermaid e ADRs (*Architecture Decision Records*) para manter o raciocínio técnico perto do código:
 
 - [Guia de documentação](docs/DOCUMENTATION.md): o que atualizar a cada mudança;
+- [Guia de uso](docs/USAGE.md): caminho rápido e exemplos de operação;
 - [Modelo de decisão de qualidade](docs/QUALITY_DECISION_MODEL.md): como o relatório chega à recomendação;
 - [ADRs](docs/adr): decisões arquiteturais duráveis e seus trade-offs.
 

@@ -3,6 +3,7 @@
 ## Em desenvolvimento
 
 - Documentação viva com diagrama Mermaid, modelo de decisão de qualidade e ADR inicial.
+- Guia de uso orientado a tarefas, com exemplos de entrada, fluxo visual e solução de problemas.
 
 ## 0.1.0
 

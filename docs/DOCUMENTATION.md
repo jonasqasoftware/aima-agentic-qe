@@ -7,6 +7,7 @@ Este projeto trata documentação como parte do produto. Toda afirmação deve s
 | Artefato | Finalidade | Quando atualizar |
 | --- | --- | --- |
 | `README.md` | Proposta de valor, início rápido e limites públicos | Quando o uso, escopo ou resultado mudar |
+| `docs/USAGE.md` | Guia orientado a tarefas para quem executa a ferramenta | Quando comandos, entradas, saídas ou erros mudarem |
 | `ARCHITECTURE.md` | Fluxo atual, componentes e contratos | Quando módulos ou integrações mudarem |
 | `docs/QUALITY_DECISION_MODEL.md` | Explicação da decisão de release | Quando risco, evidência ou score mudar |
 | `docs/adr/` | Decisões relevantes e trade-offs | Antes ou junto de mudanças difíceis de reverter |
