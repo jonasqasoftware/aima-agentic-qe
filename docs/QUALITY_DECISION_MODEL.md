@@ -26,6 +26,23 @@ flowchart TD
 | Recomendação | Próxima ação proposta a uma pessoa responsável | Executar teste de carga antes do release |
 | `UNKNOWN` | Informação necessária que não está disponível | Resultado de teste de carga não fornecido |
 
+## Ledger de evidências
+
+Cada relatório inclui um ledger versionado e legível por pessoas e ferramentas. Ele associa um identificador, tipo e origem a cada afirmação relevante:
+
+```mermaid
+flowchart LR
+  Declared["Contexto declarado\nou nomes de arquivos locais"] --> Fact["FACT"]
+  Rules["Regras determinísticas"] --> Inference["INFERENCE"]
+  Missing["Evidência indisponível"] --> Unknown["UNKNOWN"]
+  Fact --> Ledger["Ledger de evidências"]
+  Inference --> Ledger
+  Unknown --> Ledger
+  Ledger --> Decision["Recomendação auditável"]
+```
+
+`UNKNOWN` é preservado como tal. Uma inferência aponta para os fatos que a sustentam, mas não se torna evidência de execução de teste ou aprovação de release.
+
 ## Limites do score
 
 O **Quality Confidence** é uma visualização de cobertura de evidências e risco declarado. Ele é experimental, não prediz defeitos e não autoriza deploys. Uma recomendação `GO` continua exigindo validação humana e governança do produto.

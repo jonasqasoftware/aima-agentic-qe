@@ -12,7 +12,8 @@ flowchart LR
   Validate --> Registry["Framework Registry\nAIMA"]
   Registry --> Risk["Risk Agent\nregras determinísticas"]
   Risk --> Strategy["Estratégia de testes\ne evidências esperadas"]
-  Strategy --> Decision["Quality Confidence\ne recomendação"]
+  Strategy --> Ledger["Ledger de evidências\nfatos, inferências e UNKNOWN"]
+  Ledger --> Decision["Quality Confidence\ne recomendação"]
   Decision --> Report["Relatórios\nJSON e Markdown"]
 
   Registry -. "framework como dado" .-> Framework["Risk-Based Testing"]
@@ -29,6 +30,7 @@ O adaptador de Git lê somente a lista local de arquivos alterados entre referê
 | Framework Registry | Evita hardcode de metodologias AIMA | Só há um framework inicial. |
 | Sinais de risco explícitos | Evita alegações de análise mágica ou leitura remota | Não substitui análise de diff real. |
 | Quality Confidence explicável | Mostra trade-offs e incertezas | Métrica experimental, não preditiva. |
+| Ledger de evidências | Torna origem e tipo de cada afirmação auditáveis | Ainda não referencia execução de testes externa. |
 
 O próximo adaptador deve implementar leitura autorizada de um diff real antes de adicionar novos agentes ou LLMs.
 

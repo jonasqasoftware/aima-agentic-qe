@@ -1,5 +1,6 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { buildEvidenceLedger } from './evidence-ledger.js';
 
 export function createReport(change, selection, risks, confidence, strategy) {
   const evidenceBoundary = change.source === 'local-git-name-only'
@@ -20,6 +21,7 @@ export function createReport(change, selection, risks, confidence, strategy) {
       name: selection.framework.name,
       selectionEvidence: selection.evidence
     },
+    evidenceLedger: buildEvidenceLedger(change, risks),
     risks,
     qualityConfidence: confidence,
     strategy,
@@ -38,7 +40,10 @@ export function formatMarkdown(report) {
   const unknowns = report.strategy.missingEvidence.length
     ? report.strategy.missingEvidence.map((item) => `- ${item}`).join('\n')
     : '- Nenhuma incerteza declarada.';
-  return `# AIMA Agentic QE report\n\n> ${report.evidenceBoundary}\n\n## Contexto\n\n- **Mudança:** \`${report.context.changeId}\`\n- **Resumo:** ${report.context.summary}\n- **Arquivos declarados:** ${report.context.changedFiles.map((file) => `\`${file}\``).join(', ')}\n\n## Framework AIMA selecionado\n\n- **${report.framework.name}** (\`${report.framework.id}\`)\n${report.framework.selectionEvidence.map((item) => `- ${item}`).join('\n')}\n\n## Riscos\n\n| ID | Nível | Score | Hipótese de risco |\n| --- | --- | ---: | --- |\n${risks}\n\n## Estratégia recomendada\n\n${tests}\n\n## Evidências ausentes / incertezas\n\n${unknowns}\n\n## Quality Confidence experimental\n\n**${report.qualityConfidence.score}/100**\n\n${report.qualityConfidence.factors.map((item) => `- ${item}`).join('\n')}\n\n## Recomendação de release\n\n**${report.strategy.recommendation}**\n\n${report.strategy.rationale}\n\n## Rastreabilidade de agentes\n\n${report.agentTrace.map((entry) => `- **${entry.agent}:** ${entry.status} — ${entry.output}`).join('\n')}\n`;
+  const evidence = report.evidenceLedger
+    .map((item) => `| ${item.id} | ${item.kind} | ${item.source} | ${item.statement} |`)
+    .join('\n');
+  return `# AIMA Agentic QE report\n\n> ${report.evidenceBoundary}\n\n## Contexto\n\n- **Mudança:** \`${report.context.changeId}\`\n- **Resumo:** ${report.context.summary}\n- **Arquivos declarados:** ${report.context.changedFiles.map((file) => `\`${file}\``).join(', ')}\n\n## Framework AIMA selecionado\n\n- **${report.framework.name}** (\`${report.framework.id}\`)\n${report.framework.selectionEvidence.map((item) => `- ${item}`).join('\n')}\n\n## Ledger de evidências\n\n| ID | Tipo | Origem | Declaração |\n| --- | --- | --- | --- |\n${evidence}\n\n## Riscos\n\n| ID | Nível | Score | Hipótese de risco |\n| --- | --- | ---: | --- |\n${risks}\n\n## Estratégia recomendada\n\n${tests}\n\n## Evidências ausentes / incertezas\n\n${unknowns}\n\n## Quality Confidence experimental\n\n**${report.qualityConfidence.score}/100**\n\n${report.qualityConfidence.factors.map((item) => `- ${item}`).join('\n')}\n\n## Recomendação de release\n\n**${report.strategy.recommendation}**\n\n${report.strategy.rationale}\n\n## Rastreabilidade de agentes\n\n${report.agentTrace.map((entry) => `- **${entry.agent}:** ${entry.status} — ${entry.output}`).join('\n')}\n`;
 }
 
 export async function writeReports(report, directory) {

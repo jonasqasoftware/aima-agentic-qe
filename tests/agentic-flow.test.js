@@ -8,6 +8,7 @@ import { promisify } from 'node:util';
 import { fileURLToPath } from 'node:url';
 import {
   assessRisks,
+  buildEvidenceLedger,
   buildStrategy,
   createReport,
   createChangeFromLocalDiff,
@@ -36,6 +37,9 @@ test('payment fixture produces an evidence-bounded NO-GO recommendation', async 
   assert.ok(risks.some((risk) => risk.category === 'integration'));
   assert.ok(confidence.score < 100);
   assert.match(formatMarkdown(report), /Não afirma leitura de PR remoto/);
+  assert.ok(report.evidenceLedger.some((item) => item.kind === 'FACT'));
+  assert.ok(report.evidenceLedger.some((item) => item.kind === 'UNKNOWN'));
+  assert.ok(report.evidenceLedger.some((item) => item.kind === 'INFERENCE'));
 });
 
 test('unknown change surface remains explicit instead of invented', () => {
@@ -46,6 +50,21 @@ test('unknown change surface remains explicit instead of invented', () => {
   });
   assert.equal(risks[0].category, 'change-surface');
   assert.match(risks[0].statement, /sem domínio classificado/);
+});
+
+test('evidence ledger keeps declared unknowns separate from deterministic inferences', () => {
+  const change = {
+    source: 'declared-input',
+    businessImpact: 'medium',
+    technicalComplexity: 'low',
+    changedFiles: ['src/api/orders.js'],
+    knownUnknowns: ['Resultado de teste de contrato não fornecido.']
+  };
+  const ledger = buildEvidenceLedger(change, assessRisks(change));
+
+  assert.equal(ledger.find((item) => item.id === 'U-001').kind, 'UNKNOWN');
+  assert.equal(ledger.find((item) => item.id === 'I-001').kind, 'INFERENCE');
+  assert.equal(ledger.find((item) => item.id === 'I-001').source, 'deterministic-risk-rule');
 });
 
 test('local diff adapter uses changed file names and keeps diff content unknown', async () => {
