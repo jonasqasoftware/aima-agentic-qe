@@ -1,0 +1,29 @@
+name: Quality gates
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Validate source and tests
+        run: npm run check
+      - name: Generate synthetic quality report
+        run: node src/cli.js analyze-pr --change examples/payment-refactor.change.json --out reports
+      - name: Upload synthetic report
+        uses: actions/upload-artifact@v4
+        with:
+          name: aima-quality-report
+          path: reports/
+          if-no-files-found: error

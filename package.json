@@ -1,0 +1,16 @@
+{
+  "name": "aima-agentic-qe",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Laboratório determinístico de estratégia de qualidade orientada por riscos e frameworks AIMA.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "analyze": "node src/cli.js analyze-pr",
+    "test": "node --test",
+    "check": "node --check src/*.js && npm test"
+  },
+  "license": "MIT"
+}

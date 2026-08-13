@@ -1,0 +1,15 @@
+{
+  "id": "DEMO-PR-482",
+  "summary": "Refatoração do fluxo de autorização de pagamentos",
+  "changedFiles": [
+    "src/payments/authorization.js",
+    "src/payments/retry-policy.js",
+    "src/api/payment-routes.js"
+  ],
+  "businessImpact": "high",
+  "technicalComplexity": "high",
+  "knownUnknowns": [
+    "Não há evidência de teste de idempotência no conjunto de alterações.",
+    "Não foi fornecido resultado de teste de carga."
+  ]
+}

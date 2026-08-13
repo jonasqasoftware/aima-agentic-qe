@@ -1,0 +1,13 @@
+{
+  "id": "risk-based-testing",
+  "name": "Risk-Based Testing",
+  "category": "strategy",
+  "description": "Prioriza verificações de qualidade a partir de impacto e probabilidade declarados.",
+  "whenToUse": ["mudanças com impacto de negócio explícito", "tempo de validação limitado"],
+  "whenNotToUse": ["ausência de contexto mínimo sobre a mudança"],
+  "inputs": ["changed_files", "business_impact", "technical_complexity", "known_unknowns"],
+  "process": ["identify_risks", "calculate_risk", "prioritize_tests"],
+  "outputs": ["risk_register", "test_strategy", "release_recommendation"],
+  "recommendedAgents": ["context-agent", "risk-agent", "test-strategy-agent", "release-agent"],
+  "recommendedTools": ["filesystem-read", "git-diff-read"]
+}

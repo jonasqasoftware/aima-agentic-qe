@@ -1,0 +1,6 @@
+{
+  "framework": "risk-based-testing",
+  "mustIncludeRiskCategories": ["financial", "integration"],
+  "expectedRecommendation": "NO-GO",
+  "evidenceBoundaryRequired": true
+}
