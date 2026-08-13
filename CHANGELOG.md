@@ -1,5 +1,9 @@
 # Changelog
 
+## Em desenvolvimento
+
+- Documentação viva com diagrama Mermaid, modelo de decisão de qualidade e ADR inicial.
+
 ## 0.1.0
 
 - CLI determinístico para análise de mudança declarada.

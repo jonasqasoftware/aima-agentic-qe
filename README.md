@@ -100,6 +100,16 @@ evals/golden/       resultados esperados
 tests/              testes do fluxo ponta a ponta
 ```
 
+A arquitetura executável, seus contratos e diagramas estão em [ARCHITECTURE.md](ARCHITECTURE.md). As decisões de qualidade e os limites da recomendação estão em [docs/QUALITY_DECISION_MODEL.md](docs/QUALITY_DECISION_MODEL.md).
+
+## Documentação viva
+
+Este repositório usa Markdown, Mermaid e ADRs (*Architecture Decision Records*) para manter o raciocínio técnico perto do código:
+
+- [Guia de documentação](docs/DOCUMENTATION.md): o que atualizar a cada mudança;
+- [Modelo de decisão de qualidade](docs/QUALITY_DECISION_MODEL.md): como o relatório chega à recomendação;
+- [ADRs](docs/adr): decisões arquiteturais duráveis e seus trade-offs.
+
 ## Roadmap
 
 - **MVP 0 (atual):** CLI, registry, avaliação de risco e relatório determinístico.
