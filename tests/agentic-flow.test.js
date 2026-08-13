@@ -1,11 +1,16 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import path from 'node:path';
+import os from 'node:os';
+import { execFile } from 'node:child_process';
+import { mkdtemp, writeFile } from 'node:fs/promises';
+import { promisify } from 'node:util';
 import { fileURLToPath } from 'node:url';
 import {
   assessRisks,
   buildStrategy,
   createReport,
+  createChangeFromLocalDiff,
   formatMarkdown,
   loadChangeInput,
   loadFrameworkRegistry,
@@ -14,6 +19,7 @@ import {
 } from '../src/index.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const execFileAsync = promisify(execFile);
 
 test('payment fixture produces an evidence-bounded NO-GO recommendation', async () => {
   const change = await loadChangeInput(path.join(root, 'examples', 'payment-refactor.change.json'));
@@ -40,4 +46,31 @@ test('unknown change surface remains explicit instead of invented', () => {
   });
   assert.equal(risks[0].category, 'change-surface');
   assert.match(risks[0].statement, /sem domínio classificado/);
+});
+
+test('local diff adapter uses changed file names and keeps diff content unknown', async () => {
+  const repo = await mkdtemp(path.join(os.tmpdir(), 'aima-local-diff-'));
+  await execFileAsync('git', ['init', '--initial-branch=main', repo]);
+  await execFileAsync('git', ['-C', repo, 'config', 'user.email', 'test@example.invalid']);
+  await execFileAsync('git', ['-C', repo, 'config', 'user.name', 'AIMA Test']);
+  await writeFile(path.join(repo, 'README.md'), '# fixture\n');
+  await execFileAsync('git', ['-C', repo, 'add', 'README.md']);
+  await execFileAsync('git', ['-C', repo, 'commit', '-m', 'base']);
+  const { stdout: base } = await execFileAsync('git', ['-C', repo, 'rev-parse', 'HEAD']);
+  await writeFile(path.join(repo, 'payment-route.js'), 'export const payment = true;\n');
+  await execFileAsync('git', ['-C', repo, 'add', 'payment-route.js']);
+  await execFileAsync('git', ['-C', repo, 'commit', '-m', 'payment change']);
+
+  const change = await createChangeFromLocalDiff({
+    repoPath: repo,
+    base: base.trim(),
+    businessImpact: 'high',
+    technicalComplexity: 'medium'
+  });
+
+  assert.deepEqual(change.changedFiles, ['payment-route.js']);
+  assert.match(change.knownUnknowns[0], /somente nomes de arquivos/);
+  assert.equal(change.source, 'local-git-name-only');
+  const report = createReport(change, { framework: { id: 'risk-based-testing', name: 'Risk-Based Testing' }, evidence: [] }, [], { score: 100, factors: [] }, { recommendation: 'GO', recommendedTests: [], missingEvidence: [], rationale: 'fixture' });
+  assert.match(report.evidenceBoundary, /conteúdo do diff/);
 });

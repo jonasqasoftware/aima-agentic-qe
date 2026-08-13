@@ -2,6 +2,7 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadChangeInput } from './change-input.js';
+import { createChangeFromLocalDiff } from './local-diff.js';
 import { loadFrameworkRegistry, selectFramework } from './framework-registry.js';
 import { assessRisks, qualityConfidence } from './risk-engine.js';
 import { buildStrategy } from './strategy.js';
@@ -10,7 +11,11 @@ import { createReport, writeReports } from './report.js';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 function usage() {
-  return 'Uso: node src/cli.js analyze-pr --change <arquivo.json> [--out <diretório>]';
+  return [
+    'Uso:',
+    '  node src/cli.js analyze-pr --change <arquivo.json> [--out <diretório>]',
+    '  node src/cli.js analyze-diff --repo <diretório> --base <referência> [--head <referência>] --impact <low|medium|high> --complexity <low|medium|high> [--out <diretório>]'
+  ].join('\n');
 }
 
 function argument(name, fallback) {
@@ -20,11 +25,29 @@ function argument(name, fallback) {
 
 async function main() {
   const [command] = process.argv.slice(2);
-  if (command !== 'analyze-pr') throw new Error(usage());
-  const changePath = argument('--change');
-  if (!changePath) throw new Error(usage());
+  if (!['analyze-pr', 'analyze-diff'].includes(command)) throw new Error(usage());
   const outputDirectory = argument('--out', path.join(root, 'reports'));
-  const change = await loadChangeInput(path.resolve(changePath));
+  let change;
+  if (command === 'analyze-pr') {
+    const changePath = argument('--change');
+    if (!changePath) throw new Error(usage());
+    change = await loadChangeInput(path.resolve(changePath));
+  } else {
+    const repoPath = argument('--repo');
+    const base = argument('--base');
+    const businessImpact = argument('--impact');
+    const technicalComplexity = argument('--complexity');
+    if (!repoPath || !base || !businessImpact || !technicalComplexity) throw new Error(usage());
+    change = await createChangeFromLocalDiff({
+      repoPath: path.resolve(repoPath),
+      base,
+      head: argument('--head', 'HEAD'),
+      businessImpact,
+      technicalComplexity,
+      id: argument('--id'),
+      summary: argument('--summary')
+    });
+  }
   const frameworks = await loadFrameworkRegistry(path.join(root, 'aima', 'frameworks'));
   const selection = selectFramework(frameworks, change);
   const risks = assessRisks(change);

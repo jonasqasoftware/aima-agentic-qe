@@ -96,6 +96,24 @@ node src/cli.js analyze-pr --change examples/minha-mudanca.json --out reports/pa
 
 O contrato completo está em [`aima/schemas/change-input.schema.json`](../aima/schemas/change-input.schema.json).
 
+## Analisar um diff Git local
+
+Quando já existe um repositório Git local, use `analyze-diff` para criar a lista de arquivos diretamente entre duas referências:
+
+```bash
+node src/cli.js analyze-diff \
+  --repo /caminho/do/repositorio \
+  --base main \
+  --head HEAD \
+  --impact high \
+  --complexity medium \
+  --out reports
+```
+
+`--impact` e `--complexity` continuam obrigatórios porque representam contexto de produto e implementação que não pode ser inferido apenas pelo Git. Os valores permitidos são `low`, `medium` e `high`.
+
+O adaptador lê **somente os nomes de arquivos** retornados por `git diff --name-only`. O limite de evidência do relatório identifica essa origem; conteúdo do diff, resultado de testes e contexto de produto permanecem `UNKNOWN`. Não há leitura remota do GitHub nem transmissão de dados.
+
 ## Como ler a saída
 
 O relatório apresenta quatro camadas que não devem ser confundidas:
@@ -122,6 +140,8 @@ O valor de **Quality Confidence** é experimental. Ele ajuda a visualizar a comb
 | `Change input requires...` | Falta `id`, `summary` ou arquivo alterado | Complete os campos obrigatórios do JSON |
 | `businessImpact and technicalComplexity...` | Nível de risco inválido | Use somente `low`, `medium` ou `high` |
 | Erro de leitura do arquivo | Caminho em `--change` incorreto | Confira o caminho relativo ao diretório atual |
+| `No changed files found...` | As referências escolhidas não têm diferença de arquivos | Escolha uma base anterior ou confirme `--head` |
+| `Unable to read local Git diff...` | Diretório ou referência Git inválida | Confirme `--repo`, `--base` e `--head` com `git log` |
 | Relatório com `UNKNOWN` | Evidência não foi declarada | Colete a evidência ou mantenha o risco explícito |
 
 ## Uso no CI

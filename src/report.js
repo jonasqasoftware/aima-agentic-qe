@@ -2,14 +2,18 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 export function createReport(change, selection, risks, confidence, strategy) {
+  const evidenceBoundary = change.source === 'local-git-name-only'
+    ? 'Relatório baseado nos nomes de arquivos de um diff Git local e em regras determinísticas. Não afirma leitura do conteúdo do diff, de PR remoto, execução de testes ou aprovação de release.'
+    : 'Relatório baseado somente na entrada declarada e em regras determinísticas. Não afirma leitura de PR remoto, execução de testes ou aprovação de release.';
   return {
     reportVersion: '0.1.0',
-    evidenceBoundary: 'Relatório baseado somente na entrada declarada e em regras determinísticas. Não afirma leitura de PR remoto, execução de testes ou aprovação de release.',
+    evidenceBoundary,
     context: {
       changeId: change.id,
       summary: change.summary,
       changedFiles: change.changedFiles,
-      knownUnknowns: change.knownUnknowns
+      knownUnknowns: change.knownUnknowns,
+      source: change.source || 'declared-input'
     },
     framework: {
       id: selection.framework.id,

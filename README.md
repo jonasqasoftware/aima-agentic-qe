@@ -16,6 +16,8 @@ O comando `analyze-pr` recebe um arquivo JSON que descreve uma mudança. Ele ent
 6. calcula um **Quality Confidence** experimental e explicável;
 7. gera relatórios JSON e Markdown com recomendação `GO`, `GO WITH RISKS` ou `NO-GO`.
 
+Além do JSON declarado, o MVP também pode criar esse contexto a partir dos **nomes de arquivos** entre duas referências de um repositório Git local. Ele não lê conteúdo de diff, nem consulta GitHub remoto.
+
 O fluxo é deliberadamente determinístico e offline. Ele **não** acessa PRs remotos, não usa LLM, não executa testes de uma aplicação externa e não publica comentários. Essas integrações pertencem a incrementos posteriores, quando houver uma implementação real para sustentá-las.
 
 ## Demonstração
@@ -26,6 +28,17 @@ Requer Node.js 20 ou superior. Não há dependências externas.
 npm test
 node src/cli.js analyze-pr \
   --change examples/payment-refactor.change.json \
+  --out reports
+```
+
+Para analisar a superfície de arquivos de um diff local:
+
+```bash
+node src/cli.js analyze-diff \
+  --repo /caminho/do/repositorio \
+  --base main \
+  --impact high \
+  --complexity medium \
   --out reports
 ```
 

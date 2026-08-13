@@ -1,12 +1,14 @@
 # Arquitetura
 
-O MVP implementa uma fatia vertical, não uma plataforma completa. O CLI coordena módulos determinísticos: entrada, registry, risco, estratégia e relatório.
+O MVP implementa uma fatia vertical, não uma plataforma completa. O CLI coordena módulos determinísticos: entrada declarada ou adaptador de diff local, registry, risco, estratégia e relatório.
 
 ## Visão de execução
 
 ```mermaid
 flowchart LR
   Input["Mudança declarada\nJSON"] --> Validate["Validação de entrada"]
+  Git["Repositório Git local"] --> Diff["Adaptador\n--name-only"]
+  Diff --> Validate
   Validate --> Registry["Framework Registry\nAIMA"]
   Registry --> Risk["Risk Agent\nregras determinísticas"]
   Risk --> Strategy["Estratégia de testes\ne evidências esperadas"]
@@ -17,7 +19,7 @@ flowchart LR
   Risk -. "sinais declarados" .-> Change["Arquivos e contexto\nfornecidos"]
 ```
 
-O diagrama representa o que o código executa hoje. Ele não implica leitura de pull request remoto, uso de LLM, execução de testes externos ou publicação automática de comentários.
+O adaptador de Git lê somente a lista local de arquivos alterados entre referências. O diagrama não implica leitura de conteúdo de diff, pull request remoto, uso de LLM, execução de testes externos ou publicação automática de comentários.
 
 ## Decisões
 
