@@ -89,6 +89,15 @@ node src/cli.js analyze-pr \
   --out reports
 ```
 
+Para ferramentas que emitem JSON, use o contrato normalizado do AIMA com uma lista `tests` e status `passed`, `failed` ou `skipped`:
+
+```bash
+node src/cli.js analyze-pr \
+  --change examples/payment-refactor.change.json \
+  --test-results examples/test-results.json \
+  --out reports
+```
+
 Saída resumida do cenário sintético:
 
 ```text

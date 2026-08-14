@@ -17,6 +17,7 @@ import {
   createChangeFromGitHubPr,
   executeEvidenceCommand,
   loadJUnitResults,
+  loadJsonTestResults,
   evaluateChange,
   formatMarkdown,
   formatHtml,
@@ -317,4 +318,14 @@ test('JUnit failures are parsed without retaining failure bodies and become a hi
   const evidence = ledger.find((entry) => entry.kind === 'TEST_RESULTS_EVIDENCE');
   assert.match(evidence.statement, /recusa cartão expirado/);
   assert.doesNotMatch(evidence.statement, /detalhe omitido/);
+});
+
+test('normalized JSON test results use the same evidence and risk contract', async () => {
+  const result = await loadJsonTestResults(path.join(root, 'examples', 'test-results.json'));
+
+  assert.equal(result.status, 'failed');
+  assert.equal(result.total, 3);
+  assert.equal(result.failedCases[0].suite, 'checkout.payment');
+  assert.equal(result.parser, 'aima-json-test-results-v1');
+  await assert.rejects(loadJsonTestResults(path.join(root, 'examples', 'payment-refactor.change.json')));
 });

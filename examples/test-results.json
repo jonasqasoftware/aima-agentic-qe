@@ -1,0 +1,8 @@
+{
+  "id": "checkout-json-fixture",
+  "tests": [
+    { "suite": "checkout.payment", "name": "autoriza pagamento", "status": "passed" },
+    { "suite": "checkout.payment", "name": "recusa cartão expirado", "status": "failed" },
+    { "suite": "checkout.refund", "name": "estorno parcial", "status": "skipped" }
+  ]
+}
