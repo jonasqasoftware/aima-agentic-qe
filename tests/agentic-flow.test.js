@@ -16,6 +16,7 @@ import {
   createChangeFromLocalDiff,
   createChangeFromGitHubPr,
   executeEvidenceCommand,
+  loadJUnitResults,
   evaluateChange,
   formatMarkdown,
   formatHtml,
@@ -299,4 +300,21 @@ test('explicit local command execution is hashed and failed execution becomes a 
   assert.equal(risks[0].id, 'R-EXECUTION-FAILING-COMMAND');
   const ledger = buildEvidenceLedger({ businessImpact: 'low', technicalComplexity: 'low', changedFiles: ['lib/normalizer.js'], executionEvidence: [passed] }, []);
   assert.equal(ledger.find((entry) => entry.kind === 'EXECUTED_EVIDENCE').verification, 'local-process-exit-code-and-transcript-hash');
+});
+
+test('JUnit failures are parsed without retaining failure bodies and become a high risk', async () => {
+  const result = await loadJUnitResults(path.join(root, 'examples', 'test-results.junit.xml'));
+
+  assert.equal(result.status, 'failed');
+  assert.equal(result.total, 3);
+  assert.equal(result.failed, 1);
+  assert.equal(result.skipped, 1);
+  assert.deepEqual(result.failedCases, [{ suite: 'checkout.payment', name: 'recusa cartão expirado', outcome: 'failed' }]);
+  assert.match(result.transcriptSha256, /^[a-f0-9]{64}$/);
+  const risks = assessRisks({ changedFiles: ['src/payments/authorization.js'], businessImpact: 'low', technicalComplexity: 'low', testResults: [result] });
+  assert.equal(risks[0].category, 'test-results');
+  const ledger = buildEvidenceLedger({ businessImpact: 'low', technicalComplexity: 'low', changedFiles: ['src/payments/authorization.js'], testResults: [result] }, []);
+  const evidence = ledger.find((entry) => entry.kind === 'TEST_RESULTS_EVIDENCE');
+  assert.match(evidence.statement, /recusa cartão expirado/);
+  assert.doesNotMatch(evidence.statement, /detalhe omitido/);
 });

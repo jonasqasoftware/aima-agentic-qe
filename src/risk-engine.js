@@ -51,6 +51,19 @@ export function assessRisks(change) {
       recommendedTests: [`Investigar e corrigir a execução de evidência: ${evidence.id}`]
     });
   }
+  for (const result of change.testResults ?? []) {
+    if (result.status !== 'failed') continue;
+    risks.push({
+      id: `R-TEST-RESULTS-${result.id.replace(/[^a-z0-9]+/gi, '-').replace(/(^-|-$)/g, '').toUpperCase()}`,
+      category: 'test-results',
+      score: 90,
+      level: 'HIGH',
+      statement: `Resultado de teste com falhas: ${result.failed}/${result.total}`,
+      facts: [],
+      inference: `O parser JUnit encontrou falhas em ${result.failedCases.map((item) => `${item.suite} › ${item.name}`).join('; ')}.`,
+      recommendedTests: ['Investigar as falhas registradas no resultado JUnit e executar novamente a suíte afetada']
+    });
+  }
   return risks.sort((left, right) => right.score - left.score || left.id.localeCompare(right.id));
 }
 

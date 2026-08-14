@@ -80,6 +80,15 @@ node src/cli.js analyze-pr \
 
 O arquivo de comando contém `id`, `command` e `args`. A execução ocorre sem shell, com limite de 60 segundos e de 1 MiB de saída. O relatório registra somente o resultado, o código de saída e o hash SHA-256 do transcript.
 
+Resultados JUnit/XML podem ser importados com `--junit`. O parser registra totais e nomes de casos com falha, mas não inclui mensagens de falha ou logs brutos no relatório.
+
+```bash
+node src/cli.js analyze-pr \
+  --change examples/payment-refactor.change.json \
+  --junit examples/test-results.junit.xml \
+  --out reports
+```
+
 Saída resumida do cenário sintético:
 
 ```text

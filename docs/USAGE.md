@@ -125,6 +125,19 @@ node src/cli.js analyze-pr \
 
 O executor limita cada comando a 60 segundos e 1 MiB de saída. Ele não inclui logs brutos no relatório: registra status, código de saída, comando, argumentos e hash SHA-256 do transcript. Uma falha é uma evidência verificável e cria risco alto; um sucesso não comprova cobertura, qualidade nem aprovação de release.
 
+### Importar resultado JUnit/XML
+
+Quando a ferramenta de testes gerar JUnit XML, importe-o sem expor o conteúdo das mensagens de falha:
+
+```bash
+node src/cli.js analyze-pr \
+  --change examples/payment-refactor.change.json \
+  --junit examples/test-results.junit.xml \
+  --out reports
+```
+
+O parser compatível com o subconjunto JUnit registra número total, falhas, ignorados e até 20 casos que falharam. Cada resultado é identificado pelo hash SHA-256 do arquivo. Falhas geram risco alto; um XML vazio ou sem casos é tratado como resultado `unknown`. Cobertura, mensagens de erro e logs continuam fora do relatório por privacidade e porque não comprovam qualidade por si só.
+
 ### Usar como quality gate no CI
 
 Por padrão, a CLI sempre conclui com sucesso depois de gerar os relatórios. Para fazer o processo falhar conforme a recomendação, use `--fail-on`:

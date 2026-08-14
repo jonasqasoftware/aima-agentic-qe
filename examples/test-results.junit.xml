@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="checkout" tests="3" failures="1" skipped="1">
+  <testcase classname="checkout.payment" name="autoriza pagamento" />
+  <testcase classname="checkout.payment" name="recusa cartão expirado"><failure message="assertion failed">detalhe omitido</failure></testcase>
+  <testcase classname="checkout.refund" name="estorno parcial"><skipped /></testcase>
+</testsuite>

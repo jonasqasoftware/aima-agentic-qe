@@ -60,6 +60,15 @@ export function buildEvidenceLedger(change, risks) {
     sha256: item.transcriptSha256,
     verification: 'local-process-exit-code-and-transcript-hash'
   }));
+  const testResultEvidence = (change.testResults ?? []).map((result, index) => ({
+    id: `T-${String(index + 1).padStart(3, '0')}`,
+    kind: 'TEST_RESULTS_EVIDENCE',
+    source: result.parser || 'test-result-parser',
+    statement: `[${result.status}] ${result.summary}${result.failedCases?.length ? ` Casos com falha: ${result.failedCases.map((item) => `${item.suite} › ${item.name}`).join('; ')}.` : ''}`,
+    reference: result.id,
+    sha256: result.transcriptSha256,
+    verification: 'local-junit-result-parse'
+  }));
   const inferences = risks.map((risk, index) => ({
     id: `I-${String(index + 1).padStart(3, '0')}`,
     kind: 'INFERENCE',
@@ -67,5 +76,5 @@ export function buildEvidenceLedger(change, risks) {
     statement: `${risk.id}: ${risk.statement}.`,
     relatedEvidence: ['E-002', 'E-003', 'E-004']
   }));
-  return [...facts, ...declaredEvidence, ...artifactEvidence, ...remoteEvidence, ...executedEvidence, ...unknowns, ...inferences];
+  return [...facts, ...declaredEvidence, ...artifactEvidence, ...remoteEvidence, ...executedEvidence, ...testResultEvidence, ...unknowns, ...inferences];
 }
