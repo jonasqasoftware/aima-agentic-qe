@@ -17,6 +17,8 @@ export function createReport(change, selection, risks, confidence, strategy) {
     ? 'Relatório baseado nos nomes de arquivos e estatísticas de linhas de um diff Git local, além de regras determinísticas. Não afirma leitura do conteúdo do diff, de PR remoto, execução de testes ou aprovação de release.'
     : change.source === 'local-git-name-only'
     ? 'Relatório baseado nos nomes de arquivos de um diff Git local e em regras determinísticas. Não afirma leitura do conteúdo do diff, de PR remoto, execução de testes ou aprovação de release.'
+    : change.source === 'github-pr-metadata'
+    ? 'Relatório baseado em metadados autenticados e nomes de arquivos de um PR do GitHub, além de regras determinísticas. Não afirma leitura do conteúdo do diff, checks de CI, resultados de testes, aprovações ou aprovação de release.'
     : 'Relatório baseado somente na entrada declarada e em regras determinísticas. Não afirma leitura de PR remoto, execução de testes ou aprovação de release.';
   return {
     reportVersion: '0.1.0',

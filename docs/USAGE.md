@@ -33,6 +33,22 @@ node src/cli.js analyze-pr \
   --out reports
 ```
 
+### Analisar um Pull Request do GitHub
+
+Depois de autenticar o GitHub CLI, informe o repositório, o número do PR e a classificação humana de impacto e complexidade:
+
+```bash
+gh auth login -h github.com --web
+node src/cli.js analyze-github-pr \
+  --repo jonasqasoftware/aima-agentic-qe \
+  --pr 1 \
+  --impact medium \
+  --complexity medium \
+  --out reports
+```
+
+O adaptador faz leitura autenticada de metadados do PR e nomes dos arquivos pelo GitHub CLI. Ele não lê hunks do diff, não consulta checks, avaliações ou aprovações e não publica comentários. Essas limitações aparecem como `UNKNOWN` no ledger; portanto, a recomendação continua exigindo revisão humana.
+
 Por padrão, a recomendação segue [`aima/policies/evidence-aware-release.json`](../aima/policies/evidence-aware-release.json). Para aplicar uma política mais rigorosa, informe `--policy`:
 
 ```bash

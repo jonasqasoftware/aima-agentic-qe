@@ -16,7 +16,7 @@ O comando `analyze-pr` recebe um arquivo JSON que descreve uma mudança. Ele ent
 6. calcula um **Quality Confidence** experimental e explicável;
 7. gera relatórios JSON, Markdown, HTML e SARIF com recomendação `GO`, `GO WITH RISKS` ou `NO-GO`.
 
-Além do JSON declarado, o MVP também pode criar esse contexto a partir dos **nomes de arquivos** entre duas referências de um repositório Git local. Ele não lê conteúdo de diff, nem consulta GitHub remoto.
+Além do JSON declarado, o MVP também pode criar esse contexto a partir dos **nomes de arquivos** entre duas referências de um repositório Git local ou dos metadados autenticados de um PR por meio do GitHub CLI. Nenhum dos adaptadores lê conteúdo de diff.
 
 A recomendação é governada por uma [política de release versionada](aima/policies/evidence-aware-release.json), que pode ser substituída via `--policy` para refletir regras mais restritivas do produto.
 
@@ -28,7 +28,7 @@ Para pipelines, `--fail-on no-go` converte a recomendação em gate de CI opcion
 
 O workflow do GitHub Actions pode ser disparado manualmente com a escolha do modo de gate, mantendo push e pull request no modo informativo.
 
-O fluxo é deliberadamente determinístico e offline. Ele **não** acessa PRs remotos, não usa LLM, não executa testes de uma aplicação externa e não publica comentários. Essas integrações pertencem a incrementos posteriores, quando houver uma implementação real para sustentá-las.
+O fluxo é deliberadamente determinístico. O adaptador de PR usa o GitHub CLI já autenticado para leitura autorizada de metadados e nomes de arquivos, sem transmitir segredos ou publicar comentários. Ele não usa LLM nem executa testes de uma aplicação externa.
 
 ## Demonstração
 
@@ -52,6 +52,20 @@ node src/cli.js analyze-diff \
   --complexity medium \
   --out reports
 ```
+
+Para analisar um PR real com leitura autorizada pelo GitHub CLI:
+
+```bash
+gh auth login -h github.com --web
+node src/cli.js analyze-github-pr \
+  --repo jonasqasoftware/aima-agentic-qe \
+  --pr 1 \
+  --impact medium \
+  --complexity medium \
+  --out reports
+```
+
+O comando consulta somente título, estado, branches e nomes dos arquivos do PR. Conteúdo do diff, checks de CI, testes, aprovações e contexto de negócio permanecem explicitamente como incertezas no relatório.
 
 Saída resumida do cenário sintético:
 

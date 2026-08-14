@@ -1,6 +1,7 @@
 function sourceLabel(change) {
   if (change.source === 'local-git-name-only') return 'git-diff-name-only';
   if (change.source === 'local-git-diff-stats') return 'git-diff-numstat';
+  if (change.source === 'github-pr-metadata') return 'github-pr-api-metadata';
   return 'declared-input';
 }
 

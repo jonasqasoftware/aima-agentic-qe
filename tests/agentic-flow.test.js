@@ -14,6 +14,7 @@ import {
   compareWithBaseline,
   createReport,
   createChangeFromLocalDiff,
+  createChangeFromGitHubPr,
   evaluateChange,
   formatMarkdown,
   formatHtml,
@@ -231,4 +232,34 @@ test('local diff adapter uses changed file names and keeps diff content unknown'
   assert.equal(changeWithStats.diffStats.additions, 1);
   assert.equal(changeWithStats.diffStats.deletions, 0);
   assert.match(buildEvidenceLedger(changeWithStats, [])[4].statement, /1 linha/);
+});
+
+test('GitHub PR adapter uses authenticated metadata but preserves CI and diff uncertainty', async () => {
+  const calls = [];
+  const change = await createChangeFromGitHubPr({
+    repo: 'example/checkout',
+    number: 42,
+    businessImpact: 'high',
+    technicalComplexity: 'medium',
+    api: async (endpoint) => {
+      calls.push(endpoint);
+      if (endpoint.endsWith('/pulls/42')) return {
+        title: 'Corrige autorização de pagamento',
+        html_url: 'https://github.com/example/checkout/pull/42',
+        state: 'open',
+        base: { ref: 'main' },
+        head: { ref: 'fix/payment' },
+        user: { login: 'qa-engineer' }
+      };
+      return [{ filename: 'src/payments/authorization.js' }, { filename: 'src/api/orders.js' }];
+    }
+  });
+
+  assert.deepEqual(calls, ['repos/example/checkout/pulls/42', 'repos/example/checkout/pulls/42/files?per_page=100']);
+  assert.equal(change.source, 'github-pr-metadata');
+  assert.deepEqual(change.changedFiles, ['src/payments/authorization.js', 'src/api/orders.js']);
+  assert.match(change.knownUnknowns.join(' '), /checks de CI/i);
+  const report = createReport(change, { framework: { id: 'risk-based-testing', name: 'Risk-Based Testing' }, evidence: [] }, [], { score: 100, factors: [] }, { recommendation: 'GO', recommendedTests: [], missingEvidence: [], rationale: 'fixture', policy: { id: 'fixture', name: 'Fixture', version: '1.0.0' } });
+  assert.match(report.evidenceBoundary, /metadados autenticados/);
+  assert.equal(report.evidenceLedger[0].source, 'github-pr-api-metadata');
 });
