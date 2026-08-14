@@ -49,6 +49,22 @@ node src/cli.js analyze-github-pr \
 
 O adaptador faz leitura autenticada de metadados, nomes dos arquivos e checks de CI disponíveis pelo GitHub CLI. Ele não lê hunks do diff, não comprova cobertura dos checks, não consulta aprovações e não publica comentários. Checks concluídos são registrados como evidência remota autenticada; uma falha adiciona risco alto. As limitações restantes aparecem como `UNKNOWN` no ledger, portanto a recomendação continua exigindo revisão humana.
 
+### Validar o fluxo completo em uma PR
+
+Uma PR pequena de documentação é suficiente para validar a integração sem simular resultados. Após abrir a PR, substitua o número abaixo pelo valor real e execute:
+
+```bash
+node src/cli.js analyze-github-pr \
+  --repo jonasqasoftware/aima-agentic-qe \
+  --pr 1 \
+  --impact low \
+  --complexity low \
+  --out reports/pr-1
+node src/cli.js verify-report --dir reports/pr-1
+```
+
+Confirme no relatório HTML que o ledger contém itens `REMOTE_EVIDENCE` para os checks disponíveis. Se nenhum check tiver sido concluído, ou se algum ainda estiver em andamento, isso deve aparecer como `UNKNOWN`; o AIMA não converte ausência de evidência em sucesso.
+
 Por padrão, a recomendação segue [`aima/policies/evidence-aware-release.json`](../aima/policies/evidence-aware-release.json). Para aplicar uma política mais rigorosa, informe `--policy`:
 
 ```bash
