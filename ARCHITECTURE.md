@@ -26,6 +26,7 @@ flowchart LR
 
   Registry -. "framework como dado" .-> Framework["Risk-Based Testing"]
   Risk -. "sinais declarados" .-> Change["Arquivos e contexto\nfornecidos"]
+  Evaluate["Golden evaluation"] -. "expectativas versionadas" .-> Decision
 ```
 
 O adaptador de Git lê somente a lista local de arquivos alterados entre referências. O diagrama não implica leitura de conteúdo de diff, pull request remoto, uso de LLM, execução de testes externos ou publicação automática de comentários.
@@ -44,6 +45,7 @@ O adaptador de Git lê somente a lista local de arquivos alterados entre referê
 | Artefato com SHA-256 | Registra integridade do arquivo local analisado | Não comprova resultado de teste. |
 | Gate opcional de CI | Converte recomendação em código de saída | Padrão não bloqueia pipelines. |
 | Manifesto de relatório | Permite verificar integridade dos artefatos gerados | Não comprova veracidade da entrada. |
+| Avaliação golden | Detecta regressão em decisões determinísticas | Cobertura limitada aos cenários versionados. |
 
 O próximo adaptador deve implementar leitura autorizada de um diff real antes de adicionar novos agentes ou LLMs.
 

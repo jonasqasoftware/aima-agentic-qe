@@ -117,6 +117,22 @@ node src/cli.js verify-report --dir reports
 
 O comando retorna código diferente de zero se algum arquivo estiver ausente ou alterado. O manifesto confirma integridade do pacote, não a veracidade do contexto ou dos resultados de teste.
 
+### Executar avaliações golden
+
+O projeto mantém expectativas conhecidas para evitar regressão das regras determinísticas. Execute todas as validações com:
+
+```bash
+npm run check
+```
+
+Ou rode a avaliação golden de pagamento isoladamente:
+
+```bash
+npm run evaluate
+```
+
+Ela compara framework selecionado, categorias de risco, recomendação e presença do limite de evidência com [`evals/golden/payment-refactor.expected.json`](../evals/golden/payment-refactor.expected.json). Um desvio retorna código diferente de zero.
+
 ```mermaid
 sequenceDiagram
   participant You as Você

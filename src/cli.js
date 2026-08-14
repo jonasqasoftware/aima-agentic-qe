@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { readFile } from 'node:fs/promises';
 import { loadChangeInput } from './change-input.js';
 import { createChangeFromLocalDiff } from './local-diff.js';
 import { loadFrameworkRegistry, selectFramework } from './framework-registry.js';
@@ -10,6 +11,7 @@ import { compareWithBaseline, loadBaselineReport } from './baseline.js';
 import { loadEvidenceArtifact } from './evidence-artifact.js';
 import { shouldFailQualityGate } from './quality-gate.js';
 import { verifyReportManifest } from './report-manifest.js';
+import { evaluateChange } from './evaluation.js';
 import { buildStrategy } from './strategy.js';
 import { createReport, writeReports } from './report.js';
 
@@ -19,6 +21,7 @@ function usage() {
   return [
     'Uso:',
     '  node src/cli.js verify-report --dir <diretório>',
+    '  node src/cli.js evaluate --change <arquivo.json> --expected <arquivo.json> [--policy <arquivo.json>]',
     '  node src/cli.js analyze-pr --change <arquivo.json> [--fail-on <never|no-go|go-with-risks>] [--evidence-artifact <arquivo.json>] [--baseline <relatório.json>] [--policy <arquivo.json>] [--out <diretório>]',
     '  node src/cli.js analyze-diff --repo <diretório> --base <referência> [--head <referência>] --impact <low|medium|high> --complexity <low|medium|high> [--fail-on <never|no-go|go-with-risks>] [--evidence-artifact <arquivo.json>] [--baseline <relatório.json>] [--policy <arquivo.json>] [--out <diretório>]'
   ].join('\n');
@@ -37,6 +40,20 @@ async function main() {
     const verification = await verifyReportManifest(path.resolve(directory));
     for (const check of verification.checks) console.log(`${check.valid ? '✓' : '✗'} ${check.filename}`);
     if (!verification.valid) process.exitCode = 1;
+    return;
+  }
+  if (command === 'evaluate') {
+    const changePath = argument('--change');
+    const expectedPath = argument('--expected');
+    if (!changePath || !expectedPath) throw new Error(usage());
+    const change = await loadChangeInput(path.resolve(changePath));
+    const expected = JSON.parse(await readFile(path.resolve(expectedPath), 'utf8'));
+    const frameworks = await loadFrameworkRegistry(path.join(root, 'aima', 'frameworks'));
+    const policyPath = argument('--policy', path.join(root, 'aima', 'policies', 'evidence-aware-release.json'));
+    const evaluation = evaluateChange(change, expected, frameworks, await loadReleasePolicy(path.resolve(policyPath)));
+    console.log(`Avaliação: ${evaluation.passed ? 'PASSOU' : 'FALHOU'}`);
+    for (const failure of evaluation.failures) console.error(`- ${failure}`);
+    if (!evaluation.passed) process.exitCode = 1;
     return;
   }
   if (!['analyze-pr', 'analyze-diff'].includes(command)) throw new Error(usage());

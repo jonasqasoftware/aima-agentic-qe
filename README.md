@@ -115,7 +115,7 @@ Recomendação de release
 
 ## Avaliações
 
-O diretório [`evals/golden`](evals/golden) contém expectativas conhecidas para o cenário de pagamento. Os testes verificam seleção de framework, categorias de risco, recomendação e limite de evidência, evitando que a ferramenta passe a inventar contexto.
+O diretório [`evals/golden`](evals/golden) contém expectativas conhecidas para o cenário de pagamento. `npm run evaluate` valida framework, categorias de risco, recomendação e limite de evidência; `npm run check` inclui essa avaliação e os testes, evitando regressões silenciosas nas regras.
 
 ## Arquitetura
 

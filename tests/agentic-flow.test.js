@@ -3,7 +3,7 @@ import test from 'node:test';
 import path from 'node:path';
 import os from 'node:os';
 import { execFile } from 'node:child_process';
-import { mkdtemp, writeFile } from 'node:fs/promises';
+import { mkdtemp, readFile, writeFile } from 'node:fs/promises';
 import { promisify } from 'node:util';
 import { fileURLToPath } from 'node:url';
 import {
@@ -13,6 +13,7 @@ import {
   compareWithBaseline,
   createReport,
   createChangeFromLocalDiff,
+  evaluateChange,
   formatMarkdown,
   formatHtml,
   formatSarif,
@@ -64,6 +65,17 @@ test('payment fixture produces an evidence-bounded NO-GO recommendation', async 
   assert.equal((await verifyReportManifest(reportDirectory)).valid, true);
   await writeFile(path.join(reportDirectory, 'aima-quality-report.md'), 'alterado');
   assert.equal((await verifyReportManifest(reportDirectory)).valid, false);
+});
+
+test('golden payment expectation passes through the evaluation runner', async () => {
+  const change = await loadChangeInput(path.join(root, 'examples', 'payment-refactor.change.json'));
+  const expected = JSON.parse(await readFile(path.join(root, 'evals', 'golden', 'payment-refactor.expected.json'), 'utf8'));
+  const frameworks = await loadFrameworkRegistry(path.join(root, 'aima', 'frameworks'));
+  const policy = await loadReleasePolicy(path.join(root, 'aima', 'policies', 'evidence-aware-release.json'));
+  const evaluation = evaluateChange(change, expected, frameworks, policy);
+
+  assert.equal(evaluation.passed, true);
+  assert.deepEqual(evaluation.failures, []);
 });
 
 test('unknown change surface remains explicit instead of invented', () => {

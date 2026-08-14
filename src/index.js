@@ -10,3 +10,4 @@ export { compareWithBaseline, loadBaselineReport } from './baseline.js';
 export { loadEvidenceArtifact } from './evidence-artifact.js';
 export { shouldFailQualityGate } from './quality-gate.js';
 export { createReportManifest, verifyReportManifest } from './report-manifest.js';
+export { evaluateChange } from './evaluation.js';

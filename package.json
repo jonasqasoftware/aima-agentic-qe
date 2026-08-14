@@ -9,8 +9,9 @@
   },
   "scripts": {
     "analyze": "node src/cli.js analyze-pr",
+    "evaluate": "node src/cli.js evaluate --change examples/payment-refactor.change.json --expected evals/golden/payment-refactor.expected.json",
     "test": "node --test",
-    "check": "node --check src/*.js && npm test"
+    "check": "node --check src/*.js && npm test && npm run evaluate"
   },
   "license": "MIT"
 }

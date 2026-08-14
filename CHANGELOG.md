@@ -16,6 +16,7 @@
 - Execução manual do GitHub Actions com escolha do modo de gate e preservação de artefatos após falha.
 - Manifesto SHA-256 e comando `verify-report` para verificar integridade dos relatórios gerados.
 - Framework Data Quality Validation no registry, selecionado para superfícies de schema, migração, banco ou dados.
+- Runner de avaliação golden integrado a `npm run check` para detectar regressões nas regras determinísticas.
 
 ## 0.1.0
 
