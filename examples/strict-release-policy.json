@@ -1,0 +1,10 @@
+{
+  "id": "strict-evidence-release",
+  "name": "Strict Evidence Release Policy",
+  "version": "1.0.0",
+  "description": "Política para mudanças que exigem evidência completa antes de avançar.",
+  "blockOnAnyUnknown": true,
+  "blockOnHighRiskWithUnknown": true,
+  "recommendationWhenHighRisk": "GO WITH RISKS",
+  "recommendationWhenNoHighRisk": "GO"
+}

@@ -5,6 +5,7 @@ import { loadChangeInput } from './change-input.js';
 import { createChangeFromLocalDiff } from './local-diff.js';
 import { loadFrameworkRegistry, selectFramework } from './framework-registry.js';
 import { assessRisks, qualityConfidence } from './risk-engine.js';
+import { loadReleasePolicy } from './release-policy.js';
 import { buildStrategy } from './strategy.js';
 import { createReport, writeReports } from './report.js';
 
@@ -13,8 +14,8 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 function usage() {
   return [
     'Uso:',
-    '  node src/cli.js analyze-pr --change <arquivo.json> [--out <diretório>]',
-    '  node src/cli.js analyze-diff --repo <diretório> --base <referência> [--head <referência>] --impact <low|medium|high> --complexity <low|medium|high> [--out <diretório>]'
+    '  node src/cli.js analyze-pr --change <arquivo.json> [--policy <arquivo.json>] [--out <diretório>]',
+    '  node src/cli.js analyze-diff --repo <diretório> --base <referência> [--head <referência>] --impact <low|medium|high> --complexity <low|medium|high> [--policy <arquivo.json>] [--out <diretório>]'
   ].join('\n');
 }
 
@@ -52,7 +53,9 @@ async function main() {
   const selection = selectFramework(frameworks, change);
   const risks = assessRisks(change);
   const confidence = qualityConfidence(risks, change.knownUnknowns);
-  const strategy = buildStrategy(risks, change.knownUnknowns);
+  const policyPath = argument('--policy', path.join(root, 'aima', 'policies', 'evidence-aware-release.json'));
+  const policy = await loadReleasePolicy(path.resolve(policyPath));
+  const strategy = buildStrategy(risks, change.knownUnknowns, policy);
   const report = createReport(change, selection, risks, confidence, strategy);
   const files = await writeReports(report, path.resolve(outputDirectory));
   console.log(`AIMA Agentic QE: ${report.strategy.recommendation}`);

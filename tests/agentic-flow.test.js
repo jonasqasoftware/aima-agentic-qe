@@ -15,6 +15,7 @@ import {
   formatMarkdown,
   formatHtml,
   loadChangeInput,
+  loadReleasePolicy,
   loadFrameworkRegistry,
   qualityConfidence,
   selectFramework
@@ -29,7 +30,8 @@ test('payment fixture produces an evidence-bounded NO-GO recommendation', async 
   const selection = selectFramework(frameworks, change);
   const risks = assessRisks(change);
   const confidence = qualityConfidence(risks, change.knownUnknowns);
-  const strategy = buildStrategy(risks, change.knownUnknowns);
+  const policy = await loadReleasePolicy(path.join(root, 'aima', 'policies', 'evidence-aware-release.json'));
+  const strategy = buildStrategy(risks, change.knownUnknowns, policy);
   const report = createReport(change, selection, risks, confidence, strategy);
 
   assert.equal(selection.framework.id, 'risk-based-testing');
@@ -72,6 +74,20 @@ test('evidence ledger keeps declared unknowns separate from deterministic infere
   assert.equal(ledger.find((item) => item.id === 'I-001').source, 'deterministic-risk-rule');
 });
 
+test('strict policy blocks a change when any evidence is unknown', async () => {
+  const policy = await loadReleasePolicy(path.join(root, 'examples', 'strict-release-policy.json'));
+  const risks = assessRisks({
+    changedFiles: ['lib/normalizer.js'],
+    businessImpact: 'low',
+    technicalComplexity: 'low'
+  });
+  const strategy = buildStrategy(risks, ['Teste de regressão não fornecido.'], policy);
+
+  assert.equal(strategy.recommendation, 'NO-GO');
+  assert.equal(strategy.policy.id, 'strict-evidence-release');
+  assert.match(strategy.rationale, /bloqueia mudanças/);
+});
+
 test('local diff adapter uses changed file names and keeps diff content unknown', async () => {
   const repo = await mkdtemp(path.join(os.tmpdir(), 'aima-local-diff-'));
   await execFileAsync('git', ['init', '--initial-branch=main', repo]);
@@ -95,6 +111,6 @@ test('local diff adapter uses changed file names and keeps diff content unknown'
   assert.deepEqual(change.changedFiles, ['payment-route.js']);
   assert.match(change.knownUnknowns[0], /somente nomes de arquivos/);
   assert.equal(change.source, 'local-git-name-only');
-  const report = createReport(change, { framework: { id: 'risk-based-testing', name: 'Risk-Based Testing' }, evidence: [] }, [], { score: 100, factors: [] }, { recommendation: 'GO', recommendedTests: [], missingEvidence: [], rationale: 'fixture' });
+  const report = createReport(change, { framework: { id: 'risk-based-testing', name: 'Risk-Based Testing' }, evidence: [] }, [], { score: 100, factors: [] }, { recommendation: 'GO', recommendedTests: [], missingEvidence: [], rationale: 'fixture', policy: { id: 'fixture', name: 'Fixture', version: '1.0.0' } });
   assert.match(report.evidenceBoundary, /conteúdo do diff/);
 });

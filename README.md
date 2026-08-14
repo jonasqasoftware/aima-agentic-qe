@@ -18,6 +18,8 @@ O comando `analyze-pr` recebe um arquivo JSON que descreve uma mudança. Ele ent
 
 Além do JSON declarado, o MVP também pode criar esse contexto a partir dos **nomes de arquivos** entre duas referências de um repositório Git local. Ele não lê conteúdo de diff, nem consulta GitHub remoto.
 
+A recomendação é governada por uma [política de release versionada](aima/policies/evidence-aware-release.json), que pode ser substituída via `--policy` para refletir regras mais restritivas do produto.
+
 O fluxo é deliberadamente determinístico e offline. Ele **não** acessa PRs remotos, não usa LLM, não executa testes de uma aplicação externa e não publica comentários. Essas integrações pertencem a incrementos posteriores, quando houver uma implementação real para sustentá-las.
 
 ## Demonstração

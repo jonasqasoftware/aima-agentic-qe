@@ -33,6 +33,17 @@ node src/cli.js analyze-pr \
   --out reports
 ```
 
+Por padrão, a recomendação segue [`aima/policies/evidence-aware-release.json`](../aima/policies/evidence-aware-release.json). Para aplicar uma política mais rigorosa, informe `--policy`:
+
+```bash
+node src/cli.js analyze-pr \
+  --change examples/payment-refactor.change.json \
+  --policy examples/strict-release-policy.json \
+  --out reports
+```
+
+A política rigorosa bloqueia qualquer mudança que possua evidência marcada como ausente. O relatório registra o identificador e a versão da política utilizada.
+
 O comando imprime uma recomendação e grava três artefatos:
 
 ```text

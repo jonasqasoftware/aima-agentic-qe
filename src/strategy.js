@@ -1,13 +1,25 @@
-export function buildStrategy(risks, unknowns) {
+export function buildStrategy(risks, unknowns, policy) {
   const tests = [...new Set(risks.flatMap((risk) => risk.recommendedTests))];
   const highest = risks[0];
-  const decision = highest?.level === 'HIGH' && unknowns.length > 0 ? 'NO-GO' : highest?.level === 'HIGH' ? 'GO WITH RISKS' : 'GO WITH RISKS';
+  const hasHighRisk = highest?.level === 'HIGH';
+  const hasUnknowns = unknowns.length > 0;
+  const blockForUnknowns = hasUnknowns && policy.blockOnAnyUnknown;
+  const blockForHighRisk = hasHighRisk && hasUnknowns && policy.blockOnHighRiskWithUnknown;
+  const decision = blockForUnknowns || blockForHighRisk
+    ? 'NO-GO'
+    : hasHighRisk
+      ? policy.recommendationWhenHighRisk
+      : policy.recommendationWhenNoHighRisk;
+  const rationale = blockForUnknowns
+    ? 'A política de release bloqueia mudanças com evidências declaradas como ausentes.'
+    : blockForHighRisk
+      ? 'A política de release bloqueia riscos altos quando há evidências declaradas como ausentes.'
+      : 'A recomendação exige revisão humana dos riscos e execução das verificações priorizadas.';
   return {
     recommendedTests: tests,
     missingEvidence: unknowns,
     recommendation: decision,
-    rationale: decision === 'NO-GO'
-      ? 'Existem riscos altos e evidências declaradas como ausentes; a mudança precisa de validação adicional.'
-      : 'A recomendação exige revisão humana dos riscos e execução das verificações priorizadas.'
+    rationale,
+    policy: { id: policy.id, name: policy.name, version: policy.version }
   };
 }

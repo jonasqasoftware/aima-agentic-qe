@@ -1,0 +1,10 @@
+{
+  "id": "evidence-aware-release",
+  "name": "Evidence-Aware Release Policy",
+  "version": "1.0.0",
+  "description": "Política conservadora: risco alto com evidência ausente bloqueia a recomendação.",
+  "blockOnAnyUnknown": false,
+  "blockOnHighRiskWithUnknown": true,
+  "recommendationWhenHighRisk": "GO WITH RISKS",
+  "recommendationWhenNoHighRisk": "GO WITH RISKS"
+}

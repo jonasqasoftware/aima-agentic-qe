@@ -7,6 +7,7 @@
 - Adaptador de diff Git local que transforma nomes de arquivos alterados em contexto de análise, sem ler conteúdo ou serviços remotos.
 - Ledger de evidências no relatório, separando fatos, inferências determinísticas e informações `UNKNOWN`.
 - Relatório HTML autocontido, com painel visual de riscos, recomendação e ledger auditável.
+- Política de release JSON versionada e opção `--policy` para governar recomendações de modo explícito.
 
 ## 0.1.0
 

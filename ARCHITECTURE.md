@@ -13,6 +13,7 @@ flowchart LR
   Registry --> Risk["Risk Agent\nregras determinísticas"]
   Risk --> Strategy["Estratégia de testes\ne evidências esperadas"]
   Strategy --> Ledger["Ledger de evidências\nfatos, inferências e UNKNOWN"]
+  Policy["Política de release\nversionada"] --> Decision
   Ledger --> Decision["Quality Confidence\ne recomendação"]
   Decision --> Report["Relatórios\nJSON, Markdown e HTML"]
 
@@ -31,6 +32,7 @@ O adaptador de Git lê somente a lista local de arquivos alterados entre referê
 | Sinais de risco explícitos | Evita alegações de análise mágica ou leitura remota | Não substitui análise de diff real. |
 | Quality Confidence explicável | Mostra trade-offs e incertezas | Métrica experimental, não preditiva. |
 | Ledger de evidências | Torna origem e tipo de cada afirmação auditáveis | Ainda não referencia execução de testes externa. |
+| Política de release | Separa governança de decisão e código | Exige contexto humano para impacto e complexidade. |
 
 O próximo adaptador deve implementar leitura autorizada de um diff real antes de adicionar novos agentes ou LLMs.
 
