@@ -7,7 +7,7 @@ O MVP implementa uma fatia vertical, não uma plataforma completa. O CLI coorden
 ```mermaid
 flowchart LR
   Input["Mudança declarada\nJSON"] --> Validate["Validação de entrada"]
-  Git["Repositório Git local"] --> Diff["Adaptador\n--name-only"]
+  Git["Repositório Git local"] --> Diff["Adaptador\n--name-only / --numstat"]
   Diff --> Validate
   Artifact["Artefato local\nde evidência JSON"] --> Hash["Hash SHA-256"]
   Hash --> Ledger
@@ -30,7 +30,7 @@ flowchart LR
   Evaluate["Golden evaluation"] -. "expectativas versionadas" .-> Decision
 ```
 
-O adaptador de Git lê somente a lista local de arquivos alterados entre referências. O diagrama não implica leitura de conteúdo de diff, pull request remoto, uso de LLM, execução de testes externos ou publicação automática de comentários.
+O adaptador de Git lê a lista local de arquivos alterados e, opcionalmente, estatísticas de linhas entre referências. O diagrama não implica leitura de conteúdo de diff, pull request remoto, uso de LLM, execução de testes externos ou publicação automática de comentários.
 
 ## Decisões
 

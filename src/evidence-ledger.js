@@ -1,5 +1,7 @@
 function sourceLabel(change) {
-  return change.source === 'local-git-name-only' ? 'git-diff-name-only' : 'declared-input';
+  if (change.source === 'local-git-name-only') return 'git-diff-name-only';
+  if (change.source === 'local-git-diff-stats') return 'git-diff-numstat';
+  return 'declared-input';
 }
 
 /** Builds an inspectable ledger; it never upgrades unknowns into evidence. */
@@ -11,6 +13,12 @@ export function buildEvidenceLedger(change, risks) {
     { id: 'E-003', kind: 'FACT', source, statement: `Complexidade técnica informada como ${change.technicalComplexity}.` },
     { id: 'E-004', kind: 'FACT', source, statement: `${change.changedFiles.length} arquivo(s) incluído(s) na superfície de mudança.` }
   ];
+  if (change.diffStats) facts.push({
+    id: 'E-005',
+    kind: 'FACT',
+    source,
+    statement: `Diff local: ${change.diffStats.additions} linha(s) adicionada(s), ${change.diffStats.deletions} removida(s) em ${change.diffStats.files} arquivo(s); ${change.diffStats.binaryFiles} binário(s).`
+  });
   const unknowns = change.knownUnknowns.map((statement, index) => ({
     id: `U-${String(index + 1).padStart(3, '0')}`,
     kind: 'UNKNOWN',

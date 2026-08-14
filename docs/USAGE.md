@@ -220,6 +220,7 @@ node src/cli.js analyze-diff \
   --repo /caminho/do/repositorio \
   --base main \
   --head HEAD \
+  --include-stats \
   --impact high \
   --complexity medium \
   --out reports
@@ -227,7 +228,7 @@ node src/cli.js analyze-diff \
 
 `--impact` e `--complexity` continuam obrigatórios porque representam contexto de produto e implementação que não pode ser inferido apenas pelo Git. Os valores permitidos são `low`, `medium` e `high`.
 
-O adaptador lê **somente os nomes de arquivos** retornados por `git diff --name-only`. O limite de evidência do relatório identifica essa origem; conteúdo do diff, resultado de testes e contexto de produto permanecem `UNKNOWN`. Não há leitura remota do GitHub nem transmissão de dados.
+Por padrão, o adaptador lê **somente os nomes de arquivos** retornados por `git diff --name-only`. Com `--include-stats`, ele também lê o resultado de `git diff --numstat` e registra linhas adicionadas, removidas e arquivos binários no ledger. Em ambos os casos, conteúdo do diff, resultado de testes e contexto de produto permanecem `UNKNOWN`. Não há leitura remota do GitHub nem transmissão de dados.
 
 ## Como ler a saída
 

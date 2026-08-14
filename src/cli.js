@@ -25,7 +25,7 @@ function usage() {
     '  node src/cli.js evaluate --change <arquivo.json> --expected <arquivo.json> [--policy <arquivo.json>]',
     '  node src/cli.js dashboard --reports <diretório> [--out <arquivo.html>]',
     '  node src/cli.js analyze-pr --change <arquivo.json> [--fail-on <never|no-go|go-with-risks>] [--evidence-artifact <arquivo.json>] [--baseline <relatório.json>] [--policy <arquivo.json>] [--out <diretório>]',
-    '  node src/cli.js analyze-diff --repo <diretório> --base <referência> [--head <referência>] --impact <low|medium|high> --complexity <low|medium|high> [--fail-on <never|no-go|go-with-risks>] [--evidence-artifact <arquivo.json>] [--baseline <relatório.json>] [--policy <arquivo.json>] [--out <diretório>]'
+    '  node src/cli.js analyze-diff --repo <diretório> --base <referência> [--head <referência>] [--include-stats] --impact <low|medium|high> --complexity <low|medium|high> [--fail-on <never|no-go|go-with-risks>] [--evidence-artifact <arquivo.json>] [--baseline <relatório.json>] [--policy <arquivo.json>] [--out <diretório>]'
   ].join('\n');
 }
 
@@ -86,7 +86,8 @@ async function main() {
       businessImpact,
       technicalComplexity,
       id: argument('--id'),
-      summary: argument('--summary')
+      summary: argument('--summary'),
+      includeStats: process.argv.includes('--include-stats')
     });
   }
   const artifactPath = argument('--evidence-artifact');

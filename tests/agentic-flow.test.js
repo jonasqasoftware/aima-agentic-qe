@@ -219,4 +219,16 @@ test('local diff adapter uses changed file names and keeps diff content unknown'
   assert.equal(change.source, 'local-git-name-only');
   const report = createReport(change, { framework: { id: 'risk-based-testing', name: 'Risk-Based Testing' }, evidence: [] }, [], { score: 100, factors: [] }, { recommendation: 'GO', recommendedTests: [], missingEvidence: [], rationale: 'fixture', policy: { id: 'fixture', name: 'Fixture', version: '1.0.0' } });
   assert.match(report.evidenceBoundary, /conteúdo do diff/);
+
+  const changeWithStats = await createChangeFromLocalDiff({
+    repoPath: repo,
+    base: base.trim(),
+    businessImpact: 'high',
+    technicalComplexity: 'medium',
+    includeStats: true
+  });
+  assert.equal(changeWithStats.source, 'local-git-diff-stats');
+  assert.equal(changeWithStats.diffStats.additions, 1);
+  assert.equal(changeWithStats.diffStats.deletions, 0);
+  assert.match(buildEvidenceLedger(changeWithStats, [])[4].statement, /1 linha/);
 });

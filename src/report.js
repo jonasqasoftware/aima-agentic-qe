@@ -13,7 +13,9 @@ function escapeHtml(value) {
 }
 
 export function createReport(change, selection, risks, confidence, strategy) {
-  const evidenceBoundary = change.source === 'local-git-name-only'
+  const evidenceBoundary = change.source === 'local-git-diff-stats'
+    ? 'Relatório baseado nos nomes de arquivos e estatísticas de linhas de um diff Git local, além de regras determinísticas. Não afirma leitura do conteúdo do diff, de PR remoto, execução de testes ou aprovação de release.'
+    : change.source === 'local-git-name-only'
     ? 'Relatório baseado nos nomes de arquivos de um diff Git local e em regras determinísticas. Não afirma leitura do conteúdo do diff, de PR remoto, execução de testes ou aprovação de release.'
     : 'Relatório baseado somente na entrada declarada e em regras determinísticas. Não afirma leitura de PR remoto, execução de testes ou aprovação de release.';
   return {

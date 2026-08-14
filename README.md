@@ -47,6 +47,7 @@ Para analisar a superfície de arquivos de um diff local:
 node src/cli.js analyze-diff \
   --repo /caminho/do/repositorio \
   --base main \
+  --include-stats \
   --impact high \
   --complexity medium \
   --out reports
