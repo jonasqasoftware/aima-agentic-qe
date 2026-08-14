@@ -12,6 +12,7 @@
 - Exportação SARIF 2.1.0 para interoperabilidade com ferramentas de análise, sem upload automático.
 - Comparação opcional com relatório baseline para destacar riscos novos, resolvidos e variação de confiança.
 - Artefatos locais de evidência com hash SHA-256 no ledger, mantendo resultado de teste como não confiado automaticamente.
+- Gate de CI opcional via `--fail-on`, que preserva relatórios antes de retornar falha.
 
 ## 0.1.0
 

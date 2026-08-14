@@ -22,6 +22,8 @@ A recomendação é governada por uma [política de release versionada](aima/pol
 
 Use `--baseline <aima-quality-report.json>` para comparar riscos e confiança com uma análise anterior, mantendo a comparação limitada ao que cada relatório declarou.
 
+Para pipelines, `--fail-on no-go` converte a recomendação em gate de CI opcional, sem deixar de gerar os relatórios de diagnóstico.
+
 O fluxo é deliberadamente determinístico e offline. Ele **não** acessa PRs remotos, não usa LLM, não executa testes de uma aplicação externa e não publica comentários. Essas integrações pertencem a incrementos posteriores, quando houver uma implementação real para sustentá-las.
 
 ## Demonstração

@@ -17,6 +17,7 @@ flowchart LR
   Strategy --> Ledger["Ledger de evidências\nfatos, inferências e UNKNOWN"]
   Policy["Política de release\nversionada"] --> Decision
   Ledger --> Decision["Quality Confidence\ne recomendação"]
+  Decision --> Gate["Gate opcional\n--fail-on"]
   Baseline["Relatório anterior\nJSON"] --> Compare["Comparador de baseline"]
   Decision --> Compare
   Compare --> Report
@@ -40,6 +41,7 @@ O adaptador de Git lê somente a lista local de arquivos alterados entre referê
 | Política de release | Separa governança de decisão e código | Exige contexto humano para impacto e complexidade. |
 | Comparação com baseline | Destaca mudanças entre análises declaradas | Não demonstra regressão de código. |
 | Artefato com SHA-256 | Registra integridade do arquivo local analisado | Não comprova resultado de teste. |
+| Gate opcional de CI | Converte recomendação em código de saída | Padrão não bloqueia pipelines. |
 
 O próximo adaptador deve implementar leitura autorizada de um diff real antes de adicionar novos agentes ou LLMs.
 

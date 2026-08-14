@@ -8,3 +8,4 @@ export { createReport, formatHtml, formatMarkdown, formatSarif } from './report.
 export { buildEvidenceLedger } from './evidence-ledger.js';
 export { compareWithBaseline, loadBaselineReport } from './baseline.js';
 export { loadEvidenceArtifact } from './evidence-artifact.js';
+export { shouldFailQualityGate } from './quality-gate.js';

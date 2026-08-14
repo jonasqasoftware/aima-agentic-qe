@@ -8,6 +8,7 @@ import { assessRisks, qualityConfidence } from './risk-engine.js';
 import { loadReleasePolicy } from './release-policy.js';
 import { compareWithBaseline, loadBaselineReport } from './baseline.js';
 import { loadEvidenceArtifact } from './evidence-artifact.js';
+import { shouldFailQualityGate } from './quality-gate.js';
 import { buildStrategy } from './strategy.js';
 import { createReport, writeReports } from './report.js';
 
@@ -16,8 +17,8 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 function usage() {
   return [
     'Uso:',
-    '  node src/cli.js analyze-pr --change <arquivo.json> [--evidence-artifact <arquivo.json>] [--baseline <relatório.json>] [--policy <arquivo.json>] [--out <diretório>]',
-    '  node src/cli.js analyze-diff --repo <diretório> --base <referência> [--head <referência>] --impact <low|medium|high> --complexity <low|medium|high> [--evidence-artifact <arquivo.json>] [--baseline <relatório.json>] [--policy <arquivo.json>] [--out <diretório>]'
+    '  node src/cli.js analyze-pr --change <arquivo.json> [--fail-on <never|no-go|go-with-risks>] [--evidence-artifact <arquivo.json>] [--baseline <relatório.json>] [--policy <arquivo.json>] [--out <diretório>]',
+    '  node src/cli.js analyze-diff --repo <diretório> --base <referência> [--head <referência>] --impact <low|medium|high> --complexity <low|medium|high> [--fail-on <never|no-go|go-with-risks>] [--evidence-artifact <arquivo.json>] [--baseline <relatório.json>] [--policy <arquivo.json>] [--out <diretório>]'
   ].join('\n');
 }
 
@@ -67,6 +68,11 @@ async function main() {
   console.log(`AIMA Agentic QE: ${report.strategy.recommendation}`);
   console.log(`Quality Confidence experimental: ${report.qualityConfidence.score}/100`);
   console.log(`Relatórios: ${files.jsonPath}, ${files.markdownPath}, ${files.htmlPath}, ${files.sarifPath}`);
+  const failOn = argument('--fail-on', 'never');
+  if (shouldFailQualityGate(report.strategy.recommendation, failOn)) {
+    console.error(`Quality gate falhou: recomendação ${report.strategy.recommendation} bloqueada pelo modo ${failOn}.`);
+    process.exitCode = 1;
+  }
 }
 
 main().catch((error) => {

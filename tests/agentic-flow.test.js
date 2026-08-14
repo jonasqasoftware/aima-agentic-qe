@@ -21,7 +21,8 @@ import {
   loadReleasePolicy,
   loadFrameworkRegistry,
   qualityConfidence,
-  selectFramework
+  selectFramework,
+  shouldFailQualityGate
 } from '../src/index.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -114,6 +115,15 @@ test('strict policy blocks a change when any evidence is unknown', async () => {
   assert.equal(strategy.recommendation, 'NO-GO');
   assert.equal(strategy.policy.id, 'strict-evidence-release');
   assert.match(strategy.rationale, /bloqueia mudanças/);
+});
+
+test('quality gate failures are opt-in and deterministic', () => {
+  assert.equal(shouldFailQualityGate('NO-GO', 'never'), false);
+  assert.equal(shouldFailQualityGate('NO-GO', 'no-go'), true);
+  assert.equal(shouldFailQualityGate('GO WITH RISKS', 'no-go'), false);
+  assert.equal(shouldFailQualityGate('GO WITH RISKS', 'go-with-risks'), true);
+  assert.equal(shouldFailQualityGate('GO', 'go-with-risks'), false);
+  assert.throws(() => shouldFailQualityGate('GO', 'always'));
 });
 
 test('baseline comparison identifies new, resolved, and changed risks', async () => {

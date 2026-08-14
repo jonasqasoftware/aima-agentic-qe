@@ -70,6 +70,26 @@ node src/cli.js analyze-pr \
 
 O artefato precisa conter `id`, `type`, `summary` e `status` (`passed`, `failed` ou `unknown`). O hash prova exatamente qual arquivo local foi lido; ele **não** prova que o resultado declarado de teste é verdadeiro, nem altera automaticamente score ou recomendação.
 
+### Usar como quality gate no CI
+
+Por padrão, a CLI sempre conclui com sucesso depois de gerar os relatórios. Para fazer o processo falhar conforme a recomendação, use `--fail-on`:
+
+```bash
+# Falha somente quando a recomendação for NO-GO.
+node src/cli.js analyze-pr \
+  --change examples/payment-refactor.change.json \
+  --fail-on no-go \
+  --out reports
+```
+
+| Modo | Quando o processo retorna código diferente de zero |
+| --- | --- |
+| `never` | Nunca; é o padrão e preserva o comportamento informativo |
+| `no-go` | Apenas em `NO-GO` |
+| `go-with-risks` | Em qualquer recomendação diferente de `GO` |
+
+Os relatórios são gravados antes da falha do gate, mantendo evidências disponíveis para investigação. O workflow padrão do projeto permanece informativo e não usa `--fail-on`.
+
 O comando imprime uma recomendação e grava três artefatos:
 
 ```text
