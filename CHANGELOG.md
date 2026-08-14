@@ -21,6 +21,8 @@
 - Opção `--include-stats` para registrar estatísticas de linhas do diff Git local como fatos auditáveis.
 - Adaptador autorizado de PR do GitHub via CLI, com metadados, nomes de arquivos e checks de CI como evidência remota rastreável.
 - Executor de evidência local por especificação estruturada, sem shell e com hash de transcript em vez de logs brutos.
+- Importação de resultados JUnit/XML, com totais e casos de falha rastreáveis sem expor mensagens de erro ou logs.
+- Contrato JSON normalizado para importar resultados de ferramentas sem exportação JUnit.
 
 ## 0.1.0
 
