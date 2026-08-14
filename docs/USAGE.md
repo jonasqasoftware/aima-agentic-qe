@@ -104,6 +104,27 @@ node src/cli.js analyze-pr \
 
 O artefato precisa conter `id`, `type`, `summary` e `status` (`passed`, `failed` ou `unknown`). O hash prova exatamente qual arquivo local foi lido; ele **não** prova que o resultado declarado de teste é verdadeiro, nem altera automaticamente score ou recomendação.
 
+### Executar uma evidência local autorizada
+
+Use um arquivo de especificação para executar um comando local explicitamente autorizado. O AIMA nunca usa shell; por isso, argumentos e execução ficam separados:
+
+```bash
+node src/cli.js analyze-pr \
+  --change examples/payment-refactor.change.json \
+  --execute-evidence examples/node-test.command.json \
+  --out reports
+```
+
+```json
+{
+  "id": "NODE-TEST",
+  "command": "node",
+  "args": ["--test"]
+}
+```
+
+O executor limita cada comando a 60 segundos e 1 MiB de saída. Ele não inclui logs brutos no relatório: registra status, código de saída, comando, argumentos e hash SHA-256 do transcript. Uma falha é uma evidência verificável e cria risco alto; um sucesso não comprova cobertura, qualidade nem aprovação de release.
+
 ### Usar como quality gate no CI
 
 Por padrão, a CLI sempre conclui com sucesso depois de gerar os relatórios. Para fazer o processo falhar conforme a recomendação, use `--fail-on`:

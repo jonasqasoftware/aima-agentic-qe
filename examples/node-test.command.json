@@ -1,0 +1,6 @@
+{
+  "id": "NODE-TEST",
+  "command": "node",
+  "args": ["--test"],
+  "summary": "Suíte de testes Node.js executada localmente pelo AIMA."
+}

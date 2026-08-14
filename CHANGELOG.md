@@ -20,6 +20,7 @@
 - Dashboard HTML local para consolidar confiança, recomendações, políticas e riscos de vários relatórios.
 - Opção `--include-stats` para registrar estatísticas de linhas do diff Git local como fatos auditáveis.
 - Adaptador autorizado de PR do GitHub via CLI, com metadados, nomes de arquivos e checks de CI como evidência remota rastreável.
+- Executor de evidência local por especificação estruturada, sem shell e com hash de transcript em vez de logs brutos.
 
 ## 0.1.0
 
