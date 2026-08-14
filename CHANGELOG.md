@@ -9,6 +9,7 @@
 - Relatório HTML autocontido, com painel visual de riscos, recomendação e ledger auditável.
 - Política de release JSON versionada e opção `--policy` para governar recomendações de modo explícito.
 - Suporte a evidências declaradas na entrada, preservadas no ledger como não verificadas.
+- Exportação SARIF 2.1.0 para interoperabilidade com ferramentas de análise, sem upload automático.
 
 ## 0.1.0
 

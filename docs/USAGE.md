@@ -50,10 +50,13 @@ O comando imprime uma recomendação e grava três artefatos:
 reports/
 ├── aima-quality-report.json   # integração com ferramentas
 ├── aima-quality-report.md     # leitura humana e revisão
-└── aima-quality-report.html   # painel visual e portátil
+├── aima-quality-report.html   # painel visual e portátil
+└── aima-quality-report.sarif  # interoperabilidade com ferramentas de análise
 ```
 
 Abra `aima-quality-report.html` diretamente no navegador para uma leitura visual da recomendação, do score, dos riscos e do ledger de evidências. O arquivo é autocontido: não depende de servidor, biblioteca externa ou transmissão de dados.
+
+O arquivo `aima-quality-report.sarif` usa o padrão SARIF 2.1.0. Seus achados apontam para a superfície de arquivos declarada, sempre na linha 1, pois o MVP não lê o conteúdo do diff. Ele pode ser armazenado como artefato ou entregue a uma integração compatível; o workflow atual **não** envia resultados ao GitHub Code Scanning.
 
 ```mermaid
 sequenceDiagram

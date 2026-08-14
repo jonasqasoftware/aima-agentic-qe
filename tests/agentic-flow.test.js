@@ -14,6 +14,7 @@ import {
   createChangeFromLocalDiff,
   formatMarkdown,
   formatHtml,
+  formatSarif,
   loadChangeInput,
   loadReleasePolicy,
   loadFrameworkRegistry,
@@ -48,6 +49,11 @@ test('payment fixture produces an evidence-bounded NO-GO recommendation', async 
   assert.match(html, /Ledger de evidências/);
   assert.match(html, /&lt;script&gt;untrusted&lt;\/script&gt;/);
   assert.doesNotMatch(html, /<script>untrusted<\/script>/);
+  const sarif = formatSarif(report);
+  assert.equal(sarif.version, '2.1.0');
+  assert.equal(sarif.runs[0].tool.driver.name, 'AIMA Agentic QE');
+  assert.equal(sarif.runs[0].results[0].level, 'error');
+  assert.equal(sarif.runs[0].results[0].locations[0].physicalLocation.region.startLine, 1);
 });
 
 test('unknown change surface remains explicit instead of invented', () => {

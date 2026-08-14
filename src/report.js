@@ -108,15 +108,68 @@ export function formatHtml(report) {
 </main></body></html>`;
 }
 
+function sarifLevel(level) {
+  return level === 'HIGH' ? 'error' : level === 'MEDIUM' ? 'warning' : 'note';
+}
+
+/**
+ * Emits a SARIF 2.1.0 document for consumers that understand static-analysis
+ * findings. Locations identify the declared change surface, not a proven line.
+ */
+export function formatSarif(report) {
+  const rules = report.risks.map((risk) => ({
+    id: risk.id,
+    name: risk.category,
+    shortDescription: { text: risk.statement },
+    defaultConfiguration: { level: sarifLevel(risk.level) },
+    properties: { aimaRiskLevel: risk.level, aimaRiskScore: risk.score }
+  }));
+  const results = report.risks.map((risk) => {
+    const files = risk.facts.length ? risk.facts : report.context.changedFiles;
+    return {
+      ruleId: risk.id,
+      level: sarifLevel(risk.level),
+      message: { text: `${risk.statement}. ${risk.inference}` },
+      locations: files.map((uri) => ({
+        physicalLocation: {
+          artifactLocation: { uri },
+          region: { startLine: 1 }
+        }
+      })),
+      properties: {
+        aimaRiskScore: risk.score,
+        evidenceBoundary: report.evidenceBoundary,
+        recommendation: report.strategy.recommendation
+      }
+    };
+  });
+  return {
+    $schema: 'https://json.schemastore.org/sarif-2.1.0.json',
+    version: '2.1.0',
+    runs: [{
+      tool: { driver: { name: 'AIMA Agentic QE', informationUri: 'https://github.com/jonasqasoftware/aima-agentic-qe', rules } },
+      invocations: [{ executionSuccessful: true }],
+      results,
+      properties: {
+        changeId: report.context.changeId,
+        policy: report.strategy.policy,
+        evidenceBoundary: report.evidenceBoundary
+      }
+    }]
+  };
+}
+
 export async function writeReports(report, directory) {
   await mkdir(directory, { recursive: true });
   const jsonPath = path.join(directory, 'aima-quality-report.json');
   const markdownPath = path.join(directory, 'aima-quality-report.md');
   const htmlPath = path.join(directory, 'aima-quality-report.html');
+  const sarifPath = path.join(directory, 'aima-quality-report.sarif');
   await Promise.all([
     writeFile(jsonPath, `${JSON.stringify(report, null, 2)}\n`),
     writeFile(markdownPath, formatMarkdown(report)),
-    writeFile(htmlPath, formatHtml(report))
+    writeFile(htmlPath, formatHtml(report)),
+    writeFile(sarifPath, `${JSON.stringify(formatSarif(report), null, 2)}\n`)
   ]);
-  return { jsonPath, markdownPath, htmlPath };
+  return { jsonPath, markdownPath, htmlPath, sarifPath };
 }
