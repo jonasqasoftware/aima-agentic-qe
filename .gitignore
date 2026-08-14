@@ -1,4 +1,4 @@
 node_modules/
-reports/*.json
-reports/*.md
+reports/*
+!reports/.gitkeep
 .DS_Store

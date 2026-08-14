@@ -20,7 +20,7 @@ export function buildEvidenceLedger(change, risks) {
     source,
     statement: `Diff local: ${change.diffStats.additions} linha(s) adicionada(s), ${change.diffStats.deletions} removida(s) em ${change.diffStats.files} arquivo(s); ${change.diffStats.binaryFiles} binário(s).`
   });
-  const unknowns = change.knownUnknowns.map((statement, index) => ({
+  const unknowns = (change.knownUnknowns ?? []).map((statement, index) => ({
     id: `U-${String(index + 1).padStart(3, '0')}`,
     kind: 'UNKNOWN',
     source,
@@ -51,6 +51,15 @@ export function buildEvidenceLedger(change, risks) {
     reference: check.url || undefined,
     verification: 'authenticated-github-api-read'
   }));
+  const executedEvidence = (change.executionEvidence ?? []).map((item, index) => ({
+    id: `X-${String(index + 1).padStart(3, '0')}`,
+    kind: 'EXECUTED_EVIDENCE',
+    source: 'local-command-execution',
+    statement: `[${item.status}] ${item.summary} (exit code: ${item.exitCode ?? 'não disponível'}).`,
+    reference: `${item.command} ${item.args.join(' ')}`.trim(),
+    sha256: item.transcriptSha256,
+    verification: 'local-process-exit-code-and-transcript-hash'
+  }));
   const inferences = risks.map((risk, index) => ({
     id: `I-${String(index + 1).padStart(3, '0')}`,
     kind: 'INFERENCE',
@@ -58,5 +67,5 @@ export function buildEvidenceLedger(change, risks) {
     statement: `${risk.id}: ${risk.statement}.`,
     relatedEvidence: ['E-002', 'E-003', 'E-004']
   }));
-  return [...facts, ...declaredEvidence, ...artifactEvidence, ...remoteEvidence, ...unknowns, ...inferences];
+  return [...facts, ...declaredEvidence, ...artifactEvidence, ...remoteEvidence, ...executedEvidence, ...unknowns, ...inferences];
 }

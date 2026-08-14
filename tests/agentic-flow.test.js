@@ -15,6 +15,7 @@ import {
   createReport,
   createChangeFromLocalDiff,
   createChangeFromGitHubPr,
+  executeEvidenceCommand,
   evaluateChange,
   formatMarkdown,
   formatHtml,
@@ -277,4 +278,25 @@ test('failed authenticated CI check becomes a high-priority risk', async () => {
 
   assert.equal(risks[0].id, 'R-CI-INTEGRATION-TESTS');
   assert.equal(risks[0].level, 'HIGH');
+});
+
+test('explicit local command execution is hashed and failed execution becomes a risk', async () => {
+  const directory = await mkdtemp(path.join(os.tmpdir(), 'aima-command-evidence-'));
+  const passingSpec = path.join(directory, 'passing.json');
+  const failingSpec = path.join(directory, 'failing.json');
+  await writeFile(passingSpec, JSON.stringify({ id: 'PASSING-COMMAND', command: process.execPath, args: ['-e', 'console.log("ok")'] }));
+  await writeFile(failingSpec, JSON.stringify({ id: 'FAILING-COMMAND', command: process.execPath, args: ['-e', 'process.exit(3)'] }));
+
+  const passed = await executeEvidenceCommand(passingSpec);
+  const failed = await executeEvidenceCommand(failingSpec);
+
+  assert.equal(passed.status, 'passed');
+  assert.equal(passed.exitCode, 0);
+  assert.match(passed.transcriptSha256, /^[a-f0-9]{64}$/);
+  assert.equal(failed.status, 'failed');
+  assert.equal(failed.exitCode, 3);
+  const risks = assessRisks({ changedFiles: ['lib/normalizer.js'], businessImpact: 'low', technicalComplexity: 'low', executionEvidence: [failed] });
+  assert.equal(risks[0].id, 'R-EXECUTION-FAILING-COMMAND');
+  const ledger = buildEvidenceLedger({ businessImpact: 'low', technicalComplexity: 'low', changedFiles: ['lib/normalizer.js'], executionEvidence: [passed] }, []);
+  assert.equal(ledger.find((entry) => entry.kind === 'EXECUTED_EVIDENCE').verification, 'local-process-exit-code-and-transcript-hash');
 });

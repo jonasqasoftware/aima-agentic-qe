@@ -30,6 +30,8 @@ O workflow do GitHub Actions pode ser disparado manualmente com a escolha do mod
 
 O fluxo é deliberadamente determinístico. O adaptador de PR usa o GitHub CLI já autenticado para leitura autorizada de metadados e nomes de arquivos, sem transmitir segredos ou publicar comentários. Ele não usa LLM nem executa testes de uma aplicação externa.
 
+No início do MVP 2, um comando estruturado fornecido explicitamente pode ser executado como evidência local. AIMA não usa shell, preserva apenas código de saída e hash do transcript — nunca o log completo — e transforma falhas em risco alto. A execução não prova cobertura nem aprova um release.
+
 ## Demonstração
 
 Requer Node.js 20 ou superior. Não há dependências externas.
@@ -66,6 +68,17 @@ node src/cli.js analyze-github-pr \
 ```
 
 O comando consulta título, estado, branches, nomes dos arquivos e checks de CI disponíveis do PR. Conteúdo do diff, cobertura dos checks, aprovações e contexto de negócio permanecem explicitamente como incertezas no relatório. Uma falha de check cria um risco alto rastreável; sucesso nunca equivale a aprovação de release.
+
+Para executar uma evidência local explicitamente declarada:
+
+```bash
+node src/cli.js analyze-pr \
+  --change examples/payment-refactor.change.json \
+  --execute-evidence examples/node-test.command.json \
+  --out reports
+```
+
+O arquivo de comando contém `id`, `command` e `args`. A execução ocorre sem shell, com limite de 60 segundos e de 1 MiB de saída. O relatório registra somente o resultado, o código de saída e o hash SHA-256 do transcript.
 
 Saída resumida do cenário sintético:
 

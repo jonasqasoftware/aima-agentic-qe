@@ -38,6 +38,19 @@ export function assessRisks(change) {
       recommendedTests: [`Investigar e corrigir o check de CI: ${check.name}`]
     });
   }
+  for (const evidence of change.executionEvidence ?? []) {
+    if (evidence.status !== 'failed') continue;
+    risks.push({
+      id: `R-EXECUTION-${evidence.id.replace(/[^a-z0-9]+/gi, '-').replace(/(^-|-$)/g, '').toUpperCase() || 'FAILED'}`,
+      category: 'execution',
+      score: 90,
+      level: 'HIGH',
+      statement: `Comando de evidência com falha: ${evidence.id}`,
+      facts: [],
+      inference: 'Um comando executado localmente retornou falha; investigue o resultado antes de liberar a mudança.',
+      recommendedTests: [`Investigar e corrigir a execução de evidência: ${evidence.id}`]
+    });
+  }
   return risks.sort((left, right) => right.score - left.score || left.id.localeCompare(right.id));
 }
 
