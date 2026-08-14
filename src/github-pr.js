@@ -12,12 +12,10 @@ function validateLevel(name, value) {
   if (!LEVELS.has(value)) throw new Error(`${name} must be low, medium, or high.`);
 }
 
-async function ghApi(endpoint, { paginate = false } = {}) {
+async function ghApi(endpoint) {
   try {
-    const args = paginate ? ['api', '--paginate', '--slurp', endpoint] : ['api', endpoint];
-    const { stdout } = await execFileAsync('gh', args);
-    const payload = JSON.parse(stdout);
-    return paginate ? payload.flat() : payload;
+    const { stdout } = await execFileAsync('gh', ['api', endpoint]);
+    return JSON.parse(stdout);
   } catch (error) {
     throw new Error(`Unable to read GitHub PR data: ${error.stderr?.trim() || error.message}`);
   }
@@ -37,7 +35,7 @@ export async function createChangeFromGitHubPr({ repo, number, businessImpact, t
   const prNumber = Number(number);
   const [pullRequest, files] = await Promise.all([
     api(`repos/${repo}/pulls/${prNumber}`),
-    api(`repos/${repo}/pulls/${prNumber}/files?per_page=100`, { paginate: true })
+    api(`repos/${repo}/pulls/${prNumber}/files?per_page=100`)
   ]);
   if (!pullRequest?.title || !Array.isArray(files)) throw new Error('GitHub returned an incomplete PR response.');
   const changedFiles = [...new Set(files.map((file) => file.filename).filter(Boolean))];
@@ -49,8 +47,8 @@ export async function createChangeFromGitHubPr({ repo, number, businessImpact, t
     ciUnknown = 'O SHA do commit de origem não foi retornado pelo GitHub; checks de CI permanecem UNKNOWN.';
   } else {
     try {
-      const response = await api(`repos/${repo}/commits/${headSha}/check-runs?per_page=100`, { paginate: true });
-      const checkRuns = Array.isArray(response) ? response.flatMap((page) => page.check_runs ?? []) : response.check_runs ?? [];
+      const response = await api(`repos/${repo}/commits/${headSha}/check-runs?per_page=100`);
+      const checkRuns = response.check_runs ?? [];
       ciChecks = checkRuns.map((check) => ({
         name: check.name || 'check-sem-nome',
         status: check.status || 'unknown',
@@ -63,6 +61,7 @@ export async function createChangeFromGitHubPr({ repo, number, businessImpact, t
       }));
       if (!ciChecks.length) ciUnknown = 'Nenhum check de CI foi retornado para o commit do PR; cobertura e execução permanecem UNKNOWN.';
       else if (ciChecks.some((check) => check.outcome === 'unknown')) ciUnknown = 'Há check(s) de CI ainda em andamento ou sem conclusão; o resultado final permanece UNKNOWN.';
+      else if (response.total_count > ciChecks.length) ciUnknown = 'O GitHub retornou somente os primeiros 100 checks de CI; checks adicionais permanecem UNKNOWN.';
     } catch (error) {
       ciUnknown = `Não foi possível consultar checks de CI: ${error.message}`;
     }
@@ -78,6 +77,7 @@ export async function createChangeFromGitHubPr({ repo, number, businessImpact, t
     knownUnknowns: [
       'O adaptador GitHub leu apenas metadados autenticados e nomes de arquivos; conteúdo do diff não foi analisado.',
       'Aprovações e contexto de produto não foram consultados e permanecem UNKNOWN.',
+      ...(files.length === 100 ? ['O GitHub retornou os primeiros 100 arquivos do PR; arquivos adicionais, se houver, permanecem UNKNOWN.'] : []),
       ...(ciUnknown ? [ciUnknown] : [])
     ],
     declaredEvidence: [],

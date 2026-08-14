@@ -63,7 +63,7 @@ node src/cli.js analyze-github-pr \
 node src/cli.js verify-report --dir reports/pr-1
 ```
 
-Confirme no relatório HTML que o ledger contém itens `REMOTE_EVIDENCE` para os checks disponíveis. Se nenhum check tiver sido concluído, ou se algum ainda estiver em andamento, isso deve aparecer como `UNKNOWN`; o AIMA não converte ausência de evidência em sucesso.
+Confirme no relatório HTML (`reports/pr-1/aima-quality-report.html`) que o ledger contém itens `REMOTE_EVIDENCE` para os checks disponíveis. Se nenhum check tiver sido concluído, ou se algum ainda estiver em andamento, isso deve aparecer como `UNKNOWN`; o AIMA não converte ausência de evidência em sucesso. Para compatibilidade com versões estáveis do GitHub CLI, a primeira execução lê até 100 arquivos e 100 checks e declara qualquer possível excedente como `UNKNOWN`.
 
 Por padrão, a recomendação segue [`aima/policies/evidence-aware-release.json`](../aima/policies/evidence-aware-release.json). Para aplicar uma política mais rigorosa, informe `--policy`:
 
