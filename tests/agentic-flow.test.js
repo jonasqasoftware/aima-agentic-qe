@@ -3,12 +3,13 @@ import test from 'node:test';
 import path from 'node:path';
 import os from 'node:os';
 import { execFile } from 'node:child_process';
-import { mkdtemp, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, writeFile } from 'node:fs/promises';
 import { promisify } from 'node:util';
 import { fileURLToPath } from 'node:url';
 import {
   assessRisks,
   buildEvidenceLedger,
+  buildDashboard,
   buildStrategy,
   compareWithBaseline,
   createReport,
@@ -76,6 +77,24 @@ test('golden payment expectation passes through the evaluation runner', async ()
 
   assert.equal(evaluation.passed, true);
   assert.deepEqual(evaluation.failures, []);
+});
+
+test('local dashboard aggregates reports without remote access', async () => {
+  const reportsDirectory = await mkdtemp(path.join(os.tmpdir(), 'aima-dashboard-'));
+  const reportDirectory = path.join(reportsDirectory, 'run-1');
+  await mkdir(reportDirectory);
+  await writeFile(path.join(reportDirectory, 'aima-quality-report.json'), JSON.stringify({
+    context: { changeId: 'DASH-1', summary: 'Cenário de dashboard' },
+    qualityConfidence: { score: 72 },
+    strategy: { recommendation: 'GO WITH RISKS', policy: { id: 'evidence-aware-release' } },
+    risks: [{ id: 'R-ONE' }]
+  }));
+  const outputFile = path.join(reportsDirectory, 'dashboard.html');
+  const dashboard = await buildDashboard(reportsDirectory, outputFile);
+
+  assert.equal(dashboard.summaries.length, 1);
+  assert.equal(dashboard.summaries[0].changeId, 'DASH-1');
+  assert.match(await readFile(outputFile, 'utf8'), /Qualidade em evidências/);
 });
 
 test('unknown change surface remains explicit instead of invented', () => {

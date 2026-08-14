@@ -133,6 +133,18 @@ npm run evaluate
 
 Ela compara framework selecionado, categorias de risco, recomendação e presença do limite de evidência com [`evals/golden/payment-refactor.expected.json`](../evals/golden/payment-refactor.expected.json). Um desvio retorna código diferente de zero.
 
+### Criar um dashboard local
+
+Para visualizar vários relatórios já gerados, construa um dashboard HTML autocontido:
+
+```bash
+node src/cli.js dashboard \
+  --reports /caminho/para/relatorios \
+  --out reports/aima-quality-dashboard.html
+```
+
+Abra o HTML no navegador. O dashboard mostra quantidade de relatórios, Quality Confidence médio, recomendação, política e número de riscos. Ele percorre somente arquivos locais chamados `aima-quality-report.json` e não transmite dados.
+
 ```mermaid
 sequenceDiagram
   participant You as Você

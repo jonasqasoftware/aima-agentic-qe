@@ -12,6 +12,7 @@ import { loadEvidenceArtifact } from './evidence-artifact.js';
 import { shouldFailQualityGate } from './quality-gate.js';
 import { verifyReportManifest } from './report-manifest.js';
 import { evaluateChange } from './evaluation.js';
+import { buildDashboard } from './dashboard.js';
 import { buildStrategy } from './strategy.js';
 import { createReport, writeReports } from './report.js';
 
@@ -22,6 +23,7 @@ function usage() {
     'Uso:',
     '  node src/cli.js verify-report --dir <diretório>',
     '  node src/cli.js evaluate --change <arquivo.json> --expected <arquivo.json> [--policy <arquivo.json>]',
+    '  node src/cli.js dashboard --reports <diretório> [--out <arquivo.html>]',
     '  node src/cli.js analyze-pr --change <arquivo.json> [--fail-on <never|no-go|go-with-risks>] [--evidence-artifact <arquivo.json>] [--baseline <relatório.json>] [--policy <arquivo.json>] [--out <diretório>]',
     '  node src/cli.js analyze-diff --repo <diretório> --base <referência> [--head <referência>] --impact <low|medium|high> --complexity <low|medium|high> [--fail-on <never|no-go|go-with-risks>] [--evidence-artifact <arquivo.json>] [--baseline <relatório.json>] [--policy <arquivo.json>] [--out <diretório>]'
   ].join('\n');
@@ -54,6 +56,14 @@ async function main() {
     console.log(`Avaliação: ${evaluation.passed ? 'PASSOU' : 'FALHOU'}`);
     for (const failure of evaluation.failures) console.error(`- ${failure}`);
     if (!evaluation.passed) process.exitCode = 1;
+    return;
+  }
+  if (command === 'dashboard') {
+    const reportsDirectory = argument('--reports');
+    if (!reportsDirectory) throw new Error(usage());
+    const outputFile = argument('--out', path.join(root, 'reports', 'aima-quality-dashboard.html'));
+    const dashboard = await buildDashboard(path.resolve(reportsDirectory), path.resolve(outputFile));
+    console.log(`Dashboard: ${dashboard.outputFile} (${dashboard.summaries.length} relatório(s))`);
     return;
   }
   if (!['analyze-pr', 'analyze-diff'].includes(command)) throw new Error(usage());

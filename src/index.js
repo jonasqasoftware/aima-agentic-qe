@@ -11,3 +11,4 @@ export { loadEvidenceArtifact } from './evidence-artifact.js';
 export { shouldFailQualityGate } from './quality-gate.js';
 export { createReportManifest, verifyReportManifest } from './report-manifest.js';
 export { evaluateChange } from './evaluation.js';
+export { buildDashboard, collectReportSummaries, formatDashboard } from './dashboard.js';

@@ -24,6 +24,8 @@ Use `--baseline <aima-quality-report.json>` para comparar riscos e confiança co
 
 Para pipelines, `--fail-on no-go` converte a recomendação em gate de CI opcional, sem deixar de gerar os relatórios de diagnóstico.
 
+`dashboard --reports <diretório>` agrega relatórios locais em um painel HTML para acompanhamento de qualidade.
+
 O workflow do GitHub Actions pode ser disparado manualmente com a escolha do modo de gate, mantendo push e pull request no modo informativo.
 
 O fluxo é deliberadamente determinístico e offline. Ele **não** acessa PRs remotos, não usa LLM, não executa testes de uma aplicação externa e não publica comentários. Essas integrações pertencem a incrementos posteriores, quando houver uma implementação real para sustentá-las.

@@ -17,6 +17,7 @@
 - Manifesto SHA-256 e comando `verify-report` para verificar integridade dos relatórios gerados.
 - Framework Data Quality Validation no registry, selecionado para superfícies de schema, migração, banco ou dados.
 - Runner de avaliação golden integrado a `npm run check` para detectar regressões nas regras determinísticas.
+- Dashboard HTML local para consolidar confiança, recomendações, políticas e riscos de vários relatórios.
 
 ## 0.1.0
 
