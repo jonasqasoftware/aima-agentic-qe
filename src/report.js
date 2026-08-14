@@ -1,6 +1,7 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { buildEvidenceLedger } from './evidence-ledger.js';
+import { createReportManifest } from './report-manifest.js';
 
 function escapeHtml(value) {
   return String(value)
@@ -173,11 +174,17 @@ export async function writeReports(report, directory) {
   const markdownPath = path.join(directory, 'aima-quality-report.md');
   const htmlPath = path.join(directory, 'aima-quality-report.html');
   const sarifPath = path.join(directory, 'aima-quality-report.sarif');
+  const manifestPath = path.join(directory, 'aima-quality-report.manifest.json');
+  const artifacts = {
+    'aima-quality-report.json': `${JSON.stringify(report, null, 2)}\n`,
+    'aima-quality-report.md': formatMarkdown(report),
+    'aima-quality-report.html': formatHtml(report),
+    'aima-quality-report.sarif': `${JSON.stringify(formatSarif(report), null, 2)}\n`
+  };
+  const manifest = createReportManifest(report, artifacts);
   await Promise.all([
-    writeFile(jsonPath, `${JSON.stringify(report, null, 2)}\n`),
-    writeFile(markdownPath, formatMarkdown(report)),
-    writeFile(htmlPath, formatHtml(report)),
-    writeFile(sarifPath, `${JSON.stringify(formatSarif(report), null, 2)}\n`)
+    ...Object.entries(artifacts).map(([filename, content]) => writeFile(path.join(directory, filename), content)),
+    writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`)
   ]);
-  return { jsonPath, markdownPath, htmlPath, sarifPath };
+  return { jsonPath, markdownPath, htmlPath, sarifPath, manifestPath };
 }

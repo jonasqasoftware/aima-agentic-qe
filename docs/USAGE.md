@@ -99,12 +99,21 @@ reports/
 ├── aima-quality-report.json   # integração com ferramentas
 ├── aima-quality-report.md     # leitura humana e revisão
 ├── aima-quality-report.html   # painel visual e portátil
-└── aima-quality-report.sarif  # interoperabilidade com ferramentas de análise
+├── aima-quality-report.sarif  # interoperabilidade com ferramentas de análise
+└── aima-quality-report.manifest.json # integridade dos arquivos gerados
 ```
 
 Abra `aima-quality-report.html` diretamente no navegador para uma leitura visual da recomendação, do score, dos riscos e do ledger de evidências. O arquivo é autocontido: não depende de servidor, biblioteca externa ou transmissão de dados.
 
 O arquivo `aima-quality-report.sarif` usa o padrão SARIF 2.1.0. Seus achados apontam para a superfície de arquivos declarada, sempre na linha 1, pois o MVP não lê o conteúdo do diff. Ele pode ser armazenado como artefato ou entregue a uma integração compatível; o workflow atual **não** envia resultados ao GitHub Code Scanning.
+
+O pacote também inclui `aima-quality-report.manifest.json`, com hash SHA-256 e tamanho de cada relatório. Para verificar se os arquivos continuam idênticos aos gerados:
+
+```bash
+node src/cli.js verify-report --dir reports
+```
+
+O comando retorna código diferente de zero se algum arquivo estiver ausente ou alterado. O manifesto confirma integridade do pacote, não a veracidade do contexto ou dos resultados de teste.
 
 ```mermaid
 sequenceDiagram

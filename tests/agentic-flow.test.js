@@ -22,7 +22,9 @@ import {
   loadFrameworkRegistry,
   qualityConfidence,
   selectFramework,
-  shouldFailQualityGate
+  shouldFailQualityGate,
+  verifyReportManifest,
+  writeReports
 } from '../src/index.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -57,6 +59,11 @@ test('payment fixture produces an evidence-bounded NO-GO recommendation', async 
   assert.equal(sarif.runs[0].tool.driver.name, 'AIMA Agentic QE');
   assert.equal(sarif.runs[0].results[0].level, 'error');
   assert.equal(sarif.runs[0].results[0].locations[0].physicalLocation.region.startLine, 1);
+  const reportDirectory = await mkdtemp(path.join(os.tmpdir(), 'aima-report-manifest-'));
+  await writeReports(report, reportDirectory);
+  assert.equal((await verifyReportManifest(reportDirectory)).valid, true);
+  await writeFile(path.join(reportDirectory, 'aima-quality-report.md'), 'alterado');
+  assert.equal((await verifyReportManifest(reportDirectory)).valid, false);
 });
 
 test('unknown change surface remains explicit instead of invented', () => {

@@ -14,6 +14,7 @@
 - Artefatos locais de evidência com hash SHA-256 no ledger, mantendo resultado de teste como não confiado automaticamente.
 - Gate de CI opcional via `--fail-on`, que preserva relatórios antes de retornar falha.
 - Execução manual do GitHub Actions com escolha do modo de gate e preservação de artefatos após falha.
+- Manifesto SHA-256 e comando `verify-report` para verificar integridade dos relatórios gerados.
 
 ## 0.1.0
 

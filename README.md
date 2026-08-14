@@ -63,6 +63,7 @@ Os relatórios gerados são:
 - `reports/aima-quality-report.md`
 - `reports/aima-quality-report.html` — painel visual, portátil e sem dependências externas
 - `reports/aima-quality-report.sarif` — formato interoperável para ferramentas de análise
+- `reports/aima-quality-report.manifest.json` — hashes SHA-256 para verificar integridade do pacote
 
 Para um passo a passo com cenário, comandos, leitura do relatório e resolução de erros, consulte o [Guia de uso](docs/USAGE.md).
 

@@ -22,6 +22,7 @@ flowchart LR
   Decision --> Compare
   Compare --> Report
   Decision --> Report["Relatórios\nJSON, Markdown, HTML e SARIF"]
+  Report --> Manifest["Manifesto SHA-256\ne verificação"]
 
   Registry -. "framework como dado" .-> Framework["Risk-Based Testing"]
   Risk -. "sinais declarados" .-> Change["Arquivos e contexto\nfornecidos"]
@@ -42,6 +43,7 @@ O adaptador de Git lê somente a lista local de arquivos alterados entre referê
 | Comparação com baseline | Destaca mudanças entre análises declaradas | Não demonstra regressão de código. |
 | Artefato com SHA-256 | Registra integridade do arquivo local analisado | Não comprova resultado de teste. |
 | Gate opcional de CI | Converte recomendação em código de saída | Padrão não bloqueia pipelines. |
+| Manifesto de relatório | Permite verificar integridade dos artefatos gerados | Não comprova veracidade da entrada. |
 
 O próximo adaptador deve implementar leitura autorizada de um diff real antes de adicionar novos agentes ou LLMs.
 

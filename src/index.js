@@ -4,8 +4,9 @@ export { loadFrameworkRegistry, selectFramework } from './framework-registry.js'
 export { assessRisks, qualityConfidence } from './risk-engine.js';
 export { buildStrategy } from './strategy.js';
 export { loadReleasePolicy, validateReleasePolicy } from './release-policy.js';
-export { createReport, formatHtml, formatMarkdown, formatSarif } from './report.js';
+export { createReport, formatHtml, formatMarkdown, formatSarif, writeReports } from './report.js';
 export { buildEvidenceLedger } from './evidence-ledger.js';
 export { compareWithBaseline, loadBaselineReport } from './baseline.js';
 export { loadEvidenceArtifact } from './evidence-artifact.js';
 export { shouldFailQualityGate } from './quality-gate.js';
+export { createReportManifest, verifyReportManifest } from './report-manifest.js';

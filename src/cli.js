@@ -9,6 +9,7 @@ import { loadReleasePolicy } from './release-policy.js';
 import { compareWithBaseline, loadBaselineReport } from './baseline.js';
 import { loadEvidenceArtifact } from './evidence-artifact.js';
 import { shouldFailQualityGate } from './quality-gate.js';
+import { verifyReportManifest } from './report-manifest.js';
 import { buildStrategy } from './strategy.js';
 import { createReport, writeReports } from './report.js';
 
@@ -17,6 +18,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 function usage() {
   return [
     'Uso:',
+    '  node src/cli.js verify-report --dir <diretório>',
     '  node src/cli.js analyze-pr --change <arquivo.json> [--fail-on <never|no-go|go-with-risks>] [--evidence-artifact <arquivo.json>] [--baseline <relatório.json>] [--policy <arquivo.json>] [--out <diretório>]',
     '  node src/cli.js analyze-diff --repo <diretório> --base <referência> [--head <referência>] --impact <low|medium|high> --complexity <low|medium|high> [--fail-on <never|no-go|go-with-risks>] [--evidence-artifact <arquivo.json>] [--baseline <relatório.json>] [--policy <arquivo.json>] [--out <diretório>]'
   ].join('\n');
@@ -29,6 +31,14 @@ function argument(name, fallback) {
 
 async function main() {
   const [command] = process.argv.slice(2);
+  if (command === 'verify-report') {
+    const directory = argument('--dir');
+    if (!directory) throw new Error(usage());
+    const verification = await verifyReportManifest(path.resolve(directory));
+    for (const check of verification.checks) console.log(`${check.valid ? '✓' : '✗'} ${check.filename}`);
+    if (!verification.valid) process.exitCode = 1;
+    return;
+  }
   if (!['analyze-pr', 'analyze-diff'].includes(command)) throw new Error(usage());
   const outputDirectory = argument('--out', path.join(root, 'reports'));
   let change;
@@ -67,7 +77,7 @@ async function main() {
   const files = await writeReports(report, path.resolve(outputDirectory));
   console.log(`AIMA Agentic QE: ${report.strategy.recommendation}`);
   console.log(`Quality Confidence experimental: ${report.qualityConfidence.score}/100`);
-  console.log(`Relatórios: ${files.jsonPath}, ${files.markdownPath}, ${files.htmlPath}, ${files.sarifPath}`);
+  console.log(`Relatórios: ${files.jsonPath}, ${files.markdownPath}, ${files.htmlPath}, ${files.sarifPath}, ${files.manifestPath}`);
   const failOn = argument('--fail-on', 'never');
   if (shouldFailQualityGate(report.strategy.recommendation, failOn)) {
     console.error(`Quality gate falhou: recomendação ${report.strategy.recommendation} bloqueada pelo modo ${failOn}.`);
