@@ -7,3 +7,4 @@ export { loadReleasePolicy, validateReleasePolicy } from './release-policy.js';
 export { createReport, formatHtml, formatMarkdown, formatSarif } from './report.js';
 export { buildEvidenceLedger } from './evidence-ledger.js';
 export { compareWithBaseline, loadBaselineReport } from './baseline.js';
+export { loadEvidenceArtifact } from './evidence-artifact.js';

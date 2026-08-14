@@ -97,6 +97,7 @@ Recomendação de release
 
 - Recomendações distinguem fatos declarados, inferências e incertezas.
 - Evidências fornecidas por pessoas são registradas como declaradas e não verificadas.
+- Artefatos locais de evidência podem ser identificados por SHA-256, sem confiança automática no resultado declarado.
 - O relatório estabelece o limite das evidências antes de apresentar qualquer decisão.
 - O score é experimental: não é uma métrica científica nem aprovação automática.
 - O projeto não contém credenciais, dados de clientes ou integrações externas.

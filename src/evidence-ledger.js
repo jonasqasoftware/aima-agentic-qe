@@ -25,6 +25,15 @@ export function buildEvidenceLedger(change, risks) {
     reference: item.id,
     verification: 'declared-not-verified'
   }));
+  const artifactEvidence = (change.artifactEvidence ?? []).map((item, index) => ({
+    id: `A-${String(index + 1).padStart(3, '0')}`,
+    kind: 'ARTIFACT_EVIDENCE',
+    source: 'local-evidence-artifact',
+    statement: `[${item.type}/${item.status}] ${item.summary}`,
+    reference: item.id,
+    sha256: item.sha256,
+    verification: 'sha256-verified-local-file'
+  }));
   const inferences = risks.map((risk, index) => ({
     id: `I-${String(index + 1).padStart(3, '0')}`,
     kind: 'INFERENCE',
@@ -32,5 +41,5 @@ export function buildEvidenceLedger(change, risks) {
     statement: `${risk.id}: ${risk.statement}.`,
     relatedEvidence: ['E-002', 'E-003', 'E-004']
   }));
-  return [...facts, ...declaredEvidence, ...unknowns, ...inferences];
+  return [...facts, ...declaredEvidence, ...artifactEvidence, ...unknowns, ...inferences];
 }

@@ -17,6 +17,7 @@ import {
   formatHtml,
   formatSarif,
   loadChangeInput,
+  loadEvidenceArtifact,
   loadReleasePolicy,
   loadFrameworkRegistry,
   qualityConfidence,
@@ -82,6 +83,23 @@ test('evidence ledger keeps declared unknowns separate from deterministic infere
   assert.equal(ledger.find((item) => item.id === 'I-001').kind, 'INFERENCE');
   assert.equal(ledger.find((item) => item.id === 'I-001').source, 'deterministic-risk-rule');
   assert.equal(ledger.find((item) => item.id === 'D-001').verification, 'declared-not-verified');
+});
+
+test('local evidence artifact is fingerprinted without trusting its claimed outcome', async () => {
+  const artifact = await loadEvidenceArtifact(path.join(root, 'examples', 'unit-test-summary.json'));
+  const ledger = buildEvidenceLedger({
+    businessImpact: 'low',
+    technicalComplexity: 'low',
+    changedFiles: ['lib/normalizer.js'],
+    knownUnknowns: [],
+    artifactEvidence: [artifact]
+  }, []);
+  const entry = ledger.find((item) => item.id === 'A-001');
+
+  assert.equal(entry.kind, 'ARTIFACT_EVIDENCE');
+  assert.equal(entry.verification, 'sha256-verified-local-file');
+  assert.match(entry.sha256, /^[a-f0-9]{64}$/);
+  assert.match(entry.statement, /passed/);
 });
 
 test('strict policy blocks a change when any evidence is unknown', async () => {

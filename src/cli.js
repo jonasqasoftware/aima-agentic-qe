@@ -7,6 +7,7 @@ import { loadFrameworkRegistry, selectFramework } from './framework-registry.js'
 import { assessRisks, qualityConfidence } from './risk-engine.js';
 import { loadReleasePolicy } from './release-policy.js';
 import { compareWithBaseline, loadBaselineReport } from './baseline.js';
+import { loadEvidenceArtifact } from './evidence-artifact.js';
 import { buildStrategy } from './strategy.js';
 import { createReport, writeReports } from './report.js';
 
@@ -15,8 +16,8 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 function usage() {
   return [
     'Uso:',
-    '  node src/cli.js analyze-pr --change <arquivo.json> [--baseline <relatório.json>] [--policy <arquivo.json>] [--out <diretório>]',
-    '  node src/cli.js analyze-diff --repo <diretório> --base <referência> [--head <referência>] --impact <low|medium|high> --complexity <low|medium|high> [--baseline <relatório.json>] [--policy <arquivo.json>] [--out <diretório>]'
+    '  node src/cli.js analyze-pr --change <arquivo.json> [--evidence-artifact <arquivo.json>] [--baseline <relatório.json>] [--policy <arquivo.json>] [--out <diretório>]',
+    '  node src/cli.js analyze-diff --repo <diretório> --base <referência> [--head <referência>] --impact <low|medium|high> --complexity <low|medium|high> [--evidence-artifact <arquivo.json>] [--baseline <relatório.json>] [--policy <arquivo.json>] [--out <diretório>]'
   ].join('\n');
 }
 
@@ -50,6 +51,8 @@ async function main() {
       summary: argument('--summary')
     });
   }
+  const artifactPath = argument('--evidence-artifact');
+  if (artifactPath) change.artifactEvidence = [await loadEvidenceArtifact(path.resolve(artifactPath))];
   const frameworks = await loadFrameworkRegistry(path.join(root, 'aima', 'frameworks'));
   const selection = selectFramework(frameworks, change);
   const risks = assessRisks(change);

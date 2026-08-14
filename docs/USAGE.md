@@ -57,6 +57,19 @@ node src/cli.js analyze-pr \
 
 A comparação é entre **relatórios declarados**. Ela não prova regressão no código nem substitui execução de testes; essa limitação aparece no próprio relatório.
 
+### Anexar um artefato local de evidência
+
+Você pode anexar um resumo JSON de teste local. O AIMA lê o arquivo e registra seu SHA-256 no ledger:
+
+```bash
+node src/cli.js analyze-pr \
+  --change examples/payment-refactor.change.json \
+  --evidence-artifact examples/unit-test-summary.json \
+  --out reports
+```
+
+O artefato precisa conter `id`, `type`, `summary` e `status` (`passed`, `failed` ou `unknown`). O hash prova exatamente qual arquivo local foi lido; ele **não** prova que o resultado declarado de teste é verdadeiro, nem altera automaticamente score ou recomendação.
+
 O comando imprime uma recomendação e grava três artefatos:
 
 ```text

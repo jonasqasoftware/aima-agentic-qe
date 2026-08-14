@@ -9,6 +9,8 @@ flowchart LR
   Input["Mudança declarada\nJSON"] --> Validate["Validação de entrada"]
   Git["Repositório Git local"] --> Diff["Adaptador\n--name-only"]
   Diff --> Validate
+  Artifact["Artefato local\nde evidência JSON"] --> Hash["Hash SHA-256"]
+  Hash --> Ledger
   Validate --> Registry["Framework Registry\nAIMA"]
   Registry --> Risk["Risk Agent\nregras determinísticas"]
   Risk --> Strategy["Estratégia de testes\ne evidências esperadas"]
@@ -37,6 +39,7 @@ O adaptador de Git lê somente a lista local de arquivos alterados entre referê
 | Ledger de evidências | Torna origem e tipo de cada afirmação auditáveis | Ainda não referencia execução de testes externa. |
 | Política de release | Separa governança de decisão e código | Exige contexto humano para impacto e complexidade. |
 | Comparação com baseline | Destaca mudanças entre análises declaradas | Não demonstra regressão de código. |
+| Artefato com SHA-256 | Registra integridade do arquivo local analisado | Não comprova resultado de teste. |
 
 O próximo adaptador deve implementar leitura autorizada de um diff real antes de adicionar novos agentes ou LLMs.
 

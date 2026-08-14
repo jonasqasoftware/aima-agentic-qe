@@ -22,6 +22,7 @@ flowchart TD
 | --- | --- | --- |
 | Fato | Informação entregue na entrada | `businessImpact: high` |
 | Evidência declarada | Resultado relatado por uma pessoa, ainda não verificado pela ferramenta | Suíte de testes executada pelo autor |
+| Artefato local | Arquivo de evidência lido localmente e identificado por SHA-256 | Resumo JSON de testes |
 | Inferência | Resultado de regra determinística sobre fatos | Arquivo de pagamento gera sinal financeiro |
 | Hipótese | Possibilidade ainda não comprovada | Uma alteração pode exigir teste de carga |
 | Recomendação | Próxima ação proposta a uma pessoa responsável | Executar teste de carga antes do release |
@@ -42,7 +43,7 @@ flowchart LR
   Ledger --> Decision["Recomendação auditável"]
 ```
 
-`UNKNOWN` é preservado como tal. Evidências declaradas recebem o estado `declared-not-verified`; elas não se tornam evidência de execução de teste ou aprovação de release. Uma inferência aponta para os fatos que a sustentam, mas também não se torna prova de execução.
+`UNKNOWN` é preservado como tal. Evidências declaradas recebem o estado `declared-not-verified`; artefatos locais recebem `sha256-verified-local-file`, que comprova os bytes lidos, não o resultado alegado. Nenhum dos dois se torna aprovação de release. Uma inferência aponta para os fatos que a sustentam, mas também não se torna prova de execução.
 
 ## Limites do score
 
