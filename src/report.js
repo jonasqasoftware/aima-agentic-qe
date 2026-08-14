@@ -18,7 +18,7 @@ export function createReport(change, selection, risks, confidence, strategy) {
     : change.source === 'local-git-name-only'
     ? 'Relatório baseado nos nomes de arquivos de um diff Git local e em regras determinísticas. Não afirma leitura do conteúdo do diff, de PR remoto, execução de testes ou aprovação de release.'
     : change.source === 'github-pr-metadata'
-    ? 'Relatório baseado em metadados autenticados e nomes de arquivos de um PR do GitHub, além de regras determinísticas. Não afirma leitura do conteúdo do diff, checks de CI, resultados de testes, aprovações ou aprovação de release.'
+    ? 'Relatório baseado em metadados autenticados, nomes de arquivos e checks de CI disponíveis de um PR do GitHub, além de regras determinísticas. Não afirma leitura do conteúdo do diff, cobertura dos checks, aprovações ou aprovação de release.'
     : 'Relatório baseado somente na entrada declarada e em regras determinísticas. Não afirma leitura de PR remoto, execução de testes ou aprovação de release.';
   return {
     reportVersion: '0.1.0',
@@ -99,7 +99,7 @@ export function formatHtml(report) {
     .files { display:flex; flex-wrap:wrap; gap:8px; } code { color:#c7ddff; background:#17243a; padding:3px 7px; border-radius:5px; overflow-wrap:anywhere; } .risk-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:14px; }
     .risk.high { border-top:3px solid var(--red); } .risk.medium { border-top:3px solid var(--yellow); } .risk.low { border-top:3px solid var(--green); } .score { margin:16px 0 6px; color:var(--ink); font-size:2rem; font-weight:700; }
     .two-columns { display:grid; grid-template-columns:1fr 1fr; gap:16px; } ul { padding-left:20px; color:var(--muted); } li+li { margin-top:8px; } .table-wrap { overflow:auto; border:1px solid var(--line); border-radius:12px; } table { width:100%; border-collapse:collapse; min-width:700px; } th,td { padding:12px 14px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top; } th { color:var(--muted); font-size:.75rem; text-transform:uppercase; letter-spacing:.08em; } .kind { font:600 11px ui-monospace,SFMono-Regular,monospace; padding:4px 6px; border-radius:99px; } .FACT { color:var(--blue); background:#14345d; } .DECLARED_EVIDENCE { color:#d5b7ff; background:#35245a; } .ARTIFACT_EVIDENCE { color:#77e4dd; background:#114349; } .INFERENCE { color:var(--green); background:#123d32; } .UNKNOWN { color:var(--yellow); background:#493a10; }
-    footer { margin-top:46px; color:var(--muted); font-size:.875rem; } @media (max-width:700px) { main { padding-top:32px; } .summary,.two-columns { grid-template-columns:1fr; } }
+    .REMOTE_EVIDENCE { color:#b8c7ff; background:#242c64; } footer { margin-top:46px; color:var(--muted); font-size:.875rem; } @media (max-width:700px) { main { padding-top:32px; } .summary,.two-columns { grid-template-columns:1fr; } }
   </style>
 </head>
 <body><main>

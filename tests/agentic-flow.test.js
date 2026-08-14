@@ -248,18 +248,33 @@ test('GitHub PR adapter uses authenticated metadata but preserves CI and diff un
         html_url: 'https://github.com/example/checkout/pull/42',
         state: 'open',
         base: { ref: 'main' },
-        head: { ref: 'fix/payment' },
+        head: { ref: 'fix/payment', sha: 'abc123' },
         user: { login: 'qa-engineer' }
       };
-      return [{ filename: 'src/payments/authorization.js' }, { filename: 'src/api/orders.js' }];
+      if (endpoint.includes('/files')) return [{ filename: 'src/payments/authorization.js' }, { filename: 'src/api/orders.js' }];
+      return { check_runs: [{ name: 'test', status: 'completed', conclusion: 'success', details_url: 'https://ci.example/test' }] };
     }
   });
 
-  assert.deepEqual(calls, ['repos/example/checkout/pulls/42', 'repos/example/checkout/pulls/42/files?per_page=100']);
+  assert.deepEqual(calls, ['repos/example/checkout/pulls/42', 'repos/example/checkout/pulls/42/files?per_page=100', 'repos/example/checkout/commits/abc123/check-runs?per_page=100']);
   assert.equal(change.source, 'github-pr-metadata');
   assert.deepEqual(change.changedFiles, ['src/payments/authorization.js', 'src/api/orders.js']);
-  assert.match(change.knownUnknowns.join(' '), /checks de CI/i);
+  assert.equal(change.ciChecks[0].outcome, 'passed');
+  assert.match(change.knownUnknowns.join(' '), /aprovações/i);
   const report = createReport(change, { framework: { id: 'risk-based-testing', name: 'Risk-Based Testing' }, evidence: [] }, [], { score: 100, factors: [] }, { recommendation: 'GO', recommendedTests: [], missingEvidence: [], rationale: 'fixture', policy: { id: 'fixture', name: 'Fixture', version: '1.0.0' } });
   assert.match(report.evidenceBoundary, /metadados autenticados/);
   assert.equal(report.evidenceLedger[0].source, 'github-pr-api-metadata');
+  assert.equal(report.evidenceLedger.some((item) => item.kind === 'REMOTE_EVIDENCE'), true);
+});
+
+test('failed authenticated CI check becomes a high-priority risk', async () => {
+  const risks = assessRisks({
+    changedFiles: ['src/payments/authorization.js'],
+    businessImpact: 'low',
+    technicalComplexity: 'low',
+    ciChecks: [{ name: 'integration tests', status: 'completed', conclusion: 'failure', outcome: 'failed' }]
+  });
+
+  assert.equal(risks[0].id, 'R-CI-INTEGRATION-TESTS');
+  assert.equal(risks[0].level, 'HIGH');
 });

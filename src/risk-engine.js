@@ -25,6 +25,19 @@ export function assessRisks(change) {
       recommendedTests: signal.tests
     };
   });
+  for (const check of change.ciChecks ?? []) {
+    if (check.outcome !== 'failed') continue;
+    risks.push({
+      id: `R-CI-${check.name.replace(/[^a-z0-9]+/gi, '-').replace(/(^-|-$)/g, '').toUpperCase() || 'FAILED'}`,
+      category: 'ci',
+      score: 90,
+      level: 'HIGH',
+      statement: `Check de CI com falha: ${check.name}`,
+      facts: [],
+      inference: 'Um check concluído com falha é evidência remota autenticada de que a mudança exige investigação antes do release.',
+      recommendedTests: [`Investigar e corrigir o check de CI: ${check.name}`]
+    });
+  }
   return risks.sort((left, right) => right.score - left.score || left.id.localeCompare(right.id));
 }
 

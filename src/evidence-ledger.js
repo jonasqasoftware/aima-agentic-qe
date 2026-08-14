@@ -43,6 +43,14 @@ export function buildEvidenceLedger(change, risks) {
     sha256: item.sha256,
     verification: 'sha256-verified-local-file'
   }));
+  const remoteEvidence = (change.ciChecks ?? []).map((check, index) => ({
+    id: `C-${String(index + 1).padStart(3, '0')}`,
+    kind: 'REMOTE_EVIDENCE',
+    source: 'github-check-runs-api',
+    statement: `[${check.outcome}] ${check.name} — status ${check.status}${check.conclusion ? `, conclusão ${check.conclusion}` : ''}.`,
+    reference: check.url || undefined,
+    verification: 'authenticated-github-api-read'
+  }));
   const inferences = risks.map((risk, index) => ({
     id: `I-${String(index + 1).padStart(3, '0')}`,
     kind: 'INFERENCE',
@@ -50,5 +58,5 @@ export function buildEvidenceLedger(change, risks) {
     statement: `${risk.id}: ${risk.statement}.`,
     relatedEvidence: ['E-002', 'E-003', 'E-004']
   }));
-  return [...facts, ...declaredEvidence, ...artifactEvidence, ...unknowns, ...inferences];
+  return [...facts, ...declaredEvidence, ...artifactEvidence, ...remoteEvidence, ...unknowns, ...inferences];
 }

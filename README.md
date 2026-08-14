@@ -65,7 +65,7 @@ node src/cli.js analyze-github-pr \
   --out reports
 ```
 
-O comando consulta somente título, estado, branches e nomes dos arquivos do PR. Conteúdo do diff, checks de CI, testes, aprovações e contexto de negócio permanecem explicitamente como incertezas no relatório.
+O comando consulta título, estado, branches, nomes dos arquivos e checks de CI disponíveis do PR. Conteúdo do diff, cobertura dos checks, aprovações e contexto de negócio permanecem explicitamente como incertezas no relatório. Uma falha de check cria um risco alto rastreável; sucesso nunca equivale a aprovação de release.
 
 Saída resumida do cenário sintético:
 

@@ -12,11 +12,12 @@ function validateLevel(name, value) {
   if (!LEVELS.has(value)) throw new Error(`${name} must be low, medium, or high.`);
 }
 
-async function ghApi(endpoint) {
+async function ghApi(endpoint, { paginate = false } = {}) {
   try {
-    const args = endpoint.includes('/files?') ? ['api', '--paginate', endpoint] : ['api', endpoint];
+    const args = paginate ? ['api', '--paginate', '--slurp', endpoint] : ['api', endpoint];
     const { stdout } = await execFileAsync('gh', args);
-    return JSON.parse(stdout);
+    const payload = JSON.parse(stdout);
+    return paginate ? payload.flat() : payload;
   } catch (error) {
     throw new Error(`Unable to read GitHub PR data: ${error.stderr?.trim() || error.message}`);
   }
@@ -24,8 +25,8 @@ async function ghApi(endpoint) {
 
 /**
  * Reads authenticated GitHub PR metadata and its changed-file names via gh.
- * Diff hunks, CI results, review status, and business context deliberately
- * remain unknown; this adapter never treats GitHub metadata as test evidence.
+ * Diff hunks, review status, and business context deliberately remain unknown.
+ * CI check results are recorded as remote evidence, never as a release approval.
  */
 export async function createChangeFromGitHubPr({ repo, number, businessImpact, technicalComplexity, api = ghApi }) {
   validateRepo(repo);
@@ -36,11 +37,36 @@ export async function createChangeFromGitHubPr({ repo, number, businessImpact, t
   const prNumber = Number(number);
   const [pullRequest, files] = await Promise.all([
     api(`repos/${repo}/pulls/${prNumber}`),
-    api(`repos/${repo}/pulls/${prNumber}/files?per_page=100`)
+    api(`repos/${repo}/pulls/${prNumber}/files?per_page=100`, { paginate: true })
   ]);
   if (!pullRequest?.title || !Array.isArray(files)) throw new Error('GitHub returned an incomplete PR response.');
   const changedFiles = [...new Set(files.map((file) => file.filename).filter(Boolean))];
   if (!changedFiles.length) throw new Error(`GitHub PR #${prNumber} has no changed files.`);
+  const headSha = pullRequest.head?.sha;
+  let ciChecks = [];
+  let ciUnknown;
+  if (!headSha) {
+    ciUnknown = 'O SHA do commit de origem não foi retornado pelo GitHub; checks de CI permanecem UNKNOWN.';
+  } else {
+    try {
+      const response = await api(`repos/${repo}/commits/${headSha}/check-runs?per_page=100`, { paginate: true });
+      const checkRuns = Array.isArray(response) ? response.flatMap((page) => page.check_runs ?? []) : response.check_runs ?? [];
+      ciChecks = checkRuns.map((check) => ({
+        name: check.name || 'check-sem-nome',
+        status: check.status || 'unknown',
+        conclusion: check.conclusion || null,
+        url: check.details_url || check.html_url || null,
+        outcome: check.status !== 'completed'
+          ? 'unknown'
+          : ['success', 'neutral', 'skipped'].includes(check.conclusion) ? 'passed'
+          : 'failed'
+      }));
+      if (!ciChecks.length) ciUnknown = 'Nenhum check de CI foi retornado para o commit do PR; cobertura e execução permanecem UNKNOWN.';
+      else if (ciChecks.some((check) => check.outcome === 'unknown')) ciUnknown = 'Há check(s) de CI ainda em andamento ou sem conclusão; o resultado final permanece UNKNOWN.';
+    } catch (error) {
+      ciUnknown = `Não foi possível consultar checks de CI: ${error.message}`;
+    }
+  }
 
   return {
     id: `GITHUB-PR:${repo}#${prNumber}`,
@@ -51,10 +77,12 @@ export async function createChangeFromGitHubPr({ repo, number, businessImpact, t
     technicalComplexity,
     knownUnknowns: [
       'O adaptador GitHub leu apenas metadados autenticados e nomes de arquivos; conteúdo do diff não foi analisado.',
-      'Checks de CI, resultados de testes, aprovações e contexto de produto não foram consultados e permanecem UNKNOWN.'
+      'Aprovações e contexto de produto não foram consultados e permanecem UNKNOWN.',
+      ...(ciUnknown ? [ciUnknown] : [])
     ],
     declaredEvidence: [],
     artifactEvidence: [],
+    ciChecks,
     pullRequest: {
       repository: repo,
       number: prNumber,
