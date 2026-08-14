@@ -44,6 +44,8 @@ node src/cli.js analyze-pr \
 
 A política rigorosa bloqueia qualquer mudança que possua evidência marcada como ausente. O relatório registra o identificador e a versão da política utilizada.
 
+O framework é selecionado pelo registry: arquivos com `migration`, `schema`, `database` ou `data` acionam **Data Quality Validation**; os demais usam **Risk-Based Testing**. O exemplo [`examples/data-migration.change.json`](../examples/data-migration.change.json) demonstra esse caminho.
+
 ### Comparar com uma baseline
 
 Use um `aima-quality-report.json` anterior como baseline para destacar riscos novos, resolvidos e mudanças de score:

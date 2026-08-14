@@ -35,7 +35,7 @@ O adaptador de Git lê somente a lista local de arquivos alterados entre referê
 | Decisão | Motivo | Limite atual |
 | --- | --- | --- |
 | Node.js sem dependências | Execução simples e reprodutível | Não há parser YAML completo; os arquivos usam subconjunto JSON compatível. |
-| Framework Registry | Evita hardcode de metodologias AIMA | Só há um framework inicial. |
+| Framework Registry | Evita hardcode de metodologias AIMA e seleciona pela superfície declarada | A seleção atual usa sinais de caminho simples. |
 | Sinais de risco explícitos | Evita alegações de análise mágica ou leitura remota | Não substitui análise de diff real. |
 | Quality Confidence explicável | Mostra trade-offs e incertezas | Métrica experimental, não preditiva. |
 | Ledger de evidências | Torna origem e tipo de cada afirmação auditáveis | Ainda não referencia execução de testes externa. |

@@ -15,6 +15,7 @@
 - Gate de CI opcional via `--fail-on`, que preserva relatórios antes de retornar falha.
 - Execução manual do GitHub Actions com escolha do modo de gate e preservação de artefatos após falha.
 - Manifesto SHA-256 e comando `verify-report` para verificar integridade dos relatórios gerados.
+- Framework Data Quality Validation no registry, selecionado para superfícies de schema, migração, banco ou dados.
 
 ## 0.1.0
 

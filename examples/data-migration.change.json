@@ -1,0 +1,13 @@
+{
+  "id": "DATA-219",
+  "summary": "Migração de limite de crédito e ajuste de consistência de dados",
+  "changedFiles": [
+    "database/migrations/20260813_credit_limit.sql",
+    "src/data/credit-limit-validator.js"
+  ],
+  "businessImpact": "high",
+  "technicalComplexity": "high",
+  "knownUnknowns": [
+    "Plano de reversão da migração não foi fornecido."
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "id": "data-quality-validation",
+  "name": "Data Quality Validation",
+  "category": "data-quality",
+  "description": "Prioriza integridade, migração e consistência de dados quando a mudança alcança banco, schema ou pipelines de dados.",
+  "whenToUse": ["alterações em schema, migrações ou banco de dados", "mudanças em dados críticos ou relatórios"],
+  "whenNotToUse": ["mudanças sem superfície de dados declarada"],
+  "inputs": ["changed_files", "business_impact", "technical_complexity", "known_unknowns"],
+  "process": ["identify_data_risks", "validate_integrity", "prioritize_data_checks"],
+  "outputs": ["data_risk_register", "data_validation_strategy", "release_recommendation"],
+  "recommendedAgents": ["context-agent", "risk-agent", "data-quality-agent", "release-agent"],
+  "recommendedTools": ["filesystem-read", "git-diff-read", "sql-client-read"]
+}

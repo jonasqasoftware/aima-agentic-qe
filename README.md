@@ -9,7 +9,7 @@ O projeto explora a transição de *AI-assisted testing* para **Agentic Quality 
 O comando `analyze-pr` recebe um arquivo JSON que descreve uma mudança. Ele então:
 
 1. valida o contexto fornecido;
-2. seleciona o framework AIMA **Risk-Based Testing** pelo registry;
+2. seleciona um framework AIMA pelo registry, incluindo **Risk-Based Testing** e **Data Quality Validation**;
 3. identifica sinais de risco a partir dos arquivos declarados;
 4. recomenda verificações priorizadas;
 5. declara incertezas e evidências ausentes;
@@ -83,6 +83,11 @@ Para um passo a passo com cenário, comandos, leitura do relatório e resoluçã
 ## Framework Registry AIMA
 
 Os frameworks AIMA são dados estruturados em [`aima/frameworks`](aima/frameworks), com objetivo, entradas, processo, saídas, agentes e ferramentas recomendadas. O MVP usa arquivos YAML compatíveis com JSON para não introduzir dependência de parser; a migração para YAML completo será justificada quando o registry exigir sintaxe mais rica.
+
+| Sinal na superfície declarada | Framework selecionado |
+| --- | --- |
+| Arquivos de aplicação sem dados, schema ou migração | Risk-Based Testing |
+| `migration`, `schema`, `database` ou `data` no caminho do arquivo | Data Quality Validation |
 
 ```text
 Contexto declarado

@@ -76,6 +76,15 @@ test('unknown change surface remains explicit instead of invented', () => {
   assert.match(risks[0].statement, /sem domínio classificado/);
 });
 
+test('data change selects the data-quality framework from the registry', async () => {
+  const change = await loadChangeInput(path.join(root, 'examples', 'data-migration.change.json'));
+  const frameworks = await loadFrameworkRegistry(path.join(root, 'aima', 'frameworks'));
+  const selection = selectFramework(frameworks, change);
+
+  assert.equal(selection.framework.id, 'data-quality-validation');
+  assert.match(selection.evidence.at(-1), /sinal de dados/);
+});
+
 test('evidence ledger keeps declared unknowns separate from deterministic inferences', () => {
   const change = {
     source: 'declared-input',
