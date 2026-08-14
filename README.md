@@ -20,6 +20,8 @@ Além do JSON declarado, o MVP também pode criar esse contexto a partir dos **n
 
 A recomendação é governada por uma [política de release versionada](aima/policies/evidence-aware-release.json), que pode ser substituída via `--policy` para refletir regras mais restritivas do produto.
 
+Use `--baseline <aima-quality-report.json>` para comparar riscos e confiança com uma análise anterior, mantendo a comparação limitada ao que cada relatório declarou.
+
 O fluxo é deliberadamente determinístico e offline. Ele **não** acessa PRs remotos, não usa LLM, não executa testes de uma aplicação externa e não publica comentários. Essas integrações pertencem a incrementos posteriores, quando houver uma implementação real para sustentá-las.
 
 ## Demonstração

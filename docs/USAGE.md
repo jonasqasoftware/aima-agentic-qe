@@ -44,6 +44,19 @@ node src/cli.js analyze-pr \
 
 A política rigorosa bloqueia qualquer mudança que possua evidência marcada como ausente. O relatório registra o identificador e a versão da política utilizada.
 
+### Comparar com uma baseline
+
+Use um `aima-quality-report.json` anterior como baseline para destacar riscos novos, resolvidos e mudanças de score:
+
+```bash
+node src/cli.js analyze-pr \
+  --change examples/payment-refactor.change.json \
+  --baseline reports-anteriores/aima-quality-report.json \
+  --out reports-atual
+```
+
+A comparação é entre **relatórios declarados**. Ela não prova regressão no código nem substitui execução de testes; essa limitação aparece no próprio relatório.
+
 O comando imprime uma recomendação e grava três artefatos:
 
 ```text

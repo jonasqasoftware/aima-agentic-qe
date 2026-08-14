@@ -15,6 +15,9 @@ flowchart LR
   Strategy --> Ledger["Ledger de evidências\nfatos, inferências e UNKNOWN"]
   Policy["Política de release\nversionada"] --> Decision
   Ledger --> Decision["Quality Confidence\ne recomendação"]
+  Baseline["Relatório anterior\nJSON"] --> Compare["Comparador de baseline"]
+  Decision --> Compare
+  Compare --> Report
   Decision --> Report["Relatórios\nJSON, Markdown, HTML e SARIF"]
 
   Registry -. "framework como dado" .-> Framework["Risk-Based Testing"]
@@ -33,6 +36,7 @@ O adaptador de Git lê somente a lista local de arquivos alterados entre referê
 | Quality Confidence explicável | Mostra trade-offs e incertezas | Métrica experimental, não preditiva. |
 | Ledger de evidências | Torna origem e tipo de cada afirmação auditáveis | Ainda não referencia execução de testes externa. |
 | Política de release | Separa governança de decisão e código | Exige contexto humano para impacto e complexidade. |
+| Comparação com baseline | Destaca mudanças entre análises declaradas | Não demonstra regressão de código. |
 
 O próximo adaptador deve implementar leitura autorizada de um diff real antes de adicionar novos agentes ou LLMs.
 

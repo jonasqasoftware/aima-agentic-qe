@@ -6,6 +6,7 @@ import { createChangeFromLocalDiff } from './local-diff.js';
 import { loadFrameworkRegistry, selectFramework } from './framework-registry.js';
 import { assessRisks, qualityConfidence } from './risk-engine.js';
 import { loadReleasePolicy } from './release-policy.js';
+import { compareWithBaseline, loadBaselineReport } from './baseline.js';
 import { buildStrategy } from './strategy.js';
 import { createReport, writeReports } from './report.js';
 
@@ -14,8 +15,8 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 function usage() {
   return [
     'Uso:',
-    '  node src/cli.js analyze-pr --change <arquivo.json> [--policy <arquivo.json>] [--out <diretório>]',
-    '  node src/cli.js analyze-diff --repo <diretório> --base <referência> [--head <referência>] --impact <low|medium|high> --complexity <low|medium|high> [--policy <arquivo.json>] [--out <diretório>]'
+    '  node src/cli.js analyze-pr --change <arquivo.json> [--baseline <relatório.json>] [--policy <arquivo.json>] [--out <diretório>]',
+    '  node src/cli.js analyze-diff --repo <diretório> --base <referência> [--head <referência>] --impact <low|medium|high> --complexity <low|medium|high> [--baseline <relatório.json>] [--policy <arquivo.json>] [--out <diretório>]'
   ].join('\n');
 }
 
@@ -57,6 +58,8 @@ async function main() {
   const policy = await loadReleasePolicy(path.resolve(policyPath));
   const strategy = buildStrategy(risks, change.knownUnknowns, policy);
   const report = createReport(change, selection, risks, confidence, strategy);
+  const baselinePath = argument('--baseline');
+  if (baselinePath) report.baselineComparison = compareWithBaseline(report, await loadBaselineReport(path.resolve(baselinePath)));
   const files = await writeReports(report, path.resolve(outputDirectory));
   console.log(`AIMA Agentic QE: ${report.strategy.recommendation}`);
   console.log(`Quality Confidence experimental: ${report.qualityConfidence.score}/100`);

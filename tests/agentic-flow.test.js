@@ -10,6 +10,7 @@ import {
   assessRisks,
   buildEvidenceLedger,
   buildStrategy,
+  compareWithBaseline,
   createReport,
   createChangeFromLocalDiff,
   formatMarkdown,
@@ -95,6 +96,27 @@ test('strict policy blocks a change when any evidence is unknown', async () => {
   assert.equal(strategy.recommendation, 'NO-GO');
   assert.equal(strategy.policy.id, 'strict-evidence-release');
   assert.match(strategy.rationale, /bloqueia mudanças/);
+});
+
+test('baseline comparison identifies new, resolved, and changed risks', async () => {
+  const change = await loadChangeInput(path.join(root, 'examples', 'payment-refactor.change.json'));
+  const frameworks = await loadFrameworkRegistry(path.join(root, 'aima', 'frameworks'));
+  const policy = await loadReleasePolicy(path.join(root, 'aima', 'policies', 'evidence-aware-release.json'));
+  const risks = assessRisks(change);
+  const report = createReport(change, selectFramework(frameworks, change), risks, qualityConfidence(risks, change.knownUnknowns), buildStrategy(risks, change.knownUnknowns, policy));
+  const baseline = {
+    context: { changeId: 'BASELINE-41' },
+    qualityConfidence: { score: 45 },
+    strategy: { recommendation: 'GO WITH RISKS' },
+    risks: [{ ...risks[0], score: 80 }, { id: 'R-LEGACY', score: 20, level: 'LOW' }]
+  };
+  report.baselineComparison = compareWithBaseline(report, baseline);
+
+  assert.equal(report.baselineComparison.baselineChangeId, 'BASELINE-41');
+  assert.ok(report.baselineComparison.newRisks.some((risk) => risk.id === 'R-INTEGRATION'));
+  assert.ok(report.baselineComparison.resolvedRisks.some((risk) => risk.id === 'R-LEGACY'));
+  assert.ok(report.baselineComparison.changedRisks.some((risk) => risk.id === 'R-FINANCIAL'));
+  assert.match(formatMarkdown(report), /Comparação com baseline/);
 });
 
 test('local diff adapter uses changed file names and keeps diff content unknown', async () => {

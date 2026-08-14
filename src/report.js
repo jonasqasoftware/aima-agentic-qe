@@ -52,7 +52,10 @@ export function formatMarkdown(report) {
   const evidence = report.evidenceLedger
     .map((item) => `| ${item.id} | ${item.kind} | ${item.source} | ${item.statement} |`)
     .join('\n');
-  return `# AIMA Agentic QE report\n\n> ${report.evidenceBoundary}\n\n## Contexto\n\n- **Mudança:** \`${report.context.changeId}\`\n- **Resumo:** ${report.context.summary}\n- **Arquivos declarados:** ${report.context.changedFiles.map((file) => `\`${file}\``).join(', ')}\n\n## Framework AIMA selecionado\n\n- **${report.framework.name}** (\`${report.framework.id}\`)\n${report.framework.selectionEvidence.map((item) => `- ${item}`).join('\n')}\n\n## Política de release\n\n- **${report.strategy.policy.name}** (\`${report.strategy.policy.id}\` · v${report.strategy.policy.version})\n\n## Ledger de evidências\n\n| ID | Tipo | Origem | Declaração |\n| --- | --- | --- | --- |\n${evidence}\n\n## Riscos\n\n| ID | Nível | Score | Hipótese de risco |\n| --- | --- | ---: | --- |\n${risks}\n\n## Estratégia recomendada\n\n${tests}\n\n## Evidências ausentes / incertezas\n\n${unknowns}\n\n## Quality Confidence experimental\n\n**${report.qualityConfidence.score}/100**\n\n${report.qualityConfidence.factors.map((item) => `- ${item}`).join('\n')}\n\n## Recomendação de release\n\n**${report.strategy.recommendation}**\n\n${report.strategy.rationale}\n\n## Rastreabilidade de agentes\n\n${report.agentTrace.map((entry) => `- **${entry.agent}:** ${entry.status} — ${entry.output}`).join('\n')}\n`;
+  const comparison = report.baselineComparison
+    ? `\n## Comparação com baseline\n\n> ${report.baselineComparison.boundary}\n\n- **Baseline:** \`${report.baselineComparison.baselineChangeId}\` (${report.baselineComparison.baselineRecommendation})\n- **Variação de Quality Confidence:** ${report.baselineComparison.qualityConfidenceDelta >= 0 ? '+' : ''}${report.baselineComparison.qualityConfidenceDelta}\n- **Riscos novos:** ${report.baselineComparison.newRisks.map((risk) => risk.id).join(', ') || 'nenhum'}\n- **Riscos resolvidos:** ${report.baselineComparison.resolvedRisks.map((risk) => risk.id).join(', ') || 'nenhum'}\n- **Riscos com score alterado:** ${report.baselineComparison.changedRisks.map((risk) => `${risk.id} (${risk.previousScore}→${risk.currentScore})`).join(', ') || 'nenhum'}\n`
+    : '';
+  return `# AIMA Agentic QE report\n\n> ${report.evidenceBoundary}\n\n## Contexto\n\n- **Mudança:** \`${report.context.changeId}\`\n- **Resumo:** ${report.context.summary}\n- **Arquivos declarados:** ${report.context.changedFiles.map((file) => `\`${file}\``).join(', ')}\n\n## Framework AIMA selecionado\n\n- **${report.framework.name}** (\`${report.framework.id}\`)\n${report.framework.selectionEvidence.map((item) => `- ${item}`).join('\n')}\n\n## Política de release\n\n- **${report.strategy.policy.name}** (\`${report.strategy.policy.id}\` · v${report.strategy.policy.version})\n\n## Ledger de evidências\n\n| ID | Tipo | Origem | Declaração |\n| --- | --- | --- | --- |\n${evidence}\n\n## Riscos\n\n| ID | Nível | Score | Hipótese de risco |\n| --- | --- | ---: | --- |\n${risks}\n\n## Estratégia recomendada\n\n${tests}\n\n## Evidências ausentes / incertezas\n\n${unknowns}\n\n## Quality Confidence experimental\n\n**${report.qualityConfidence.score}/100**\n\n${report.qualityConfidence.factors.map((item) => `- ${item}`).join('\n')}\n${comparison}\n## Recomendação de release\n\n**${report.strategy.recommendation}**\n\n${report.strategy.rationale}\n\n## Rastreabilidade de agentes\n\n${report.agentTrace.map((entry) => `- **${entry.agent}:** ${entry.status} — ${entry.output}`).join('\n')}\n`;
 }
 
 export function formatHtml(report) {
@@ -71,6 +74,9 @@ export function formatHtml(report) {
     ? report.strategy.missingEvidence.map((item) => `<li>${escapeHtml(item)}</li>`).join('')
     : '<li>Nenhuma incerteza declarada.</li>';
   const files = report.context.changedFiles.map((file) => `<code>${escapeHtml(file)}</code>`).join('');
+  const comparison = report.baselineComparison
+    ? `<section class="two-columns"><article class="panel"><p class="eyebrow">Comparação com baseline</p><h3>${escapeHtml(report.baselineComparison.baselineChangeId)}</h3><p>Quality Confidence: ${report.baselineComparison.qualityConfidenceDelta >= 0 ? '+' : ''}${escapeHtml(report.baselineComparison.qualityConfidenceDelta)}</p></article><article class="panel"><p class="eyebrow">Mudanças de risco</p><p>Novos: ${escapeHtml(report.baselineComparison.newRisks.map((risk) => risk.id).join(', ') || 'nenhum')}</p><p>Resolvidos: ${escapeHtml(report.baselineComparison.resolvedRisks.map((risk) => risk.id).join(', ') || 'nenhum')}</p></article></section>`
+    : '';
   return `<!doctype html>
 <html lang="pt-BR">
 <head>
@@ -103,6 +109,7 @@ export function formatHtml(report) {
   <h2>Superfície de mudança</h2><div class="files">${files}</div>
   <h2>Riscos priorizados</h2><section class="risk-grid">${riskCards}</section>
   <section class="two-columns"><article class="panel"><h2>Verificações recomendadas</h2><ol>${tests}</ol></article><article class="panel"><h2>Evidências ausentes</h2><ul>${unknowns}</ul></article></section>
+  ${comparison}
   <h2>Ledger de evidências</h2><div class="table-wrap"><table><thead><tr><th>ID</th><th>Tipo</th><th>Origem</th><th>Declaração</th></tr></thead><tbody>${evidenceRows}</tbody></table></div>
   <footer>Gerado pelo AIMA Agentic QE · relatório baseado em evidências declaradas e regras determinísticas.</footer>
 </main></body></html>`;
@@ -153,7 +160,8 @@ export function formatSarif(report) {
       properties: {
         changeId: report.context.changeId,
         policy: report.strategy.policy,
-        evidenceBoundary: report.evidenceBoundary
+        evidenceBoundary: report.evidenceBoundary,
+        baselineComparison: report.baselineComparison
       }
     }]
   };
