@@ -8,6 +8,7 @@
 - Ledger de evidências no relatório, separando fatos, inferências determinísticas e informações `UNKNOWN`.
 - Relatório HTML autocontido, com painel visual de riscos, recomendação e ledger auditável.
 - Política de release JSON versionada e opção `--policy` para governar recomendações de modo explícito.
+- Suporte a evidências declaradas na entrada, preservadas no ledger como não verificadas.
 
 ## 0.1.0
 

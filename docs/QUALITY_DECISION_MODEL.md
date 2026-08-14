@@ -21,6 +21,7 @@ flowchart TD
 | Tipo | Definição | Exemplo no MVP |
 | --- | --- | --- |
 | Fato | Informação entregue na entrada | `businessImpact: high` |
+| Evidência declarada | Resultado relatado por uma pessoa, ainda não verificado pela ferramenta | Suíte de testes executada pelo autor |
 | Inferência | Resultado de regra determinística sobre fatos | Arquivo de pagamento gera sinal financeiro |
 | Hipótese | Possibilidade ainda não comprovada | Uma alteração pode exigir teste de carga |
 | Recomendação | Próxima ação proposta a uma pessoa responsável | Executar teste de carga antes do release |
@@ -41,7 +42,7 @@ flowchart LR
   Ledger --> Decision["Recomendação auditável"]
 ```
 
-`UNKNOWN` é preservado como tal. Uma inferência aponta para os fatos que a sustentam, mas não se torna evidência de execução de teste ou aprovação de release.
+`UNKNOWN` é preservado como tal. Evidências declaradas recebem o estado `declared-not-verified`; elas não se tornam evidência de execução de teste ou aprovação de release. Uma inferência aponta para os fatos que a sustentam, mas também não se torna prova de execução.
 
 ## Limites do score
 

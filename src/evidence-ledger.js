@@ -17,6 +17,14 @@ export function buildEvidenceLedger(change, risks) {
     source,
     statement
   }));
+  const declaredEvidence = (change.declaredEvidence ?? []).map((item, index) => ({
+    id: `D-${String(index + 1).padStart(3, '0')}`,
+    kind: 'DECLARED_EVIDENCE',
+    source: item.source || source,
+    statement: `[${item.type}] ${item.summary}`,
+    reference: item.id,
+    verification: 'declared-not-verified'
+  }));
   const inferences = risks.map((risk, index) => ({
     id: `I-${String(index + 1).padStart(3, '0')}`,
     kind: 'INFERENCE',
@@ -24,5 +32,5 @@ export function buildEvidenceLedger(change, risks) {
     statement: `${risk.id}: ${risk.statement}.`,
     relatedEvidence: ['E-002', 'E-003', 'E-004']
   }));
-  return [...facts, ...unknowns, ...inferences];
+  return [...facts, ...declaredEvidence, ...unknowns, ...inferences];
 }

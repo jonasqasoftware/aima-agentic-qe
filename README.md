@@ -93,6 +93,7 @@ Recomendação de release
 ## Qualidade e segurança de agentes
 
 - Recomendações distinguem fatos declarados, inferências e incertezas.
+- Evidências fornecidas por pessoas são registradas como declaradas e não verificadas.
 - O relatório estabelece o limite das evidências antes de apresentar qualquer decisão.
 - O score é experimental: não é uma métrica científica nem aprovação automática.
 - O projeto não contém credenciais, dados de clientes ou integrações externas.

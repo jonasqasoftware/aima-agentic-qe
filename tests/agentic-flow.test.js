@@ -41,6 +41,7 @@ test('payment fixture produces an evidence-bounded NO-GO recommendation', async 
   assert.ok(confidence.score < 100);
   assert.match(formatMarkdown(report), /Não afirma leitura de PR remoto/);
   assert.ok(report.evidenceLedger.some((item) => item.kind === 'FACT'));
+  assert.ok(report.evidenceLedger.some((item) => item.kind === 'DECLARED_EVIDENCE'));
   assert.ok(report.evidenceLedger.some((item) => item.kind === 'UNKNOWN'));
   assert.ok(report.evidenceLedger.some((item) => item.kind === 'INFERENCE'));
   const html = formatHtml({ ...report, context: { ...report.context, summary: '<script>untrusted</script>' } });
@@ -65,13 +66,15 @@ test('evidence ledger keeps declared unknowns separate from deterministic infere
     businessImpact: 'medium',
     technicalComplexity: 'low',
     changedFiles: ['src/api/orders.js'],
-    knownUnknowns: ['Resultado de teste de contrato não fornecido.']
+    knownUnknowns: ['Resultado de teste de contrato não fornecido.'],
+    declaredEvidence: [{ id: 'TEST-1', type: 'test', summary: 'Executado pelo autor.' }]
   };
   const ledger = buildEvidenceLedger(change, assessRisks(change));
 
   assert.equal(ledger.find((item) => item.id === 'U-001').kind, 'UNKNOWN');
   assert.equal(ledger.find((item) => item.id === 'I-001').kind, 'INFERENCE');
   assert.equal(ledger.find((item) => item.id === 'I-001').source, 'deterministic-risk-rule');
+  assert.equal(ledger.find((item) => item.id === 'D-001').verification, 'declared-not-verified');
 });
 
 test('strict policy blocks a change when any evidence is unknown', async () => {

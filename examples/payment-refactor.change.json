@@ -8,6 +8,14 @@
   ],
   "businessImpact": "high",
   "technicalComplexity": "high",
+  "declaredEvidence": [
+    {
+      "id": "UNIT-2026-08-13",
+      "type": "unit-test",
+      "summary": "Suíte de testes unitários executada pelo autor; resultado detalhado não foi anexado.",
+      "source": "declared-by-author"
+    }
+  ],
   "knownUnknowns": [
     "Não há evidência de teste de idempotência no conjunto de alterações.",
     "Não foi fornecido resultado de teste de carga."

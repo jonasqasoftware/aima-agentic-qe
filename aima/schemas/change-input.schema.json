@@ -9,6 +9,19 @@
     "changedFiles": { "type": "array", "minItems": 1, "items": { "type": "string" } },
     "businessImpact": { "enum": ["low", "medium", "high"] },
     "technicalComplexity": { "enum": ["low", "medium", "high"] },
-    "knownUnknowns": { "type": "array", "items": { "type": "string" } }
+    "knownUnknowns": { "type": "array", "items": { "type": "string" } },
+    "declaredEvidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "summary"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "type": { "type": "string", "minLength": 1 },
+          "summary": { "type": "string", "minLength": 1 },
+          "source": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
   }
 }

@@ -85,6 +85,14 @@ Crie, por exemplo, `examples/minha-mudanca.json`:
   ],
   "businessImpact": "high",
   "technicalComplexity": "medium",
+  "declaredEvidence": [
+    {
+      "id": "CI-458",
+      "type": "integration-test",
+      "summary": "Teste de integração executado pelo autor; saída detalhada não anexada.",
+      "source": "declared-by-author"
+    }
+  ],
   "knownUnknowns": [
     "Resultado de teste de integração com o gateway não foi fornecido."
   ]
@@ -107,8 +115,11 @@ node src/cli.js analyze-pr --change examples/minha-mudanca.json --out reports/pa
 | `businessImpact` | texto | `low`, `medium` ou `high` |
 | `technicalComplexity` | texto | `low`, `medium` ou `high` |
 | `knownUnknowns` | lista opcional | Evidências importantes ainda indisponíveis |
+| `declaredEvidence` | lista opcional | Evidências declaradas com `id`, `type`, `summary` e `source` opcional |
 
 O contrato completo está em [`aima/schemas/change-input.schema.json`](../aima/schemas/change-input.schema.json).
+
+Evidências em `declaredEvidence` são registradas no ledger como **declaradas e não verificadas**. Por exemplo, elas podem indicar que alguém executou uma suíte de testes, mas não comprovam o resultado para a ferramenta. O MVP não altera o score nem aprova uma entrega com base nessa declaração.
 
 ## Analisar um diff Git local
 
@@ -135,6 +146,7 @@ O relatório apresenta quatro camadas que não devem ser confundidas:
 | Seção | O que significa | Próxima ação |
 | --- | --- | --- |
 | Ledger de evidências | Fatos, inferências e `UNKNOWN` com sua origem | Auditar o que fundamenta cada recomendação |
+| Evidência declarada | Informação fornecida por uma pessoa, ainda não verificada pela ferramenta | Anexar ou coletar resultado verificável se necessário |
 | Riscos | Hipóteses derivadas dos arquivos e contexto declarados | Revisar cenários de maior score |
 | Estratégia recomendada | Verificações proporcionais ao risco | Executar ou planejar os testes indicados |
 | Evidências ausentes | Dados que a ferramenta não recebeu | Coletar evidência ou assumir explicitamente o risco |

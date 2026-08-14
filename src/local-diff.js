@@ -38,6 +38,7 @@ export async function createChangeFromLocalDiff({ repoPath, base, head = 'HEAD',
     technicalComplexity,
     knownUnknowns: [
       'O adaptador local analisou somente nomes de arquivos; conteúdo do diff, resultado de testes e contexto de produto permanecem UNKNOWN.'
-    ]
+    ],
+    declaredEvidence: []
   };
 }
