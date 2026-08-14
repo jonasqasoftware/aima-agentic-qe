@@ -5,6 +5,17 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      fail_on:
+        description: Modo opcional do quality gate
+        required: false
+        default: never
+        type: choice
+        options:
+          - never
+          - no-go
+          - go-with-risks
 
 permissions:
   contents: read
@@ -20,8 +31,9 @@ jobs:
       - name: Validate source and tests
         run: npm run check
       - name: Generate synthetic quality report
-        run: node src/cli.js analyze-pr --change examples/payment-refactor.change.json --out reports
+        run: node src/cli.js analyze-pr --change examples/payment-refactor.change.json --fail-on "${{ inputs.fail_on || 'never' }}" --out reports
       - name: Upload synthetic report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: aima-quality-report
