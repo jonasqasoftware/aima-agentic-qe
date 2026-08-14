@@ -57,7 +57,7 @@ async function main() {
   const files = await writeReports(report, path.resolve(outputDirectory));
   console.log(`AIMA Agentic QE: ${report.strategy.recommendation}`);
   console.log(`Quality Confidence experimental: ${report.qualityConfidence.score}/100`);
-  console.log(`Relatórios: ${files.jsonPath}, ${files.markdownPath}`);
+  console.log(`Relatórios: ${files.jsonPath}, ${files.markdownPath}, ${files.htmlPath}`);
 }
 
 main().catch((error) => {

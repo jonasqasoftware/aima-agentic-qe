@@ -33,13 +33,16 @@ node src/cli.js analyze-pr \
   --out reports
 ```
 
-O comando imprime uma recomendação e grava dois artefatos:
+O comando imprime uma recomendação e grava três artefatos:
 
 ```text
 reports/
 ├── aima-quality-report.json   # integração com ferramentas
-└── aima-quality-report.md     # leitura humana e revisão
+├── aima-quality-report.md     # leitura humana e revisão
+└── aima-quality-report.html   # painel visual e portátil
 ```
+
+Abra `aima-quality-report.html` diretamente no navegador para uma leitura visual da recomendação, do score, dos riscos e do ledger de evidências. O arquivo é autocontido: não depende de servidor, biblioteca externa ou transmissão de dados.
 
 ```mermaid
 sequenceDiagram

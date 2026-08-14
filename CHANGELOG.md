@@ -6,6 +6,7 @@
 - Guia de uso orientado a tarefas, com exemplos de entrada, fluxo visual e solução de problemas.
 - Adaptador de diff Git local que transforma nomes de arquivos alterados em contexto de análise, sem ler conteúdo ou serviços remotos.
 - Ledger de evidências no relatório, separando fatos, inferências determinísticas e informações `UNKNOWN`.
+- Relatório HTML autocontido, com painel visual de riscos, recomendação e ledger auditável.
 
 ## 0.1.0
 

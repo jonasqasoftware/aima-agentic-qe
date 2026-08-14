@@ -2,6 +2,15 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { buildEvidenceLedger } from './evidence-ledger.js';
 
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
 export function createReport(change, selection, risks, confidence, strategy) {
   const evidenceBoundary = change.source === 'local-git-name-only'
     ? 'Relatório baseado nos nomes de arquivos de um diff Git local e em regras determinísticas. Não afirma leitura do conteúdo do diff, de PR remoto, execução de testes ou aprovação de release.'
@@ -46,13 +55,68 @@ export function formatMarkdown(report) {
   return `# AIMA Agentic QE report\n\n> ${report.evidenceBoundary}\n\n## Contexto\n\n- **Mudança:** \`${report.context.changeId}\`\n- **Resumo:** ${report.context.summary}\n- **Arquivos declarados:** ${report.context.changedFiles.map((file) => `\`${file}\``).join(', ')}\n\n## Framework AIMA selecionado\n\n- **${report.framework.name}** (\`${report.framework.id}\`)\n${report.framework.selectionEvidence.map((item) => `- ${item}`).join('\n')}\n\n## Ledger de evidências\n\n| ID | Tipo | Origem | Declaração |\n| --- | --- | --- | --- |\n${evidence}\n\n## Riscos\n\n| ID | Nível | Score | Hipótese de risco |\n| --- | --- | ---: | --- |\n${risks}\n\n## Estratégia recomendada\n\n${tests}\n\n## Evidências ausentes / incertezas\n\n${unknowns}\n\n## Quality Confidence experimental\n\n**${report.qualityConfidence.score}/100**\n\n${report.qualityConfidence.factors.map((item) => `- ${item}`).join('\n')}\n\n## Recomendação de release\n\n**${report.strategy.recommendation}**\n\n${report.strategy.rationale}\n\n## Rastreabilidade de agentes\n\n${report.agentTrace.map((entry) => `- **${entry.agent}:** ${entry.status} — ${entry.output}`).join('\n')}\n`;
 }
 
+export function formatHtml(report) {
+  const recommendationClass = report.strategy.recommendation.toLowerCase().replaceAll(' ', '-');
+  const riskCards = report.risks.map((risk) => `
+    <article class="risk ${risk.level.toLowerCase()}">
+      <p class="eyebrow">${escapeHtml(risk.id)} · ${escapeHtml(risk.category)}</p>
+      <h3>${escapeHtml(risk.statement)}</h3>
+      <p class="score">${escapeHtml(risk.score)}<span>/100</span></p>
+      <p>${escapeHtml(risk.inference)}</p>
+    </article>`).join('');
+  const evidenceRows = report.evidenceLedger.map((item) => `
+    <tr><td>${escapeHtml(item.id)}</td><td><span class="kind ${escapeHtml(item.kind)}">${escapeHtml(item.kind)}</span></td><td>${escapeHtml(item.source)}</td><td>${escapeHtml(item.statement)}</td></tr>`).join('');
+  const tests = report.strategy.recommendedTests.map((test) => `<li>${escapeHtml(test)}</li>`).join('');
+  const unknowns = report.strategy.missingEvidence.length
+    ? report.strategy.missingEvidence.map((item) => `<li>${escapeHtml(item)}</li>`).join('')
+    : '<li>Nenhuma incerteza declarada.</li>';
+  const files = report.context.changedFiles.map((file) => `<code>${escapeHtml(file)}</code>`).join('');
+  return `<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AIMA Quality Report · ${escapeHtml(report.context.changeId)}</title>
+  <style>
+    :root { color-scheme: dark; --ink:#e7edf7; --muted:#9babc1; --panel:#101826; --line:#26364f; --bg:#09111f; --blue:#78b7ff; --green:#5ee6b2; --yellow:#ffd166; --red:#ff7a90; }
+    * { box-sizing:border-box; } body { margin:0; background:radial-gradient(circle at top right,#183257,transparent 36%),var(--bg); color:var(--ink); font:16px/1.5 Inter,ui-sans-serif,system-ui,sans-serif; }
+    main { width:min(1120px,calc(100% - 32px)); margin:0 auto; padding:52px 0 72px; } .eyebrow { margin:0 0 8px; color:var(--blue); font:600 12px/1.2 ui-monospace,SFMono-Regular,monospace; letter-spacing:.08em; text-transform:uppercase; }
+    h1 { font-size:clamp(2rem,6vw,4.75rem); line-height:.98; margin:0; letter-spacing:-.06em; } h2 { margin:42px 0 16px; font-size:1.25rem; } h3 { margin:0; font-size:1.05rem; } p { color:var(--muted); } .boundary { border-left:3px solid var(--yellow); padding:12px 16px; background:#171a1d; border-radius:0 8px 8px 0; }
+    .summary { display:grid; grid-template-columns:1.45fr .8fr; gap:16px; margin-top:28px; } .panel,.risk { border:1px solid var(--line); background:color-mix(in srgb,var(--panel) 92%,transparent); border-radius:16px; padding:22px; }
+    .decision { display:flex; flex-direction:column; justify-content:space-between; } .decision strong { font-size:1.75rem; letter-spacing:-.04em; } .decision .no-go { color:var(--red); } .decision .go-with-risks { color:var(--yellow); } .decision .go { color:var(--green); }
+    .confidence { font-size:4rem; line-height:1; color:var(--blue); letter-spacing:-.08em; margin:14px 0; } .confidence span,.score span { font-size:.42em; color:var(--muted); letter-spacing:0; }
+    .files { display:flex; flex-wrap:wrap; gap:8px; } code { color:#c7ddff; background:#17243a; padding:3px 7px; border-radius:5px; overflow-wrap:anywhere; } .risk-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:14px; }
+    .risk.high { border-top:3px solid var(--red); } .risk.medium { border-top:3px solid var(--yellow); } .risk.low { border-top:3px solid var(--green); } .score { margin:16px 0 6px; color:var(--ink); font-size:2rem; font-weight:700; }
+    .two-columns { display:grid; grid-template-columns:1fr 1fr; gap:16px; } ul { padding-left:20px; color:var(--muted); } li+li { margin-top:8px; } .table-wrap { overflow:auto; border:1px solid var(--line); border-radius:12px; } table { width:100%; border-collapse:collapse; min-width:700px; } th,td { padding:12px 14px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top; } th { color:var(--muted); font-size:.75rem; text-transform:uppercase; letter-spacing:.08em; } .kind { font:600 11px ui-monospace,SFMono-Regular,monospace; padding:4px 6px; border-radius:99px; } .FACT { color:var(--blue); background:#14345d; } .INFERENCE { color:var(--green); background:#123d32; } .UNKNOWN { color:var(--yellow); background:#493a10; }
+    footer { margin-top:46px; color:var(--muted); font-size:.875rem; } @media (max-width:700px) { main { padding-top:32px; } .summary,.two-columns { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body><main>
+  <p class="eyebrow">AIMA Agentic QE · relatório auditável</p>
+  <h1>${escapeHtml(report.context.changeId)}</h1>
+  <p>${escapeHtml(report.context.summary)}</p>
+  <p class="boundary">${escapeHtml(report.evidenceBoundary)}</p>
+  <section class="summary">
+    <article class="panel decision"><div><p class="eyebrow">Recomendação de release</p><strong class="${recommendationClass}">${escapeHtml(report.strategy.recommendation)}</strong><p>${escapeHtml(report.strategy.rationale)}</p></div><p class="eyebrow">Framework · ${escapeHtml(report.framework.name)}</p></article>
+    <article class="panel"><p class="eyebrow">Quality Confidence experimental</p><p class="confidence">${escapeHtml(report.qualityConfidence.score)}<span>/100</span></p>${report.qualityConfidence.factors.map((item) => `<p>${escapeHtml(item)}</p>`).join('')}</article>
+  </section>
+  <h2>Superfície de mudança</h2><div class="files">${files}</div>
+  <h2>Riscos priorizados</h2><section class="risk-grid">${riskCards}</section>
+  <section class="two-columns"><article class="panel"><h2>Verificações recomendadas</h2><ol>${tests}</ol></article><article class="panel"><h2>Evidências ausentes</h2><ul>${unknowns}</ul></article></section>
+  <h2>Ledger de evidências</h2><div class="table-wrap"><table><thead><tr><th>ID</th><th>Tipo</th><th>Origem</th><th>Declaração</th></tr></thead><tbody>${evidenceRows}</tbody></table></div>
+  <footer>Gerado pelo AIMA Agentic QE · relatório baseado em evidências declaradas e regras determinísticas.</footer>
+</main></body></html>`;
+}
+
 export async function writeReports(report, directory) {
   await mkdir(directory, { recursive: true });
   const jsonPath = path.join(directory, 'aima-quality-report.json');
   const markdownPath = path.join(directory, 'aima-quality-report.md');
+  const htmlPath = path.join(directory, 'aima-quality-report.html');
   await Promise.all([
     writeFile(jsonPath, `${JSON.stringify(report, null, 2)}\n`),
-    writeFile(markdownPath, formatMarkdown(report))
+    writeFile(markdownPath, formatMarkdown(report)),
+    writeFile(htmlPath, formatHtml(report))
   ]);
-  return { jsonPath, markdownPath };
+  return { jsonPath, markdownPath, htmlPath };
 }

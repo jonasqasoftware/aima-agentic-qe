@@ -14,7 +14,7 @@ O comando `analyze-pr` recebe um arquivo JSON que descreve uma mudança. Ele ent
 4. recomenda verificações priorizadas;
 5. declara incertezas e evidências ausentes;
 6. calcula um **Quality Confidence** experimental e explicável;
-7. gera relatórios JSON e Markdown com recomendação `GO`, `GO WITH RISKS` ou `NO-GO`.
+7. gera relatórios JSON, Markdown e HTML com recomendação `GO`, `GO WITH RISKS` ou `NO-GO`.
 
 Além do JSON declarado, o MVP também pode criar esse contexto a partir dos **nomes de arquivos** entre duas referências de um repositório Git local. Ele não lê conteúdo de diff, nem consulta GitHub remoto.
 
@@ -53,6 +53,7 @@ Os relatórios gerados são:
 
 - `reports/aima-quality-report.json`
 - `reports/aima-quality-report.md`
+- `reports/aima-quality-report.html` — painel visual, portátil e sem dependências externas
 
 Para um passo a passo com cenário, comandos, leitura do relatório e resolução de erros, consulte o [Guia de uso](docs/USAGE.md).
 

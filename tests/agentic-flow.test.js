@@ -13,6 +13,7 @@ import {
   createReport,
   createChangeFromLocalDiff,
   formatMarkdown,
+  formatHtml,
   loadChangeInput,
   loadFrameworkRegistry,
   qualityConfidence,
@@ -40,6 +41,10 @@ test('payment fixture produces an evidence-bounded NO-GO recommendation', async 
   assert.ok(report.evidenceLedger.some((item) => item.kind === 'FACT'));
   assert.ok(report.evidenceLedger.some((item) => item.kind === 'UNKNOWN'));
   assert.ok(report.evidenceLedger.some((item) => item.kind === 'INFERENCE'));
+  const html = formatHtml({ ...report, context: { ...report.context, summary: '<script>untrusted</script>' } });
+  assert.match(html, /Ledger de evidências/);
+  assert.match(html, /&lt;script&gt;untrusted&lt;\/script&gt;/);
+  assert.doesNotMatch(html, /<script>untrusted<\/script>/);
 });
 
 test('unknown change surface remains explicit instead of invented', () => {

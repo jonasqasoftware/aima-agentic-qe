@@ -14,7 +14,7 @@ flowchart LR
   Risk --> Strategy["Estratégia de testes\ne evidências esperadas"]
   Strategy --> Ledger["Ledger de evidências\nfatos, inferências e UNKNOWN"]
   Ledger --> Decision["Quality Confidence\ne recomendação"]
-  Decision --> Report["Relatórios\nJSON e Markdown"]
+  Decision --> Report["Relatórios\nJSON, Markdown e HTML"]
 
   Registry -. "framework como dado" .-> Framework["Risk-Based Testing"]
   Risk -. "sinais declarados" .-> Change["Arquivos e contexto\nfornecidos"]
