@@ -19,6 +19,7 @@ import {
   loadJUnitResults,
   loadJsonTestResults,
   loadLcovCoverage,
+  correlateCoverageWithChangedFiles,
   evaluateChange,
   formatMarkdown,
   formatHtml,
@@ -346,4 +347,22 @@ test('LCOV line coverage is hashed and only enforces an explicit threshold', asy
   assert.equal(risks.find((risk) => risk.category === 'coverage').level, 'MEDIUM');
   const evidence = buildEvidenceLedger({ businessImpact: 'low', technicalComplexity: 'low', changedFiles: ['lib/normalizer.js'], coverage }, []).find((entry) => entry.kind === 'COVERAGE_EVIDENCE');
   assert.match(evidence.statement, /90%/);
+});
+
+test('coverage correlation distinguishes changed source files from documentation', async () => {
+  const coverage = await loadLcovCoverage(path.join(root, 'examples', 'coverage.lcov'));
+  coverage.minimum = 85;
+  coverage.correlation = correlateCoverageWithChangedFiles(coverage, [
+    'src/payments/authorization.js',
+    'src/api/absent.js',
+    'docs/USAGE.md'
+  ]);
+
+  assert.deepEqual(coverage.correlation.relevantChangedFiles, ['src/payments/authorization.js', 'src/api/absent.js']);
+  assert.equal(coverage.correlation.coveredChangedFiles[0].lineCoverage, 66.67);
+  assert.deepEqual(coverage.correlation.uncoveredChangedFiles, ['src/api/absent.js']);
+  const risk = assessRisks({ changedFiles: ['src/payments/authorization.js'], businessImpact: 'low', technicalComplexity: 'low', coverage })
+    .find((item) => item.id === 'R-CHANGED-FILE-COVERAGE');
+  assert.equal(risk.level, 'HIGH');
+  assert.deepEqual(risk.facts, ['src/api/absent.js', 'src/payments/authorization.js']);
 });

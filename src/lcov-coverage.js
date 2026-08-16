@@ -6,6 +6,30 @@ function percentage(hit, found) {
   return found ? Number(((hit / found) * 100).toFixed(2)) : null;
 }
 
+function normalizedPath(value) {
+  return value.replaceAll('\\', '/').replace(/^\.\//, '');
+}
+
+function sourceLikeFile(file) {
+  return /\.(?:[cm]?[jt]sx?|py|java|go|rb|php|cs|kt|swift)$/i.test(file);
+}
+
+/** Correlates only source-like changed files; documentation is not coverage debt. */
+export function correlateCoverageWithChangedFiles(coverage, changedFiles) {
+  const records = new Map(coverage.files.map((item) => [normalizedPath(item.file), item]));
+  const relevant = changedFiles.filter(sourceLikeFile);
+  const matched = relevant.flatMap((file) => {
+    const normalized = normalizedPath(file);
+    const record = records.get(normalized) ?? [...records.values()].find((item) => normalizedPath(item.file).endsWith(`/${normalized}`));
+    return record ? [{ changedFile: file, ...record }] : [];
+  });
+  return {
+    relevantChangedFiles: relevant,
+    coveredChangedFiles: matched,
+    uncoveredChangedFiles: relevant.filter((file) => !matched.some((item) => item.changedFile === file))
+  };
+}
+
 /** Parses LCOV line coverage without reading source files or test logs. */
 export async function loadLcovCoverage(file) {
   const content = await readFile(file, 'utf8');

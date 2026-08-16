@@ -108,7 +108,7 @@ node src/cli.js analyze-pr \
   --out reports
 ```
 
-O AIMA não considera cobertura uma aprovação automática: ela é um sinal complementar, com hash do arquivo e limite declarado no relatório.
+O AIMA não considera cobertura uma aprovação automática: ela é um sinal complementar, com hash do arquivo e limite declarado no relatório. Quando há arquivos de código alterados, o relatório correlaciona seus caminhos com o LCOV e destaca registros ausentes ou abaixo do limite; arquivos de documentação não entram nessa conta.
 
 Saída resumida do cenário sintético:
 

@@ -24,6 +24,7 @@
 - Importação de resultados JUnit/XML, com totais e casos de falha rastreáveis sem expor mensagens de erro ou logs.
 - Contrato JSON normalizado para importar resultados de ferramentas sem exportação JUnit.
 - Coleta de cobertura de linhas LCOV, com limite opcional declarado pelo operador e evidência hasheada.
+- Correlação entre arquivos de código alterados e registros LCOV, distinguindo ausência de cobertura de alterações de documentação.
 
 ## 0.1.0
 

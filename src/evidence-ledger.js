@@ -73,7 +73,7 @@ export function buildEvidenceLedger(change, risks) {
     id: 'V-001',
     kind: 'COVERAGE_EVIDENCE',
     source: change.coverage.parser,
-    statement: `${change.coverage.summary}${change.coverage.minimum != null ? ` Limite declarado: ${change.coverage.minimum}%.` : ''}`,
+    statement: `${change.coverage.summary}${change.coverage.minimum != null ? ` Limite declarado: ${change.coverage.minimum}%.` : ''}${change.coverage.correlation ? ` Arquivos alterados cobertos: ${change.coverage.correlation.coveredChangedFiles.length}/${change.coverage.correlation.relevantChangedFiles.length}.` : ''}`,
     reference: change.coverage.id,
     sha256: change.coverage.transcriptSha256,
     verification: 'local-lcov-result-parse'
