@@ -163,7 +163,7 @@ node src/cli.js analyze-pr \
   --out reports
 ```
 
-O limite é opcional. Sem `--min-line-coverage`, a cobertura é somente evidência e não cria risco por si só. Com um limite explícito, uma cobertura abaixo dele cria risco médio ou alto conforme a diferença. O relatório armazena métricas agregadas e hash do LCOV, não logs nem conteúdo do código.
+O limite é opcional. Sem `--min-line-coverage`, a cobertura é somente evidência e não cria risco por si só. Com um limite explícito, uma cobertura abaixo dele cria risco médio ou alto conforme a diferença. O AIMA também correlaciona os arquivos de código alterados com os caminhos do LCOV: registros ausentes criam risco alto, e arquivos abaixo do limite são destacados. Documentação e arquivos sem extensão de código conhecida não entram na correlação. O relatório armazena métricas agregadas e hash do LCOV, não logs nem conteúdo do código.
 
 ### Usar como quality gate no CI
 

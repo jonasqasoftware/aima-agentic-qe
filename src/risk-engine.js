@@ -77,6 +77,20 @@ export function assessRisks(change) {
       recommendedTests: ['Adicionar testes para os caminhos não cobertos e executar novamente a coleta de cobertura']
     });
   }
+  if (change.coverage?.minimum != null && change.coverage.correlation) {
+    const missing = change.coverage.correlation.uncoveredChangedFiles;
+    const below = change.coverage.correlation.coveredChangedFiles.filter((item) => item.lineCoverage != null && item.lineCoverage < change.coverage.minimum);
+    if (missing.length || below.length) risks.push({
+      id: 'R-CHANGED-FILE-COVERAGE',
+      category: 'coverage-change-correlation',
+      score: missing.length ? 80 : 60,
+      level: missing.length ? 'HIGH' : 'MEDIUM',
+      statement: `Cobertura insuficiente na superfície alterada: ${missing.length} arquivo(s) sem registro e ${below.length} abaixo do limite.`,
+      facts: [...missing, ...below.map((item) => item.changedFile)],
+      inference: 'A correlação usa caminhos de arquivos e dados LCOV fornecidos; não prova que todos os caminhos de execução relevantes foram testados.',
+      recommendedTests: ['Adicionar cobertura para os arquivos alterados sem registro ou abaixo do limite e coletar LCOV novamente']
+    });
+  }
   return risks.sort((left, right) => right.score - left.score || left.id.localeCompare(right.id));
 }
 

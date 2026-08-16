@@ -8,7 +8,7 @@ import { createChangeFromGitHubPr } from './github-pr.js';
 import { executeEvidenceCommand } from './command-evidence.js';
 import { loadJUnitResults } from './junit-results.js';
 import { loadJsonTestResults } from './json-test-results.js';
-import { loadLcovCoverage } from './lcov-coverage.js';
+import { correlateCoverageWithChangedFiles, loadLcovCoverage } from './lcov-coverage.js';
 import { loadFrameworkRegistry, selectFramework } from './framework-registry.js';
 import { assessRisks, qualityConfidence } from './risk-engine.js';
 import { loadReleasePolicy } from './release-policy.js';
@@ -117,6 +117,7 @@ async function main() {
     const minimum = argument('--min-line-coverage');
     if (minimum != null && (!/^\d+(\.\d+)?$/.test(minimum) || Number(minimum) > 100)) throw new Error('--min-line-coverage must be a number from 0 to 100.');
     if (minimum != null) change.coverage.minimum = Number(minimum);
+    change.coverage.correlation = correlateCoverageWithChangedFiles(change.coverage, change.changedFiles);
   }
   const frameworks = await loadFrameworkRegistry(path.join(root, 'aima', 'frameworks'));
   const selection = selectFramework(frameworks, change);
