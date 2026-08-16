@@ -69,6 +69,15 @@ export function buildEvidenceLedger(change, risks) {
     sha256: result.transcriptSha256,
     verification: 'local-junit-result-parse'
   }));
+  const coverageEvidence = change.coverage ? [{
+    id: 'V-001',
+    kind: 'COVERAGE_EVIDENCE',
+    source: change.coverage.parser,
+    statement: `${change.coverage.summary}${change.coverage.minimum != null ? ` Limite declarado: ${change.coverage.minimum}%.` : ''}`,
+    reference: change.coverage.id,
+    sha256: change.coverage.transcriptSha256,
+    verification: 'local-lcov-result-parse'
+  }] : [];
   const inferences = risks.map((risk, index) => ({
     id: `I-${String(index + 1).padStart(3, '0')}`,
     kind: 'INFERENCE',
@@ -76,5 +85,5 @@ export function buildEvidenceLedger(change, risks) {
     statement: `${risk.id}: ${risk.statement}.`,
     relatedEvidence: ['E-002', 'E-003', 'E-004']
   }));
-  return [...facts, ...declaredEvidence, ...artifactEvidence, ...remoteEvidence, ...executedEvidence, ...testResultEvidence, ...unknowns, ...inferences];
+  return [...facts, ...declaredEvidence, ...artifactEvidence, ...remoteEvidence, ...executedEvidence, ...testResultEvidence, ...coverageEvidence, ...unknowns, ...inferences];
 }

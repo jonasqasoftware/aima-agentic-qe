@@ -98,6 +98,18 @@ node src/cli.js analyze-pr \
   --out reports
 ```
 
+Cobertura de linhas LCOV pode ser anexada como evidência. Um limite só é aplicado quando informado explicitamente:
+
+```bash
+node src/cli.js analyze-pr \
+  --change examples/payment-refactor.change.json \
+  --lcov examples/coverage.lcov \
+  --min-line-coverage 85 \
+  --out reports
+```
+
+O AIMA não considera cobertura uma aprovação automática: ela é um sinal complementar, com hash do arquivo e limite declarado no relatório.
+
 Saída resumida do cenário sintético:
 
 ```text
