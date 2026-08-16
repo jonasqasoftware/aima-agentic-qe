@@ -151,6 +151,20 @@ node src/cli.js analyze-pr \
 
 O JSON segue o mesmo contrato de evidência do JUnit: hash do arquivo, totais, até 20 falhas identificadas e nenhum log bruto incluído.
 
+### Anexar cobertura LCOV
+
+Importe um arquivo `lcov.info` para registrar cobertura de linhas sem ler o código-fonte:
+
+```bash
+node src/cli.js analyze-pr \
+  --change examples/payment-refactor.change.json \
+  --lcov examples/coverage.lcov \
+  --min-line-coverage 85 \
+  --out reports
+```
+
+O limite é opcional. Sem `--min-line-coverage`, a cobertura é somente evidência e não cria risco por si só. Com um limite explícito, uma cobertura abaixo dele cria risco médio ou alto conforme a diferença. O relatório armazena métricas agregadas e hash do LCOV, não logs nem conteúdo do código.
+
 ### Usar como quality gate no CI
 
 Por padrão, a CLI sempre conclui com sucesso depois de gerar os relatórios. Para fazer o processo falhar conforme a recomendação, use `--fail-on`:

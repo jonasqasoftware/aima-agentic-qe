@@ -64,6 +64,19 @@ export function assessRisks(change) {
       recommendedTests: ['Investigar as falhas registradas no resultado JUnit e executar novamente a suíte afetada']
     });
   }
+  if (change.coverage?.minimum != null && change.coverage.lineCoverage != null && change.coverage.lineCoverage < change.coverage.minimum) {
+    const deficit = change.coverage.minimum - change.coverage.lineCoverage;
+    risks.push({
+      id: 'R-COVERAGE-THRESHOLD',
+      category: 'coverage',
+      score: deficit >= 20 ? 80 : 50,
+      level: deficit >= 20 ? 'HIGH' : 'MEDIUM',
+      statement: `Cobertura de linhas abaixo do limite: ${change.coverage.lineCoverage}% < ${change.coverage.minimum}%.`,
+      facts: [],
+      inference: 'O arquivo LCOV fornecido ficou abaixo do limite declarado pelo operador; cobertura não substitui revisão dos cenários de risco.',
+      recommendedTests: ['Adicionar testes para os caminhos não cobertos e executar novamente a coleta de cobertura']
+    });
+  }
   return risks.sort((left, right) => right.score - left.score || left.id.localeCompare(right.id));
 }
 

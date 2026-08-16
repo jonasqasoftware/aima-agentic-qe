@@ -18,6 +18,7 @@ import {
   executeEvidenceCommand,
   loadJUnitResults,
   loadJsonTestResults,
+  loadLcovCoverage,
   evaluateChange,
   formatMarkdown,
   formatHtml,
@@ -328,4 +329,21 @@ test('normalized JSON test results use the same evidence and risk contract', asy
   assert.equal(result.failedCases[0].suite, 'checkout.payment');
   assert.equal(result.parser, 'aima-json-test-results-v1');
   await assert.rejects(loadJsonTestResults(path.join(root, 'examples', 'payment-refactor.change.json')));
+});
+
+test('LCOV line coverage is hashed and only enforces an explicit threshold', async () => {
+  const coverage = await loadLcovCoverage(path.join(root, 'examples', 'coverage.lcov'));
+
+  assert.equal(coverage.found, 5);
+  assert.equal(coverage.hit, 4);
+  assert.equal(coverage.lineCoverage, 80);
+  assert.equal(coverage.files.length, 2);
+  assert.match(coverage.transcriptSha256, /^[a-f0-9]{64}$/);
+  const noThresholdRisks = assessRisks({ changedFiles: ['lib/normalizer.js'], businessImpact: 'low', technicalComplexity: 'low', coverage });
+  assert.equal(noThresholdRisks.some((risk) => risk.category === 'coverage'), false);
+  coverage.minimum = 90;
+  const risks = assessRisks({ changedFiles: ['lib/normalizer.js'], businessImpact: 'low', technicalComplexity: 'low', coverage });
+  assert.equal(risks.find((risk) => risk.category === 'coverage').level, 'MEDIUM');
+  const evidence = buildEvidenceLedger({ businessImpact: 'low', technicalComplexity: 'low', changedFiles: ['lib/normalizer.js'], coverage }, []).find((entry) => entry.kind === 'COVERAGE_EVIDENCE');
+  assert.match(evidence.statement, /90%/);
 });
