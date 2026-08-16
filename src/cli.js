@@ -9,6 +9,7 @@ import { executeEvidenceCommand } from './command-evidence.js';
 import { loadJUnitResults } from './junit-results.js';
 import { loadJsonTestResults } from './json-test-results.js';
 import { correlateCoverageWithChangedFiles, loadLcovCoverage } from './lcov-coverage.js';
+import { loadEvidenceManifest } from './evidence-manifest.js';
 import { loadFrameworkRegistry, selectFramework } from './framework-registry.js';
 import { assessRisks, qualityConfidence } from './risk-engine.js';
 import { loadReleasePolicy } from './release-policy.js';
@@ -29,7 +30,7 @@ function usage() {
     '  node src/cli.js verify-report --dir <diretório>',
     '  node src/cli.js evaluate --change <arquivo.json> --expected <arquivo.json> [--policy <arquivo.json>]',
     '  node src/cli.js dashboard --reports <diretório> [--out <arquivo.html>]',
-    '  node src/cli.js analyze-pr --change <arquivo.json> [--execute-evidence <comando.json>] [--junit <resultado.xml>] [--test-results <resultado.json>] [--lcov <coverage.info>] [--min-line-coverage <0-100>] [--fail-on <never|no-go|go-with-risks>] [--evidence-artifact <arquivo.json>] [--baseline <relatório.json>] [--policy <arquivo.json>] [--out <diretório>]',
+    '  node src/cli.js analyze-pr --change <arquivo.json> [--evidence-manifest <evidências.json>] [--execute-evidence <comando.json>] [--junit <resultado.xml>] [--test-results <resultado.json>] [--lcov <coverage.info>] [--min-line-coverage <0-100>] [--fail-on <never|no-go|go-with-risks>] [--evidence-artifact <arquivo.json>] [--baseline <relatório.json>] [--policy <arquivo.json>] [--out <diretório>]',
     '  node src/cli.js analyze-github-pr --repo <dono/repositório> --pr <número> --impact <low|medium|high> --complexity <low|medium|high> [--fail-on <never|no-go|go-with-risks>] [--evidence-artifact <arquivo.json>] [--baseline <relatório.json>] [--policy <arquivo.json>] [--out <diretório>]',
     '  node src/cli.js analyze-diff --repo <diretório> --base <referência> [--head <referência>] [--include-stats] --impact <low|medium|high> --complexity <low|medium|high> [--fail-on <never|no-go|go-with-risks>] [--evidence-artifact <arquivo.json>] [--baseline <relatório.json>] [--policy <arquivo.json>] [--out <diretório>]'
   ].join('\n');
@@ -118,6 +119,16 @@ async function main() {
     if (minimum != null && (!/^\d+(\.\d+)?$/.test(minimum) || Number(minimum) > 100)) throw new Error('--min-line-coverage must be a number from 0 to 100.');
     if (minimum != null) change.coverage.minimum = Number(minimum);
     change.coverage.correlation = correlateCoverageWithChangedFiles(change.coverage, change.changedFiles);
+  }
+  const manifestPath = argument('--evidence-manifest');
+  if (manifestPath) {
+    const bundle = await loadEvidenceManifest(path.resolve(manifestPath), { cwd: process.cwd() });
+    change.executionEvidence = [...(change.executionEvidence ?? []), ...bundle.executionEvidence];
+    change.testResults = [...(change.testResults ?? []), ...bundle.testResults];
+    if (bundle.coverage) {
+      change.coverage = bundle.coverage;
+      change.coverage.correlation = correlateCoverageWithChangedFiles(change.coverage, change.changedFiles);
+    }
   }
   const frameworks = await loadFrameworkRegistry(path.join(root, 'aima', 'frameworks'));
   const selection = selectFramework(frameworks, change);

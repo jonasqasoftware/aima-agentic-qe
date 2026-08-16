@@ -110,6 +110,8 @@ node src/cli.js analyze-pr \
 
 O AIMA não considera cobertura uma aprovação automática: ela é um sinal complementar, com hash do arquivo e limite declarado no relatório. Quando há arquivos de código alterados, o relatório correlaciona seus caminhos com o LCOV e destaca registros ausentes ou abaixo do limite; arquivos de documentação não entram nessa conta.
 
+Para reunir execução, testes e cobertura em uma única análise, use `--evidence-manifest examples/evidence-manifest.json`. O manifesto é local e explícito; ele não usa shell, rede ou providers externos.
+
 Saída resumida do cenário sintético:
 
 ```text

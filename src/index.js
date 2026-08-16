@@ -1,7 +1,8 @@
 export { loadChangeInput } from './change-input.js';
 export { createChangeFromLocalDiff } from './local-diff.js';
 export { createChangeFromGitHubPr } from './github-pr.js';
-export { executeEvidenceCommand } from './command-evidence.js';
+export { executeEvidenceCommand, executeEvidenceSpecification } from './command-evidence.js';
+export { loadEvidenceManifest } from './evidence-manifest.js';
 export { loadJUnitResults } from './junit-results.js';
 export { loadJsonTestResults } from './json-test-results.js';
 export { loadLcovCoverage, correlateCoverageWithChangedFiles } from './lcov-coverage.js';

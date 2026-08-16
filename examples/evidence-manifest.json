@@ -1,0 +1,8 @@
+{
+  "id": "aima-local-evidence-demo",
+  "command": { "id": "NODE-TEST", "command": "node", "args": ["--test"], "summary": "Suíte Node.js executada pelo manifesto." },
+  "junit": "test-results.junit.xml",
+  "testResults": "test-results.json",
+  "lcov": "coverage.lcov",
+  "minLineCoverage": 85
+}
