@@ -219,7 +219,8 @@ Este repositório usa Markdown, Mermaid e ADRs (*Architecture Decision Records*)
 - **MVP 0 — concluído:** CLI, registry, avaliação de risco e relatório determinístico.
 - **MVP 1 — concluído:** adaptadores de diff Git local e de PRs do GitHub com leitura autorizada de metadados, arquivos e checks.
 - **MVP 2 — concluído:** execução estruturada de evidências, importação de JUnit/JSON/LCOV, manifesto de evidências e geração do relatório também no CI.
-- **MVP 3 — em andamento:** interface web local para análise declarada; próximos incrementos incluem governança de permissões e evolução do dashboard sem perder a revisão humana.
+- **MVP 3 — concluído:** interface web local, geração de pacotes de relatório, dashboard navegável com histórico e tendências, e governança explícita de permissões.
+- **MVP 4 — próximo:** integrações autorizadas orientadas por evidências e comparação entre análises, sempre preservando revisão humana e operações externas sob autorização explícita.
 
 ## Limitações
 
