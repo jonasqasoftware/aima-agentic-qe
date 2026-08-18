@@ -28,7 +28,7 @@ Para pipelines, `--fail-on no-go` converte a recomendação em gate de CI opcion
 
 O workflow do GitHub Actions executa a suíte, gera um relatório baseado no manifesto de evidências e pode ser disparado manualmente com a escolha do modo de gate. Push e pull request permanecem no modo informativo por padrão.
 
-O MVP 3 começa com uma interface web local para o cenário de entrada declarada. Execute `npm run serve` e abra o endereço exibido; ela usa o mesmo motor determinístico da CLI, fica em `127.0.0.1` e não executa comandos, lê repositórios nem envia dados ao GitHub.
+O MVP 3 começa com uma interface web local para o cenário de entrada declarada. Execute `npm run serve` e abra o endereço exibido; ela usa o mesmo motor determinístico da CLI, fica em `127.0.0.1` e não executa comandos, lê repositórios nem envia dados ao GitHub. Pelo navegador, também é possível gerar localmente o pacote de relatório e abrir o dashboard dos relatórios acumulados.
 
 O fluxo é deliberadamente determinístico. O adaptador de PR usa o GitHub CLI já autenticado para leitura autorizada de metadados e nomes de arquivos, sem transmitir segredos ou publicar comentários. Ele não usa LLM nem executa testes de uma aplicação externa.
 
