@@ -1,6 +1,6 @@
 # Changelog
 
-## MVP 3 — em andamento
+## 0.2.0 — MVP 3 concluído
 
 - Interface web local em `127.0.0.1` para analisar uma mudança declarada pelo mesmo motor determinístico da CLI, sem execução de comandos nem acesso remoto.
 - Geração explícita de pacote de relatório e dashboard local diretamente pela interface, com escrita limitada ao diretório `reports/web`.
