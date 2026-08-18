@@ -20,6 +20,7 @@ import {
   loadJsonTestResults,
   loadLcovCoverage,
   correlateCoverageWithChangedFiles,
+  loadEvidenceManifest,
   evaluateChange,
   formatMarkdown,
   formatHtml,
@@ -365,4 +366,11 @@ test('coverage correlation distinguishes changed source files from documentation
     .find((item) => item.id === 'R-CHANGED-FILE-COVERAGE');
   assert.equal(risk.level, 'HIGH');
   assert.deepEqual(risk.facts, ['src/api/absent.js', 'src/payments/authorization.js']);
+});
+
+test('evidence manifest combines command, test results, and coverage', async () => {
+  const bundle = await loadEvidenceManifest(path.join(root, 'examples', 'evidence-manifest.json'), { cwd: root });
+  assert.equal(bundle.executionEvidence[0].status, 'passed');
+  assert.equal(bundle.testResults.length, 2);
+  assert.equal(bundle.coverage.minimum, 85);
 });

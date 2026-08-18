@@ -14,8 +14,7 @@ function transcriptHash(stdout, stderr) {
  * shell). The report keeps status and a transcript hash, not raw output, to
  * avoid making test logs or incidental secrets part of an evidence report.
  */
-export async function executeEvidenceCommand(file, { cwd = process.cwd() } = {}) {
-  const specification = JSON.parse(await readFile(file, 'utf8'));
+export async function executeEvidenceSpecification(specification, { cwd = process.cwd() } = {}) {
   if (!specification.id || !specification.command || !Array.isArray(specification.args ?? [])) {
     throw new Error('Evidence command requires id, command, and optional args array.');
   }
@@ -52,4 +51,8 @@ export async function executeEvidenceCommand(file, { cwd = process.cwd() } = {})
       transcriptSha256: transcriptHash(stdout, stderr)
     };
   }
+}
+
+export async function executeEvidenceCommand(file, options) {
+  return executeEvidenceSpecification(JSON.parse(await readFile(file, 'utf8')), options);
 }

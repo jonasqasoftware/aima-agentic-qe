@@ -165,6 +165,17 @@ node src/cli.js analyze-pr \
 
 O limite é opcional. Sem `--min-line-coverage`, a cobertura é somente evidência e não cria risco por si só. Com um limite explícito, uma cobertura abaixo dele cria risco médio ou alto conforme a diferença. O AIMA também correlaciona os arquivos de código alterados com os caminhos do LCOV: registros ausentes criam risco alto, e arquivos abaixo do limite são destacados. Documentação e arquivos sem extensão de código conhecida não entram na correlação. O relatório armazena métricas agregadas e hash do LCOV, não logs nem conteúdo do código.
 
+### Usar manifesto de evidências
+
+Um manifesto único pode declarar comando, JUnit, JSON e LCOV:
+
+```bash
+node src/cli.js analyze-pr --change examples/payment-refactor.change.json \
+  --evidence-manifest examples/evidence-manifest.json --out reports
+```
+
+Os caminhos são resolvidos relativos ao manifesto. O comando é executado sem shell; resultados e cobertura são incorporados ao mesmo ledger.
+
 ### Usar como quality gate no CI
 
 Por padrão, a CLI sempre conclui com sucesso depois de gerar os relatórios. Para fazer o processo falhar conforme a recomendação, use `--fail-on`:
