@@ -84,7 +84,9 @@ export async function createWebApp({ reportsDirectory = path.join(root, 'reports
       }
       if (request.method === 'GET' && request.url === '/dashboard') {
         const outputFile = path.join(resolvedReportsDirectory, 'aima-quality-dashboard.html');
-        await buildDashboard(resolvedReportsDirectory, outputFile);
+        await buildDashboard(resolvedReportsDirectory, outputFile, {
+          linkForReport: (item) => reportUrl(item.htmlFile, resolvedReportsDirectory)
+        });
         response.writeHead(200, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' });
         response.end(await readFile(outputFile));
         return;

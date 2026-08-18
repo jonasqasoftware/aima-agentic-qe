@@ -4,6 +4,7 @@
 
 - Interface web local em `127.0.0.1` para analisar uma mudança declarada pelo mesmo motor determinístico da CLI, sem execução de comandos nem acesso remoto.
 - Geração explícita de pacote de relatório e dashboard local diretamente pela interface, com escrita limitada ao diretório `reports/web`.
+- Histórico do dashboard com data de geração, filtro local e links para os relatórios HTML preservados.
 
 ## MVP 2 concluído
 

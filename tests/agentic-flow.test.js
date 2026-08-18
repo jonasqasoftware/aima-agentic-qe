@@ -103,7 +103,10 @@ test('local dashboard aggregates reports without remote access', async () => {
 
   assert.equal(dashboard.summaries.length, 1);
   assert.equal(dashboard.summaries[0].changeId, 'DASH-1');
-  assert.match(await readFile(outputFile, 'utf8'), /Qualidade em evidências/);
+  const html = await readFile(outputFile, 'utf8');
+  assert.match(html, /Qualidade em evidências/);
+  assert.match(html, /aima-quality-report.html/);
+  assert.match(html, /Filtrar por mudança/);
 });
 
 test('local web interface uses the deterministic engine for declared input', async () => {
