@@ -1,6 +1,6 @@
 # Arquitetura
 
-O MVP implementa uma fatia vertical, não uma plataforma completa. O CLI coordena módulos determinísticos: entrada declarada ou adaptador de diff local, registry, risco, estratégia e relatório.
+O projeto concluiu três fatias verticais (MVP 0 a MVP 2), sem se apresentar como plataforma completa. O CLI coordena módulos determinísticos para entrada declarada, diff Git local ou PR autorizado; coleta evidências locais explícitas; aplica registry, risco e estratégia; e gera relatórios auditáveis.
 
 ## Visão de execução
 
@@ -9,8 +9,17 @@ flowchart LR
   Input["Mudança declarada\nJSON"] --> Validate["Validação de entrada"]
   Git["Repositório Git local"] --> Diff["Adaptador\n--name-only / --numstat"]
   Diff --> Validate
-  Artifact["Artefato local\nde evidência JSON"] --> Hash["Hash SHA-256"]
-  Hash --> Ledger
+  GitHub["GitHub CLI autenticado"] --> PR["Adaptador de PR\nmetadados, arquivos e checks"]
+  PR --> Validate
+  Command["Comando estruturado\nsem shell"] --> Execution["Evidência de execução\nsaída hasheada"]
+  JUnit["JUnit ou JSON\nde resultados"] --> Tests["Evidência de testes"]
+  LCOV["Arquivo LCOV"] --> Coverage["Evidência e correlação\nde cobertura"]
+  Manifest["Manifesto local\nde evidências"] --> Execution
+  Manifest --> Tests
+  Manifest --> Coverage
+  Execution --> Ledger
+  Tests --> Ledger
+  Coverage --> Ledger
   Validate --> Registry["Framework Registry\nAIMA"]
   Registry --> Risk["Risk Agent\nregras determinísticas"]
   Risk --> Strategy["Estratégia de testes\ne evidências esperadas"]
@@ -30,7 +39,7 @@ flowchart LR
   Evaluate["Golden evaluation"] -. "expectativas versionadas" .-> Decision
 ```
 
-O adaptador de Git lê a lista local de arquivos alterados e, opcionalmente, estatísticas de linhas entre referências. O diagrama não implica leitura de conteúdo de diff, pull request remoto, uso de LLM, execução de testes externos ou publicação automática de comentários.
+O adaptador de Git lê a lista local de arquivos alterados e, opcionalmente, estatísticas de linhas entre referências. O adaptador de PR usa o GitHub CLI autenticado apenas para metadados, nomes de arquivos e checks disponíveis. O diagrama não implica leitura de conteúdo de diff, uso de LLM, execução automática de comandos não declarados ou publicação automática de comentários.
 
 ## Decisões
 
@@ -40,16 +49,18 @@ O adaptador de Git lê a lista local de arquivos alterados e, opcionalmente, est
 | Framework Registry | Evita hardcode de metodologias AIMA e seleciona pela superfície declarada | A seleção atual usa sinais de caminho simples. |
 | Sinais de risco explícitos | Evita alegações de análise mágica ou leitura remota | Não substitui análise de diff real. |
 | Quality Confidence explicável | Mostra trade-offs e incertezas | Métrica experimental, não preditiva. |
-| Ledger de evidências | Torna origem e tipo de cada afirmação auditáveis | Ainda não referencia execução de testes externa. |
+| Ledger de evidências | Torna origem e tipo de cada afirmação auditáveis | Registra resultado e hash; não prova que o ambiente externo representa produção. |
 | Política de release | Separa governança de decisão e código | Exige contexto humano para impacto e complexidade. |
 | Comparação com baseline | Destaca mudanças entre análises declaradas | Não demonstra regressão de código. |
-| Artefato com SHA-256 | Registra integridade do arquivo local analisado | Não comprova resultado de teste. |
+| Evidência estruturada com SHA-256 | Registra integridade de comandos, artefatos e transcripts locais | Não comprova que a execução representa produção. |
+| Importadores JUnit, JSON e LCOV | Reúne resultados e cobertura sem logs sensíveis | Parsers deliberadamente limitados aos contratos documentados. |
+| Manifesto de evidências | Reproduz uma análise com entradas explícitas | Não descobre nem executa ferramentas automaticamente. |
 | Gate opcional de CI | Converte recomendação em código de saída | Padrão não bloqueia pipelines. |
 | Manifesto de relatório | Permite verificar integridade dos artefatos gerados | Não comprova veracidade da entrada. |
 | Avaliação golden | Detecta regressão em decisões determinísticas | Cobertura limitada aos cenários versionados. |
 | Dashboard local | Agrega relatórios para leitura visual | Não persiste dados nem consulta remoto. |
 
-O próximo adaptador deve implementar leitura autorizada de um diff real antes de adicionar novos agentes ou LLMs.
+O próximo marco é uma interface interativa e governança de permissões. Qualquer nova integração deve manter leitura mínima, escrita sempre autorizada e incertezas explícitas.
 
 ## Contratos e rastreabilidade
 

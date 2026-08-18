@@ -1,3 +1,16 @@
 # Roadmap
 
-Veja o [README](README.md#roadmap) para os marcos MVP 0 a MVP 3. Cada nova integração deve manter autonomia limitada, evidências rastreáveis e aprovação humana para escritas externas.
+## Concluído
+
+- **MVP 0:** análise determinística de mudança declarada, registry AIMA, riscos, estratégia e relatórios auditáveis.
+- **MVP 1:** adaptadores de diff Git local e de PRs do GitHub por leitura autorizada do GitHub CLI.
+- **MVP 2:** execução estruturada de evidências, importadores JUnit/JSON/LCOV, correlação de cobertura, manifesto e relatório no GitHub Actions.
+
+## Próximo: MVP 3
+
+- Interface interativa para iniciar análises e ler relatórios sem depender diretamente da CLI.
+- Evolução do dashboard local para navegação de histórico e comparação de execuções.
+- Governança explícita de permissões para novas integrações, mantendo operações externas de escrita sob aprovação humana.
+- Expansão de agentes somente quando houver uma etapa real que não seja resolvida por regras determinísticas e evidências rastreáveis.
+
+Cada novo marco deve preservar autonomia limitada, incertezas explícitas, evidências rastreáveis e aprovação humana para escritas externas. O resumo público dos marcos também está no [README](README.md#roadmap).

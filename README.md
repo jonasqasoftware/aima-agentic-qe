@@ -30,7 +30,7 @@ O workflow do GitHub Actions executa a suíte, gera um relatório baseado no man
 
 O fluxo é deliberadamente determinístico. O adaptador de PR usa o GitHub CLI já autenticado para leitura autorizada de metadados e nomes de arquivos, sem transmitir segredos ou publicar comentários. Ele não usa LLM nem executa testes de uma aplicação externa.
 
-No início do MVP 2, um comando estruturado fornecido explicitamente pode ser executado como evidência local. AIMA não usa shell, preserva apenas código de saída e hash do transcript — nunca o log completo — e transforma falhas em risco alto. A execução não prova cobertura nem aprova um release.
+No MVP 2 concluído, comandos estruturados fornecidos explicitamente podem ser executados como evidência local, e resultados JUnit, JSON e LCOV podem ser importados por um manifesto. AIMA não usa shell, preserva apenas código de saída e hash do transcript — nunca o log completo — e transforma falhas em risco alto. A execução e a cobertura não aprovam um release por si só.
 
 ## Demonstração
 
@@ -183,11 +183,16 @@ O diretório [`evals/golden`](evals/golden) contém expectativas conhecidas para
 
 ```text
 src/
-  change-input      entrada e validação
+  change-input, local-diff, github-pr
+                    entradas declaradas, Git local e PR autorizado
+  command-evidence, junit-results, json-test-results, lcov-coverage
+                    evidências de execução, testes e cobertura
+  evidence-manifest manifesto explícito que reúne evidências locais
   framework-registry registry AIMA extensível
-  risk-engine       hipóteses de risco determinísticas
-  strategy          verificações e recomendação
-  report            relatório e rastreabilidade
+  risk-engine, strategy
+                    hipóteses, verificações e recomendação determinísticas
+  report, evidence-ledger
+                    relatórios e rastreabilidade auditável
 
 aima/frameworks/    frameworks como dados
 examples/           mudanças sintéticas
@@ -208,14 +213,15 @@ Este repositório usa Markdown, Mermaid e ADRs (*Architecture Decision Records*)
 
 ## Roadmap
 
-- **MVP 0 (atual):** CLI, registry, avaliação de risco e relatório determinístico.
-- **MVP 1:** adaptador autorizado para PRs do GitHub e análise de diffs reais.
-- **MVP 2:** execução de testes, coleta de evidências e análise de falhas.
-- **MVP 3:** orquestração multiagente, permissões e dashboard.
+- **MVP 0 — concluído:** CLI, registry, avaliação de risco e relatório determinístico.
+- **MVP 1 — concluído:** adaptadores de diff Git local e de PRs do GitHub com leitura autorizada de metadados, arquivos e checks.
+- **MVP 2 — concluído:** execução estruturada de evidências, importação de JUnit/JSON/LCOV, manifesto de evidências e geração do relatório também no CI.
+- **MVP 3 — próximo:** interface interativa, governança de permissões para integrações e evolução do dashboard sem perder a revisão humana.
 
 ## Limitações
 
-- Os sinais de risco dependem integralmente da mudança declarada.
+- Os sinais de risco dependem da mudança declarada ou dos metadados e nomes de arquivos fornecidos pelos adaptadores; o AIMA não lê o conteúdo do diff.
+- A integração com GitHub é opcional, somente de leitura e requer autenticação local prévia no GitHub CLI; o projeto não publica comentários nem altera PRs.
 - Não há LLM, memória persistente, MCP nem provider externo nesta versão.
 - A recomendação de release requer revisão humana e evidências de execução no sistema alvo.
 
