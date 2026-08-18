@@ -35,6 +35,16 @@ Abra o endereço exibido, normalmente `http://127.0.0.1:4173`. A interface receb
 
 Use **Gerar pacote de relatório** quando quiser preservar a análise. Os arquivos JSON, Markdown, HTML, SARIF e o manifesto são gravados localmente em `reports/web/<id>-<data>`. O botão **Abrir dashboard local** consolida os relatórios encontrados nesse diretório, permite filtrar o histórico e abre cada relatório HTML.
 
+## Governança de permissões
+
+Consulte os limites operacionais ativos:
+
+```bash
+node src/cli.js permissions
+```
+
+A política versionada em [`aima/policies/operation-permissions.json`](../aima/policies/operation-permissions.json) permite análise declarada, exige uma ação explícita do usuário para gravar relatórios locais e mantém comentários ou merges no GitHub como operações proibidas para a aplicação. A autorização de operações externas continua sendo responsabilidade humana fora da interface local.
+
 ## Caminho rápido
 
 Analise o cenário de pagamento incluído no projeto:

@@ -175,6 +175,7 @@ Recomendação de release
 - O relatório estabelece o limite das evidências antes de apresentar qualquer decisão.
 - O score é experimental: não é uma métrica científica nem aprovação automática.
 - O projeto não contém credenciais, dados de clientes ou integrações externas.
+- A [política de operações](aima/policies/operation-permissions.json) separa análise permitida, escrita local iniciada pelo usuário, operações que exigem autorização humana e escritas externas proibidas.
 - As regras de autonomia e evolução estão em [AGENTS.md](AGENTS.md).
 
 ## Avaliações

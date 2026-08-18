@@ -8,6 +8,7 @@ import { promisify } from 'node:util';
 import { fileURLToPath } from 'node:url';
 import {
   assessRisks,
+  assertOperationPermitted,
   analyzeDeclaredChange,
   buildEvidenceLedger,
   buildDashboard,
@@ -29,6 +30,7 @@ import {
   loadChangeInput,
   loadEvidenceArtifact,
   loadReleasePolicy,
+  loadOperationPermissionPolicy,
   loadFrameworkRegistry,
   qualityConfidence,
   saveDeclaredReport,
@@ -137,6 +139,14 @@ test('local web interface saves reports in a server-controlled report directory'
   assert.ok(saved.directory.startsWith(path.join(reportsDirectory, 'web')));
   assert.match(saved.directory, /WEB-unsafe-/);
   assert.equal((await verifyReportManifest(saved.directory)).valid, true);
+});
+
+test('operation permission policy requires an explicit user action for local report writes', async () => {
+  const policy = await loadOperationPermissionPolicy(path.join(root, 'aima', 'policies', 'operation-permissions.json'));
+  assert.equal(assertOperationPermitted(policy, 'analyze-declared-change'), 'allowed');
+  assert.throws(() => assertOperationPermitted(policy, 'write-local-report'));
+  assert.equal(assertOperationPermitted(policy, 'write-local-report', { userAction: true }), 'allowed-with-user-action');
+  assert.throws(() => assertOperationPermitted(policy, 'publish-github-comment', { humanAuthorization: true }));
 });
 
 test('unknown change surface remains explicit instead of invented', () => {

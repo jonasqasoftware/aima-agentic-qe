@@ -13,6 +13,7 @@ import { loadEvidenceManifest } from './evidence-manifest.js';
 import { loadFrameworkRegistry, selectFramework } from './framework-registry.js';
 import { assessRisks, qualityConfidence } from './risk-engine.js';
 import { loadReleasePolicy } from './release-policy.js';
+import { loadOperationPermissionPolicy } from './permission-policy.js';
 import { compareWithBaseline, loadBaselineReport } from './baseline.js';
 import { loadEvidenceArtifact } from './evidence-artifact.js';
 import { shouldFailQualityGate } from './quality-gate.js';
@@ -32,6 +33,7 @@ function usage() {
     '  node src/cli.js evaluate --change <arquivo.json> --expected <arquivo.json> [--policy <arquivo.json>]',
     '  node src/cli.js dashboard --reports <diretório> [--out <arquivo.html>]',
     '  node src/cli.js serve [--port <porta>]',
+    '  node src/cli.js permissions',
     '  node src/cli.js analyze-pr --change <arquivo.json> [--evidence-manifest <evidências.json>] [--execute-evidence <comando.json>] [--junit <resultado.xml>] [--test-results <resultado.json>] [--lcov <coverage.info>] [--min-line-coverage <0-100>] [--fail-on <never|no-go|go-with-risks>] [--evidence-artifact <arquivo.json>] [--baseline <relatório.json>] [--policy <arquivo.json>] [--out <diretório>]',
     '  node src/cli.js analyze-github-pr --repo <dono/repositório> --pr <número> --impact <low|medium|high> --complexity <low|medium|high> [--fail-on <never|no-go|go-with-risks>] [--evidence-artifact <arquivo.json>] [--baseline <relatório.json>] [--policy <arquivo.json>] [--out <diretório>]',
     '  node src/cli.js analyze-diff --repo <diretório> --base <referência> [--head <referência>] [--include-stats] --impact <low|medium|high> --complexity <low|medium|high> [--fail-on <never|no-go|go-with-risks>] [--evidence-artifact <arquivo.json>] [--baseline <relatório.json>] [--policy <arquivo.json>] [--out <diretório>]'
@@ -80,6 +82,12 @@ async function main() {
     if (!/^\d+$/.test(value) || Number(value) < 1 || Number(value) > 65535) throw new Error('--port must be a number from 1 to 65535.');
     const server = await startWebApp({ port: Number(value) });
     console.log(`Interface local: ${server.address}`);
+    return;
+  }
+  if (command === 'permissions') {
+    const policy = await loadOperationPermissionPolicy(path.join(root, 'aima', 'policies', 'operation-permissions.json'));
+    console.log(`${policy.name} (${policy.id} · v${policy.version})`);
+    for (const [operation, decision] of Object.entries(policy.operations)) console.log(`- ${operation}: ${decision}`);
     return;
   }
   if (!['analyze-pr', 'analyze-diff', 'analyze-github-pr'].includes(command)) throw new Error(usage());
