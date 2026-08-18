@@ -28,6 +28,8 @@ Para pipelines, `--fail-on no-go` converte a recomendação em gate de CI opcion
 
 O workflow do GitHub Actions executa a suíte, gera um relatório baseado no manifesto de evidências e pode ser disparado manualmente com a escolha do modo de gate. Push e pull request permanecem no modo informativo por padrão.
 
+O MVP 3 começa com uma interface web local para o cenário de entrada declarada. Execute `npm run serve` e abra o endereço exibido; ela usa o mesmo motor determinístico da CLI, fica em `127.0.0.1` e não executa comandos, lê repositórios nem envia dados ao GitHub.
+
 O fluxo é deliberadamente determinístico. O adaptador de PR usa o GitHub CLI já autenticado para leitura autorizada de metadados e nomes de arquivos, sem transmitir segredos ou publicar comentários. Ele não usa LLM nem executa testes de uma aplicação externa.
 
 No MVP 2 concluído, comandos estruturados fornecidos explicitamente podem ser executados como evidência local, e resultados JUnit, JSON e LCOV podem ser importados por um manifesto. AIMA não usa shell, preserva apenas código de saída e hash do transcript — nunca o log completo — e transforma falhas em risco alto. A execução e a cobertura não aprovam um release por si só.
@@ -216,7 +218,7 @@ Este repositório usa Markdown, Mermaid e ADRs (*Architecture Decision Records*)
 - **MVP 0 — concluído:** CLI, registry, avaliação de risco e relatório determinístico.
 - **MVP 1 — concluído:** adaptadores de diff Git local e de PRs do GitHub com leitura autorizada de metadados, arquivos e checks.
 - **MVP 2 — concluído:** execução estruturada de evidências, importação de JUnit/JSON/LCOV, manifesto de evidências e geração do relatório também no CI.
-- **MVP 3 — próximo:** interface interativa, governança de permissões para integrações e evolução do dashboard sem perder a revisão humana.
+- **MVP 3 — em andamento:** interface web local para análise declarada; próximos incrementos incluem governança de permissões e evolução do dashboard sem perder a revisão humana.
 
 ## Limitações
 

@@ -8,6 +8,7 @@ import { promisify } from 'node:util';
 import { fileURLToPath } from 'node:url';
 import {
   assessRisks,
+  analyzeDeclaredChange,
   buildEvidenceLedger,
   buildDashboard,
   buildStrategy,
@@ -102,6 +103,21 @@ test('local dashboard aggregates reports without remote access', async () => {
   assert.equal(dashboard.summaries.length, 1);
   assert.equal(dashboard.summaries[0].changeId, 'DASH-1');
   assert.match(await readFile(outputFile, 'utf8'), /Qualidade em evidências/);
+});
+
+test('local web interface uses the deterministic engine for declared input', async () => {
+  const report = await analyzeDeclaredChange({
+    id: 'WEB-TEST-1',
+    summary: 'Análise por interface local',
+    changedFiles: ['src/payments/authorization.js'],
+    businessImpact: 'high',
+    technicalComplexity: 'medium',
+    knownUnknowns: []
+  });
+
+  assert.equal(report.context.changeId, 'WEB-TEST-1');
+  assert.equal(report.context.source, 'declared-input');
+  assert.ok(report.risks.some((risk) => risk.category === 'financial'));
 });
 
 test('unknown change surface remains explicit instead of invented', () => {

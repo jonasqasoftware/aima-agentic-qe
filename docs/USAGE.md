@@ -23,6 +23,16 @@ Não há dependências para instalar no MVP. Execute o teste de integridade ante
 npm test
 ```
 
+## Interface web local
+
+Para analisar uma mudança declarada sem montar o comando da CLI, inicie a interface local:
+
+```bash
+npm run serve
+```
+
+Abra o endereço exibido, normalmente `http://127.0.0.1:4173`. A interface recebe somente os campos declarados no formulário e chama o mesmo motor determinístico da CLI. Ela não lê conteúdo de código, não executa comandos, não grava relatórios e não envia dados ao GitHub.
+
 ## Caminho rápido
 
 Analise o cenário de pagamento incluído no projeto:

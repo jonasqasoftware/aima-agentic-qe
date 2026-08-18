@@ -1,4 +1,4 @@
-export { loadChangeInput } from './change-input.js';
+export { loadChangeInput, normalizeChangeInput } from './change-input.js';
 export { createChangeFromLocalDiff } from './local-diff.js';
 export { createChangeFromGitHubPr } from './github-pr.js';
 export { executeEvidenceCommand, executeEvidenceSpecification } from './command-evidence.js';
@@ -18,3 +18,4 @@ export { shouldFailQualityGate } from './quality-gate.js';
 export { createReportManifest, verifyReportManifest } from './report-manifest.js';
 export { evaluateChange } from './evaluation.js';
 export { buildDashboard, collectReportSummaries, formatDashboard } from './dashboard.js';
+export { analyzeDeclaredChange, createWebApp, startWebApp } from './web-app.js';

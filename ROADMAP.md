@@ -6,9 +6,9 @@
 - **MVP 1:** adaptadores de diff Git local e de PRs do GitHub por leitura autorizada do GitHub CLI.
 - **MVP 2:** execução estruturada de evidências, importadores JUnit/JSON/LCOV, correlação de cobertura, manifesto e relatório no GitHub Actions.
 
-## Próximo: MVP 3
+## MVP 3: em andamento
 
-- Interface interativa para iniciar análises e ler relatórios sem depender diretamente da CLI.
+- Interface web local para iniciar análise de entrada declarada sem depender diretamente da CLI.
 - Evolução do dashboard local para navegação de histórico e comparação de execuções.
 - Governança explícita de permissões para novas integrações, mantendo operações externas de escrita sob aprovação humana.
 - Expansão de agentes somente quando houver uma etapa real que não seja resolvida por regras determinísticas e evidências rastreáveis.

@@ -12,7 +12,10 @@ function validateDeclaredEvidence(items) {
 }
 
 export async function loadChangeInput(file) {
-  const input = JSON.parse(await readFile(file, 'utf8'));
+  return normalizeChangeInput(JSON.parse(await readFile(file, 'utf8')));
+}
+
+export function normalizeChangeInput(input) {
   if (!input.id || !input.summary || !Array.isArray(input.changedFiles) || input.changedFiles.length === 0) {
     throw new Error('Change input requires id, summary, and at least one changed file.');
   }

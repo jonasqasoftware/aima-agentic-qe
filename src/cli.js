@@ -19,6 +19,7 @@ import { shouldFailQualityGate } from './quality-gate.js';
 import { verifyReportManifest } from './report-manifest.js';
 import { evaluateChange } from './evaluation.js';
 import { buildDashboard } from './dashboard.js';
+import { startWebApp } from './web-app.js';
 import { buildStrategy } from './strategy.js';
 import { createReport, writeReports } from './report.js';
 
@@ -30,6 +31,7 @@ function usage() {
     '  node src/cli.js verify-report --dir <diretório>',
     '  node src/cli.js evaluate --change <arquivo.json> --expected <arquivo.json> [--policy <arquivo.json>]',
     '  node src/cli.js dashboard --reports <diretório> [--out <arquivo.html>]',
+    '  node src/cli.js serve [--port <porta>]',
     '  node src/cli.js analyze-pr --change <arquivo.json> [--evidence-manifest <evidências.json>] [--execute-evidence <comando.json>] [--junit <resultado.xml>] [--test-results <resultado.json>] [--lcov <coverage.info>] [--min-line-coverage <0-100>] [--fail-on <never|no-go|go-with-risks>] [--evidence-artifact <arquivo.json>] [--baseline <relatório.json>] [--policy <arquivo.json>] [--out <diretório>]',
     '  node src/cli.js analyze-github-pr --repo <dono/repositório> --pr <número> --impact <low|medium|high> --complexity <low|medium|high> [--fail-on <never|no-go|go-with-risks>] [--evidence-artifact <arquivo.json>] [--baseline <relatório.json>] [--policy <arquivo.json>] [--out <diretório>]',
     '  node src/cli.js analyze-diff --repo <diretório> --base <referência> [--head <referência>] [--include-stats] --impact <low|medium|high> --complexity <low|medium|high> [--fail-on <never|no-go|go-with-risks>] [--evidence-artifact <arquivo.json>] [--baseline <relatório.json>] [--policy <arquivo.json>] [--out <diretório>]'
@@ -71,6 +73,13 @@ async function main() {
     const outputFile = argument('--out', path.join(root, 'reports', 'aima-quality-dashboard.html'));
     const dashboard = await buildDashboard(path.resolve(reportsDirectory), path.resolve(outputFile));
     console.log(`Dashboard: ${dashboard.outputFile} (${dashboard.summaries.length} relatório(s))`);
+    return;
+  }
+  if (command === 'serve') {
+    const value = argument('--port', '4173');
+    if (!/^\d+$/.test(value) || Number(value) < 1 || Number(value) > 65535) throw new Error('--port must be a number from 1 to 65535.');
+    const server = await startWebApp({ port: Number(value) });
+    console.log(`Interface local: ${server.address}`);
     return;
   }
   if (!['analyze-pr', 'analyze-diff', 'analyze-github-pr'].includes(command)) throw new Error(usage());

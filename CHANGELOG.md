@@ -1,5 +1,9 @@
 # Changelog
 
+## MVP 3 — em andamento
+
+- Interface web local em `127.0.0.1` para analisar uma mudança declarada pelo mesmo motor determinístico da CLI, sem execução de comandos nem acesso remoto.
+
 ## MVP 2 concluído
 
 - Pipeline de evidências concluído: execução estruturada, resultados JUnit/JSON, cobertura LCOV e manifesto local em uma única análise.

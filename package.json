@@ -9,6 +9,7 @@
   },
   "scripts": {
     "analyze": "node src/cli.js analyze-pr",
+    "serve": "node src/cli.js serve",
     "evaluate": "node src/cli.js evaluate --change examples/payment-refactor.change.json --expected evals/golden/payment-refactor.expected.json",
     "test": "node --test",
     "check": "node --check src/*.js && npm test && npm run evaluate"
