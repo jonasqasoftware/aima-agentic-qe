@@ -18,4 +18,4 @@ export { shouldFailQualityGate } from './quality-gate.js';
 export { createReportManifest, verifyReportManifest } from './report-manifest.js';
 export { evaluateChange } from './evaluation.js';
 export { buildDashboard, collectReportSummaries, formatDashboard } from './dashboard.js';
-export { analyzeDeclaredChange, createWebApp, startWebApp } from './web-app.js';
+export { analyzeDeclaredChange, createWebApp, saveDeclaredReport, startWebApp } from './web-app.js';

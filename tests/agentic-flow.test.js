@@ -31,6 +31,7 @@ import {
   loadReleasePolicy,
   loadFrameworkRegistry,
   qualityConfidence,
+  saveDeclaredReport,
   selectFramework,
   shouldFailQualityGate,
   verifyReportManifest,
@@ -118,6 +119,21 @@ test('local web interface uses the deterministic engine for declared input', asy
   assert.equal(report.context.changeId, 'WEB-TEST-1');
   assert.equal(report.context.source, 'declared-input');
   assert.ok(report.risks.some((risk) => risk.category === 'financial'));
+});
+
+test('local web interface saves reports in a server-controlled report directory', async () => {
+  const reportsDirectory = await mkdtemp(path.join(os.tmpdir(), 'aima-web-reports-'));
+  const saved = await saveDeclaredReport({
+    id: 'WEB / unsafe?',
+    summary: 'Relatório salvo pela interface',
+    changedFiles: ['src/orders.js'],
+    businessImpact: 'low',
+    technicalComplexity: 'low'
+  }, { reportsDirectory });
+
+  assert.ok(saved.directory.startsWith(path.join(reportsDirectory, 'web')));
+  assert.match(saved.directory, /WEB-unsafe-/);
+  assert.equal((await verifyReportManifest(saved.directory)).valid, true);
 });
 
 test('unknown change surface remains explicit instead of invented', () => {

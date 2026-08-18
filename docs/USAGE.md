@@ -31,7 +31,9 @@ Para analisar uma mudança declarada sem montar o comando da CLI, inicie a inter
 npm run serve
 ```
 
-Abra o endereço exibido, normalmente `http://127.0.0.1:4173`. A interface recebe somente os campos declarados no formulário e chama o mesmo motor determinístico da CLI. Ela não lê conteúdo de código, não executa comandos, não grava relatórios e não envia dados ao GitHub.
+Abra o endereço exibido, normalmente `http://127.0.0.1:4173`. A interface recebe somente os campos declarados no formulário e chama o mesmo motor determinístico da CLI. Ela não lê conteúdo de código, não executa comandos e não envia dados ao GitHub.
+
+Use **Gerar pacote de relatório** quando quiser preservar a análise. Os arquivos JSON, Markdown, HTML, SARIF e o manifesto são gravados localmente em `reports/web/<id>-<data>`. O botão **Abrir dashboard local** consolida os relatórios encontrados nesse diretório.
 
 ## Caminho rápido
 
