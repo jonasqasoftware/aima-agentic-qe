@@ -6,6 +6,7 @@
 - Geração explícita de pacote de relatório e dashboard local diretamente pela interface, com escrita limitada ao diretório `reports/web`.
 - Histórico do dashboard com data de geração, filtro local e links para os relatórios HTML preservados.
 - Política versionada de permissões operacionais, distinguindo análise permitida, escrita local iniciada pelo usuário, autorização humana e escritas externas proibidas.
+- Links na interface para todos os artefatos do pacote gerado: HTML, JSON, Markdown, SARIF e manifesto de integridade.
 
 ## MVP 2 concluído
 

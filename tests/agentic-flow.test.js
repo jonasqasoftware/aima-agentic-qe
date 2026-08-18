@@ -138,6 +138,8 @@ test('local web interface saves reports in a server-controlled report directory'
 
   assert.ok(saved.directory.startsWith(path.join(reportsDirectory, 'web')));
   assert.match(saved.directory, /WEB-unsafe-/);
+  assert.ok(saved.files.jsonPath.endsWith('aima-quality-report.json'));
+  assert.ok(saved.files.sarifPath.endsWith('aima-quality-report.sarif'));
   assert.equal((await verifyReportManifest(saved.directory)).valid, true);
 });
 
