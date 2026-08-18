@@ -8,6 +8,7 @@
 - Política versionada de permissões operacionais, distinguindo análise permitida, escrita local iniciada pelo usuário, autorização humana e escritas externas proibidas.
 - Links na interface para todos os artefatos do pacote gerado: HTML, JSON, Markdown, SARIF e manifesto de integridade.
 - Tendência visual do `Quality Confidence` no dashboard local, baseada exclusivamente nos relatórios preservados.
+- Variação de confiança por relatório, comparada somente com a análise histórica imediatamente anterior.
 
 ## MVP 2 concluído
 
