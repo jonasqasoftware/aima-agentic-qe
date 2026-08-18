@@ -26,6 +26,7 @@
 - Coleta de cobertura de linhas LCOV, com limite opcional declarado pelo operador e evidência hasheada.
 - Correlação entre arquivos de código alterados e registros LCOV, distinguindo ausência de cobertura de alterações de documentação.
 - Manifesto local que reúne execução, resultados de teste e cobertura em uma análise auditável.
+- Workflow de CI gera relatório a partir do manifesto de evidências, aproximando execução local e CI.
 
 ## 0.1.0
 
