@@ -196,7 +196,7 @@ node src/cli.js analyze-pr \
 
 Os relatórios são gravados antes da falha do gate, mantendo evidências disponíveis para investigação. O workflow padrão do projeto permanece informativo e não usa `--fail-on`.
 
-No GitHub Actions, abra **Actions → Quality gates → Run workflow** para executar manualmente e escolher `never`, `no-go` ou `go-with-risks`. Em `push` e pull request o modo permanece `never`; em todos os casos, o artefato do relatório é enviado mesmo quando o gate falhar.
+No GitHub Actions, abra **Actions → Quality gates → Run workflow** para executar manualmente e escolher `never`, `no-go` ou `go-with-risks`. Em `push` e pull request o modo permanece `never`; em todos os casos, a suíte é executada, o manifesto de evidências é processado e o artefato do relatório é enviado mesmo quando o gate falhar. O exemplo usa um comando de evidência simples para não executar a suíte recursivamente; projetos consumidores podem apontar o manifesto para seus próprios comandos autorizados.
 
 O comando imprime uma recomendação e grava três artefatos:
 

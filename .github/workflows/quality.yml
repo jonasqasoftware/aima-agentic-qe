@@ -28,11 +28,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Validate source and tests
+      - name: Execute source validation and tests
         run: npm run check
-      - name: Generate synthetic quality report
-        run: node src/cli.js analyze-pr --change examples/payment-refactor.change.json --fail-on "${{ inputs.fail_on || 'never' }}" --out reports
-      - name: Upload synthetic report
+      - name: Generate evidence-aware quality report
+        run: node src/cli.js analyze-pr --change examples/payment-refactor.change.json --evidence-manifest examples/evidence-manifest.json --fail-on "${{ inputs.fail_on || 'never' }}" --out reports
+      - name: Upload quality evidence report
         if: always()
         uses: actions/upload-artifact@v4
         with:
