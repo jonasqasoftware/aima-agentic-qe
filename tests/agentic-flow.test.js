@@ -25,6 +25,7 @@ import {
   loadEvidenceManifest,
   evaluateChange,
   formatMarkdown,
+  formatDashboard,
   formatHtml,
   formatSarif,
   loadChangeInput,
@@ -111,6 +112,13 @@ test('local dashboard aggregates reports without remote access', async () => {
   assert.match(html, /Filtrar por mudança/);
   assert.match(html, /Tendência de confiança/);
   assert.match(html, /<polyline class="line" points="50\.00,28\.00"/);
+  assert.match(html, /<th>Variação<\/th>/);
+
+  const comparisonHtml = formatDashboard([
+    { file: 'old', htmlFile: 'old.html', generatedAt: '2026-01-01T00:00:00.000Z', changeId: 'OLD', summary: 'Anterior', confidence: 60, recommendation: 'GO WITH RISKS', policy: 'policy', riskCount: 1 },
+    { file: 'new', htmlFile: 'new.html', generatedAt: '2026-01-02T00:00:00.000Z', changeId: 'NEW', summary: 'Atual', confidence: 80, recommendation: 'GO', policy: 'policy', riskCount: 0 }
+  ]);
+  assert.match(comparisonHtml, /class="delta positive">\+20/);
 });
 
 test('local web interface uses the deterministic engine for declared input', async () => {
