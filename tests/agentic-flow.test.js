@@ -109,6 +109,8 @@ test('local dashboard aggregates reports without remote access', async () => {
   assert.match(html, /Qualidade em evidências/);
   assert.match(html, /aima-quality-report.html/);
   assert.match(html, /Filtrar por mudança/);
+  assert.match(html, /Tendência de confiança/);
+  assert.match(html, /<polyline class="line" points="50\.00,28\.00"/);
 });
 
 test('local web interface uses the deterministic engine for declared input', async () => {

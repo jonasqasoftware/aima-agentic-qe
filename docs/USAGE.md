@@ -35,6 +35,8 @@ Abra o endereço exibido, normalmente `http://127.0.0.1:4173`. A interface receb
 
 Use **Gerar pacote de relatório** quando quiser preservar a análise. Os arquivos JSON, Markdown, HTML, SARIF e o manifesto são gravados localmente em `reports/web/<id>-<data>`; depois da geração, a própria interface exibe links para todos eles. O botão **Abrir dashboard local** consolida os relatórios encontrados nesse diretório, permite filtrar o histórico e abre cada relatório HTML.
 
+O dashboard também apresenta uma tendência visual do `Quality Confidence` das análises salvas. Ela é um acompanhamento histórico, não uma previsão nem uma aprovação automática de release.
+
 ## Governança de permissões
 
 Consulte os limites operacionais ativos:
