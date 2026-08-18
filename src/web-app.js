@@ -9,6 +9,7 @@ import { loadReleasePolicy } from './release-policy.js';
 import { buildStrategy } from './strategy.js';
 import { createReport, writeReports } from './report.js';
 import { buildDashboard } from './dashboard.js';
+import { assertOperationPermitted, loadOperationPermissionPolicy } from './permission-policy.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const maxBodyBytes = 64 * 1024;
@@ -42,7 +43,8 @@ function reportDirectoryFor(report, reportsDirectory) {
   return path.join(reportsDirectory, 'web', `${id}-${new Date().toISOString().replaceAll(/[:.]/g, '-')}`);
 }
 
-export async function saveDeclaredReport(input, { reportsDirectory = path.join(root, 'reports') } = {}) {
+export async function saveDeclaredReport(input, { reportsDirectory = path.join(root, 'reports'), permissionPolicy, userAction = false } = {}) {
+  if (permissionPolicy) assertOperationPermitted(permissionPolicy, 'write-local-report', { userAction });
   const report = await analyzeDeclaredChange(input);
   const directory = reportDirectoryFor(report, path.resolve(reportsDirectory));
   const files = await writeReports(report, directory);
@@ -63,6 +65,7 @@ function reportUrl(file, reportsDirectory) {
 
 export async function createWebApp({ reportsDirectory = path.join(root, 'reports') } = {}) {
   const resolvedReportsDirectory = path.resolve(reportsDirectory);
+  const permissionPolicy = await loadOperationPermissionPolicy(path.join(root, 'aima', 'policies', 'operation-permissions.json'));
   return createServer(async (request, response) => {
     try {
       if (request.method === 'GET' && request.url === '/') {
@@ -71,15 +74,21 @@ export async function createWebApp({ reportsDirectory = path.join(root, 'reports
         return;
       }
       if (request.method === 'POST' && request.url === '/api/analyze') {
+        assertOperationPermitted(permissionPolicy, 'analyze-declared-change');
         const report = await analyzeDeclaredChange(await readJson(request));
         response.writeHead(200, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' });
         response.end(JSON.stringify(report));
         return;
       }
       if (request.method === 'POST' && request.url === '/api/reports') {
-        const saved = await saveDeclaredReport(await readJson(request), { reportsDirectory: resolvedReportsDirectory });
+        const saved = await saveDeclaredReport(await readJson(request), { reportsDirectory: resolvedReportsDirectory, permissionPolicy, userAction: true });
         response.writeHead(201, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' });
         response.end(JSON.stringify({ report: saved.report, htmlUrl: reportUrl(saved.files.htmlPath, resolvedReportsDirectory) }));
+        return;
+      }
+      if (request.method === 'GET' && request.url === '/api/permissions') {
+        response.writeHead(200, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' });
+        response.end(JSON.stringify(permissionPolicy));
         return;
       }
       if (request.method === 'GET' && request.url === '/dashboard') {
