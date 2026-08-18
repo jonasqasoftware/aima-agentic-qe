@@ -1,6 +1,10 @@
 # Changelog
 
-## Em desenvolvimento
+## MVP 2 concluído
+
+- Pipeline de evidências concluído: execução estruturada, resultados JUnit/JSON, cobertura LCOV e manifesto local em uma única análise.
+- Correlação de cobertura para arquivos de código alterados e geração de relatório de evidências também no GitHub Actions.
+- MVP 0 e MVP 1 permanecem preservados como base: decisão determinística, adaptadores de Git/PR e revisão humana obrigatória para releases.
 
 - Documentação viva com diagrama Mermaid, modelo de decisão de qualidade e ADR inicial.
 - Guia de uso orientado a tarefas, com exemplos de entrada, fluxo visual e solução de problemas.

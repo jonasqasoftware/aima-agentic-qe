@@ -1,6 +1,6 @@
 # Guia de uso
 
-Este guia mostra o caminho completo: preparar o ambiente, analisar uma mudança e interpretar o relatório. A execução é local, offline e não envia dados para serviços externos.
+Este guia mostra o caminho completo: preparar o ambiente, analisar uma mudança e interpretar o relatório. A execução é local por padrão; a integração opcional com GitHub usa o GitHub CLI já autenticado, somente para leitura autorizada. O AIMA não envia dados automaticamente nem publica comentários.
 
 ## Antes de começar
 
