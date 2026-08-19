@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Assessment AIMA 2.0 — diagnóstico inicial para identificar quais decisões e frameworks de Quality Engineering podem ajudar seu contexto." />
+  <link rel="canonical" href="https://aima20.dev/assessment.html" />
+  <meta property="og:title" content="Assessment — AIMA 2.0" />
+  <meta property="og:description" content="Um diagnóstico inicial, local e sem benchmark para sugerir frameworks úteis ao seu contexto." />
+  <title>Assessment — AIMA 2.0</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#assessment">Ir para o assessment</a>
+  <header class="topbar"><a class="brand" href="./index.html"><span class="brand-mark">AIMA</span><span class="brand-version">2.0</span></a><nav class="nav" aria-label="Navegação"><a href="./index.html#frameworks">Frameworks</a><a href="./index.html#lexico">Léxico</a><a href="./preview.html">Preview</a><a href="./insights.html">Insights</a><a class="nav-cta" href="https://github.com/jonasqasoftware/aima-agentic-qe">GitHub</a></nav><button class="menu-button" type="button" aria-label="Abrir menu" aria-expanded="false">Menu</button></header>
+
+  <main id="assessment" class="section-shell assessment-shell">
+    <a class="back-link" href="./index.html">← Voltar ao AIMA 2.0</a>
+    <div class="eyebrow">ASSESSMENT · ORIENTAÇÃO INICIAL</div>
+    <h1>Onde sua próxima decisão de Qualidade precisa melhorar?</h1>
+    <p class="assessment-intro">Este assessment não certifica maturidade, não compara equipes e não gera um benchmark. Ele usa oito perguntas para identificar lacunas de decisão e sugerir frameworks do AIMA 2.0 que podem ajudar a estruturar a próxima conversa.</p>
+    <p class="assessment-intro"><strong>Privacidade:</strong> as respostas são processadas somente no navegador e não são enviadas a nenhum servidor.</p>
+
+    <form id="assessment-form" class="assessment-form">
+      <fieldset class="question-card" data-dimension="contexto"><legend>1. Antes de decidir como testar, o time explicita o resultado que precisa proteger e as restrições do contexto?</legend><div class="answer-options"></div></fieldset>
+      <fieldset class="question-card" data-dimension="risco"><legend>2. Os riscos são descritos como eventos concretos, priorizados por impacto e conectados a responsáveis?</legend><div class="answer-options"></div></fieldset>
+      <fieldset class="question-card" data-dimension="evidencia"><legend>3. Decisões relevantes usam múltiplas evidências atuais, com lacunas e limitações explicitadas?</legend><div class="answer-options"></div></fieldset>
+      <fieldset class="question-card" data-dimension="feedback"><legend>4. Sinais de testes, produção e usuários chegam rapidamente às pessoas capazes de agir?</legend><div class="answer-options"></div></fieldset>
+      <fieldset class="question-card" data-dimension="observabilidade"><legend>5. O time consegue responder perguntas sobre comportamento real do sistema e impacto no usuário usando telemetria?</legend><div class="answer-options"></div></fieldset>
+      <fieldset class="question-card" data-dimension="recuperacao"><legend>6. Releases relevantes possuem guardrails, rollout e capacidade de rollback proporcionais ao risco?</legend><div class="answer-options"></div></fieldset>
+      <fieldset class="question-card" data-dimension="aprendizado"><legend>7. Defeitos, incidentes e experimentos geram mudanças sistêmicas verificadas posteriormente?</legend><div class="answer-options"></div></fieldset>
+      <fieldset class="question-card" data-dimension="governanca"><legend>8. Decisões de Qualidade possuem owner, critérios explícitos e condição de revisão?</legend><div class="answer-options"></div></fieldset>
+      <button class="button button-primary" type="submit">Gerar orientação</button>
+    </form>
+
+    <section id="assessment-result" class="assessment-result" hidden aria-live="polite"></section>
+  </main>
+  <script type="module" src="./assessment.mjs"></script>
+</body>
+</html>
