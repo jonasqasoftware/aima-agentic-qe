@@ -12,7 +12,7 @@ Cada afirmação abaixo é marcada com sua fonte:
 
 ## Contexto
 
-O diretório `site/` é a camada pública e editorial do AIMA 2.0, publicada em `https://aima20.dev` via GitHub Pages, versionada separadamente do núcleo executável do método (`aima/`, `evals/`, `examples/`) **[persistente]** (`site/README.md`, seção "Princípio arquitetural").
+O diretório `site/` é a camada pública e editorial do AIMA 2.0, publicada em `https://aima20.dev` via GitHub Pages, separada arquiteturalmente do núcleo executável do método (`aima/`, `evals/`, `examples/`), mantendo ambos versionados no mesmo projeto **[persistente]** (`site/README.md`, seção "Princípio arquitetural").
 
 ## Problema
 
@@ -130,7 +130,7 @@ server: GitHub.com
 last-modified: Wed, 19 Aug 2026 21:31:20 GMT
 ```
 
-O `last-modified` coincide com o horário do deploy bem-sucedido (`21:31:05Z`), confirmando que o conteúdo servido é o do commit `705160f`, sem headers residuais da hospedagem anterior.
+O `last-modified` é compatível com o horário do deploy bem-sucedido (`21:31:05Z`); isoladamente ele não prova qual commit foi servido. Em conjunto com o run de deploy bem-sucedido cujo `head_sha` é `705160f` (ver "Deploy"), essa combinação sustenta a conclusão de que o conteúdo servido corresponde a esse commit, sem headers residuais da hospedagem anterior.
 
 Validação visual em navegador real (desktop: home, Assessment, Preview, um Framework, um Insight, sem aviso de certificado) foi realizada em sessão anterior via ferramenta de automação de navegador **[manual]** — não há screenshot ou log persistido no repositório, apenas o relato da sessão.
 
