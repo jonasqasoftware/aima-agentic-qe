@@ -8,7 +8,8 @@ Separar a apresentação pública do método do núcleo executável do repositó
 
 - `site/index.html` — conteúdo e estrutura da página pública;
 - `site/styles.css` — sistema visual editorial;
-- `site/app.js` — navegação mobile e filtros dos frameworks;
+- `site/app.mjs` — navegação mobile e filtros dos frameworks/léxico/insights na home;
+- `site/layout.mjs` — header e footer compartilhados, injetados nas páginas de framework e insight;
 - `site/CNAME` — domínio pretendido `aima20.dev`.
 
 ## Fonte de conteúdo

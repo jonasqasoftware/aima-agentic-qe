@@ -1,8 +1,11 @@
 import { frameworks } from './content.mjs';
+import { mountChrome } from './layout.mjs';
 
 const slug = document.body.dataset.framework;
 const framework = frameworks.find((item) => item.slug === slug);
 const root = document.querySelector('#framework-root');
+
+mountChrome({ base: '../', rootId: 'framework-root' });
 
 const list = (items, ordered = false) => {
   const tag = ordered ? 'ol' : 'ul';
