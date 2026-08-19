@@ -3,27 +3,30 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="AIMA 2.0 — método de Engenharia de Qualidade para transformar contexto, riscos e evidências em decisões mais confiáveis." />
+  <meta name="description" content="AIMA 2.0 — método de Engenharia de Qualidade para transformar contexto, riscos e evidências em decisões mais confiáveis. Explore 20 frameworks, 28 conceitos, diagramas, assessment e insights." />
   <meta name="theme-color" content="#111111" />
+  <link rel="canonical" href="https://aima20.dev/" />
   <meta property="og:title" content="AIMA 2.0 — Engenharia de Qualidade baseada em decisões" />
-  <meta property="og:description" content="28 conceitos, 20 frameworks e 20 diagramas para apoiar decisões de Qualidade com contexto, evidências e pensamento crítico." />
+  <meta property="og:description" content="28 conceitos, 20 frameworks, 20 diagramas e ferramentas práticas para apoiar decisões de Qualidade com contexto, evidências e pensamento crítico." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://aima20.dev/" />
+  <meta name="twitter:card" content="summary_large_image" />
   <title>AIMA 2.0 — Engenharia de Qualidade baseada em decisões</title>
   <link rel="stylesheet" href="./styles.css" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"AIMA 2.0","url":"https://aima20.dev/","description":"Método de Engenharia de Qualidade baseado em contexto, riscos, evidências e decisões.","author":{"@type":"Person","name":"Jonas Dávila da Silva","url":"https://jonasdavila.com.br/"}}</script>
 </head>
 <body>
   <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
 
   <header class="topbar">
-    <a class="brand" href="#inicio" aria-label="AIMA 2.0 — início">
-      <span class="brand-mark">AIMA</span><span class="brand-version">2.0</span>
-    </a>
+    <a class="brand" href="#inicio" aria-label="AIMA 2.0 — início"><span class="brand-mark">AIMA</span><span class="brand-version">2.0</span></a>
     <nav class="nav" aria-label="Navegação principal">
       <a href="#metodo">Método</a>
       <a href="#frameworks">Frameworks</a>
       <a href="#lexico">Léxico</a>
-      <a href="#aplicar">Como usar</a>
+      <a href="#diagramas">Diagramas</a>
+      <a href="./assessment.html">Assessment</a>
+      <a href="./insights.html">Insights</a>
       <a class="nav-cta" href="https://github.com/jonasqasoftware/aima-agentic-qe">GitHub</a>
     </nav>
     <button class="menu-button" type="button" aria-label="Abrir menu" aria-expanded="false">Menu</button>
@@ -38,7 +41,8 @@
           <p class="lead">AIMA 2.0 ajuda profissionais e organizações a transformar contexto, riscos e evidências em estratégias de Qualidade mais explícitas, rastreáveis e confiáveis.</p>
           <div class="hero-actions">
             <a class="button button-primary" href="#frameworks">Explorar os 20 frameworks</a>
-            <a class="button button-secondary" href="#aplicar">Entender como usar</a>
+            <a class="button button-secondary" href="./assessment.html">Fazer o Assessment</a>
+            <a class="button button-secondary" href="./preview.html">Abrir Preview 0.9</a>
           </div>
         </div>
         <aside class="manifesto-card" aria-label="Princípio do AIMA 2.0">
@@ -73,13 +77,9 @@
 
     <section id="frameworks" class="section-shell">
       <div class="section-heading split-heading">
-        <div>
-          <span class="kicker">GUIA DE USO</span>
-          <h2>20 frameworks para decisões diferentes.</h2>
-        </div>
-        <p>Escolha pela pergunta e pelo tipo de incerteza. Combine frameworks apenas quando cada um responder a uma decisão diferente.</p>
+        <div><span class="kicker">GUIA DE USO</span><h2>20 frameworks para decisões diferentes.</h2></div>
+        <p>Escolha pela pergunta e pelo tipo de incerteza. Cada card agora abre uma página própria com finalidade, aplicação, exemplo, anti-padrões e métricas.</p>
       </div>
-
       <div class="framework-toolbar" role="group" aria-label="Filtrar frameworks">
         <button class="filter-button active" type="button" data-filter="all">Todos</button>
         <button class="filter-button" type="button" data-filter="decisao">Decisão</button>
@@ -89,51 +89,41 @@
         <button class="filter-button" type="button" data-filter="capacidade">Capacidade</button>
         <button class="filter-button" type="button" data-filter="ia">IA e aprendizado</button>
       </div>
-
-      <div class="framework-grid" id="framework-grid">
-        <article class="framework-card" data-category="decisao"><span>01</span><h3>Decision Quality Canvas</h3><p>Estruturar decisões complexas sem esconder hipóteses, opções, critérios ou lacunas de evidência.</p></article>
-        <article class="framework-card" data-category="decisao"><span>02</span><h3>Quality Decision Matrix</h3><p>Comparar alternativas com critérios explícitos de Qualidade e impacto.</p></article>
-        <article class="framework-card" data-category="confianca"><span>03</span><h3>Confidence Model</h3><p>Modelar de onde vem a confiança e quais evidências ainda faltam.</p></article>
-        <article class="framework-card" data-category="risco"><span>04</span><h3>Risk Strategy Map</h3><p>Conectar riscos relevantes às estratégias de verificação e mitigação.</p></article>
-        <article class="framework-card" data-category="confianca"><span>05</span><h3>Evidence Pyramid</h3><p>Organizar evidências por força, proximidade do risco e capacidade de sustentar uma decisão.</p></article>
-        <article class="framework-card" data-category="capacidade"><span>06</span><h3>Quality Radar</h3><p>Visualizar capacidades de Qualidade e orientar evolução sem reduzir maturidade a um único número.</p></article>
-        <article class="framework-card" data-category="fluxo"><span>07</span><h3>Feedback Loop Canvas</h3><p>Desenhar ciclos de feedback mais rápidos, úteis e acionáveis.</p></article>
-        <article class="framework-card" data-category="capacidade"><span>08</span><h3>Quality Operating System</h3><p>Conectar princípios, rituais, métricas e responsabilidades em um sistema operacional de Qualidade.</p></article>
-        <article class="framework-card" data-category="fluxo"><span>09</span><h3>Quality Value Stream</h3><p>Mapear como decisões e evidências fluem da descoberta à operação.</p></article>
-        <article class="framework-card" data-category="confianca"><span>10</span><h3>Release Confidence Index</h3><p>Estruturar sinais de confiança de release sem confundir score com aprovação automática.</p></article>
-        <article class="framework-card" data-category="fluxo"><span>11</span><h3>Observability Decision Loop</h3><p>Transformar telemetria e observabilidade em decisões e aprendizado operacional.</p></article>
-        <article class="framework-card" data-category="ia"><span>12</span><h3>AI Quality Assistant Canvas</h3><p>Definir onde IA pode ampliar análise, investigação e decisão com supervisão humana.</p></article>
-        <article class="framework-card" data-category="ia"><span>13</span><h3>Test Strategy Blueprint</h3><p>Construir estratégia de testes a partir de contexto, risco, evidência e objetivo de aprendizado.</p></article>
-        <article class="framework-card" data-category="risco"><span>14</span><h3>Risk Prioritization Grid</h3><p>Priorizar riscos usando impacto, probabilidade, detectabilidade e contexto.</p></article>
-        <article class="framework-card" data-category="fluxo"><span>15</span><h3>Continuous Quality Loop</h3><p>Fechar o ciclo entre descoberta, entrega, operação e aprendizado contínuo.</p></article>
-        <article class="framework-card" data-category="confianca"><span>16</span><h3>Evidence-Based Release Model</h3><p>Tomar decisões de release com evidências explícitas, limites e incertezas documentadas.</p></article>
-        <article class="framework-card" data-category="capacidade"><span>17</span><h3>Quality Capability Map</h3><p>Mapear capacidades necessárias para sustentar objetivos reais de Qualidade.</p></article>
-        <article class="framework-card" data-category="ia"><span>18</span><h3>Defect Learning Cycle</h3><p>Transformar defeitos em aprendizado sistêmico e prevenção de recorrência.</p></article>
-        <article class="framework-card" data-category="decisao"><span>19</span><h3>Engineering Decision Compass</h3><p>Orientar trade-offs de engenharia por valor, risco, reversibilidade e evidências.</p></article>
-        <article class="framework-card" data-category="fluxo"><span>20</span><h3>Trust Feedback Engine</h3><p>Conectar sinais de produção, confiança e feedback em um mecanismo de aprendizado.</p></article>
-      </div>
+      <div class="framework-grid" id="framework-grid" aria-live="polite"></div>
     </section>
 
     <section id="lexico" class="section-shell section-paper">
-      <div class="section-heading">
-        <span class="kicker">LÉXICO OFICIAL</span>
-        <h2>28 conceitos. Uma linguagem comum.</h2>
-        <p>Os conceitos formam um sistema: sinais ganham contexto, tornam-se evidências e orientam decisões, ações e aprendizado.</p>
+      <div class="section-heading split-heading">
+        <div><span class="kicker">LÉXICO OFICIAL</span><h2>28 conceitos. Uma linguagem comum.</h2></div>
+        <p>Pesquise termos e consulte as definições canônicas da Preview Edition 0.9.</p>
       </div>
-      <div class="lexicon-groups">
-        <div><span>NÚCLEO ESSENCIAL</span><p>Qualidade · Confiança · Risco · Evidência · Métrica · Indicador · Insight · Decisão · Ação · Estratégia de Qualidade · Observabilidade · Valor</p></div>
-        <div><span>ENGENHARIA DE QUALIDADE</span><p>Cobertura de Testes · Automação de Testes · Testabilidade · Feedback · Flaky Test</p></div>
-        <div><span>CONFIABILIDADE E ENTREGA</span><p>Confiabilidade · Resiliência · Entrega Contínua</p></div>
-        <div><span>MÉTRICAS DE FLUXO</span><p>DORA Metrics · Flow Metrics · MTTR · Lead Time</p></div>
-        <div><span>IA E RACIOCÍNIO</span><p>IA Generativa · Prompt · Modelo Mental · Pensamento Sistêmico</p></div>
+      <div class="search-panel">
+        <label for="lexicon-search">Pesquisar conceito</label>
+        <input id="lexicon-search" class="search-input" type="search" placeholder="Ex.: risco, confiança, automação..." autocomplete="off" />
+        <label for="lexicon-category">Categoria</label>
+        <select id="lexicon-category" class="select-input">
+          <option value="all">Todas</option>
+          <option value="Núcleo essencial">Núcleo essencial</option>
+          <option value="Engenharia de Qualidade">Engenharia de Qualidade</option>
+          <option value="Confiabilidade e Entrega">Confiabilidade e Entrega</option>
+          <option value="Métricas de Fluxo">Métricas de Fluxo</option>
+          <option value="IA e Raciocínio">IA e Raciocínio</option>
+        </select>
+        <span id="lexicon-count" class="search-count" aria-live="polite"></span>
       </div>
+      <div id="lexicon-grid" class="lexicon-grid"></div>
     </section>
 
-    <section id="aplicar" class="section-shell section-dark">
-      <div class="section-heading">
-        <span class="kicker">COMO USAR</span>
-        <h2>Leia por decisão, não por sequência.</h2>
+    <section id="diagramas" class="section-shell section-dark">
+      <div class="section-heading split-heading">
+        <div><span class="kicker">BIBLIOTECA VISUAL</span><h2>20 diagramas para ler o método por fluxo.</h2></div>
+        <p>Cada diagrama deriva do fluxo conceitual do framework correspondente e leva à sua página detalhada.</p>
       </div>
+      <div id="diagram-grid" class="diagram-grid"></div>
+    </section>
+
+    <section id="aplicar" class="section-shell">
+      <div class="section-heading"><span class="kicker">COMO USAR</span><h2>Leia por decisão, não por sequência.</h2></div>
       <div class="steps-grid">
         <div><strong>01</strong><h3>Nomeie a decisão</h3><p>Escreva o que precisa ser decidido e qual resultado deve ser protegido.</p></div>
         <div><strong>02</strong><h3>Consulte o léxico</h3><p>Alinhe os termos que sustentam a conversa e torne diferenças explícitas.</p></div>
@@ -143,7 +133,25 @@
       </div>
     </section>
 
-    <section class="section-shell final-cta">
+    <section class="section-shell section-dark product-grid-section">
+      <div class="section-heading"><span class="kicker">APLICAÇÃO</span><h2>Do conceito para a prática.</h2></div>
+      <div class="product-grid">
+        <a href="./assessment.html"><span>ASSESSMENT</span><h3>Descubra onde começar</h3><p>Um diagnóstico inicial, local e sem benchmark para sugerir frameworks úteis ao seu contexto.</p></a>
+        <a href="./preview.html"><span>PREVIEW EDITION 0.9</span><h3>Leia a arquitetura do método</h3><p>Uma visão web da Release 0.9: fundamentos, léxico, frameworks, diagramas e ciclo de validação.</p></a>
+        <a href="./insights.html"><span>AIMA INSIGHTS</span><h3>Aprofunde decisões de Qualidade</h3><p>Ensaios curtos sobre cobertura, automação, release, confiança e pensamento crítico.</p></a>
+      </div>
+    </section>
+
+    <section id="insights" class="section-shell">
+      <div class="section-heading split-heading">
+        <div><span class="kicker">AIMA INSIGHTS</span><h2>Ideias para desafiar automatismos.</h2></div>
+        <p>Textos curtos que conectam conceitos do método a decisões de engenharia.</p>
+      </div>
+      <div id="insights-grid" class="insights-grid"></div>
+      <div class="hero-actions"><a class="button button-secondary" href="./insights.html">Ver todos os Insights</a></div>
+    </section>
+
+    <section class="section-shell final-cta section-dark">
       <span class="kicker">CONSTRUÇÃO PÚBLICA</span>
       <h2>A Preview Edition é o começo.</h2>
       <p>O AIMA 2.0 evolui pela aplicação em contextos reais, perguntas qualificadas, evidências e revisão pública do método.</p>
@@ -157,9 +165,9 @@
   <footer class="footer section-shell">
     <div><strong>AIMA 2.0</strong><p>AI-driven Intelligent Method for Assurance</p></div>
     <div><span>Jonas Dávila da Silva</span><p>Quality Engineer · Porto Alegre · 2026</p></div>
-    <div><a href="https://github.com/jonasqasoftware/aima-agentic-qe">GitHub</a><a href="https://jonasdavila.com.br/">Portfólio</a></div>
+    <div><a href="./preview.html">Preview</a><a href="./assessment.html">Assessment</a><a href="https://github.com/jonasqasoftware/aima-agentic-qe">GitHub</a></div>
   </footer>
 
-  <script src="./app.js" defer></script>
+  <script type="module" src="./app.mjs"></script>
 </body>
 </html>
