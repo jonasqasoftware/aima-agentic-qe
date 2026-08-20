@@ -22,7 +22,8 @@ import { evaluateChange } from './evaluation.js';
 import { buildDashboard } from './dashboard.js';
 import { startWebApp } from './web-app.js';
 import { buildStrategy } from './strategy.js';
-import { createReport, writeReports } from './report.js';
+import { createReport } from './report.js';
+import { writeReports } from './report-writer.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 

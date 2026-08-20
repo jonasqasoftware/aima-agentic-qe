@@ -182,6 +182,10 @@ Recomendação de release
 
 O diretório [`evals/golden`](evals/golden) contém expectativas conhecidas para o cenário de pagamento. `npm run evaluate` valida framework, categorias de risco, recomendação e limite de evidência; `npm run check` inclui essa avaliação e os testes, evitando regressões silenciosas nas regras.
 
+## Adaptador MCP (opcional)
+
+Um adaptador local [Model Context Protocol](https://modelcontextprotocol.io) em [`integrations/mcp`](integrations/mcp) expõe o mesmo motor determinístico a clientes MCP via stdio, como pacote Node isolado com suas próprias dependências — o `package.json` da raiz não é afetado. Ele é somente leitura: o resource `aima://frameworks` lista o registry completo, `aima://frameworks/{id}` lê um framework por id, e a tool `analyze_change` executa `analyzeDeclaredChange` e retorna o relatório completo, sem gravar arquivos. Toda operação passa pela mesma [política de permissões](aima/policies/operation-permissions.json) usada pela CLI. Veja [`integrations/mcp/README.md`](integrations/mcp/README.md) e o racional em [`docs/adr/0002-adaptador-mcp-stdio-isolado.md`](docs/adr/0002-adaptador-mcp-stdio-isolado.md).
+
 ## Arquitetura
 
 ```text
@@ -220,13 +224,13 @@ Este repositório usa Markdown, Mermaid e ADRs (*Architecture Decision Records*)
 - **MVP 1 — concluído:** adaptadores de diff Git local e de PRs do GitHub com leitura autorizada de metadados, arquivos e checks.
 - **MVP 2 — concluído:** execução estruturada de evidências, importação de JUnit/JSON/LCOV, manifesto de evidências e geração do relatório também no CI.
 - **MVP 3 — concluído:** interface web local, geração de pacotes de relatório, dashboard navegável com histórico e tendências, e governança explícita de permissões.
-- **MVP 4 — próximo:** integrações autorizadas orientadas por evidências e comparação entre análises, sempre preservando revisão humana e operações externas sob autorização explícita.
+- **MVP 4 — em andamento:** adaptador MCP local e somente leitura ([`integrations/mcp`](integrations/mcp)) concluído; integrações autorizadas de escrita e comparação entre análises seguem pendentes, sempre preservando revisão humana e operações externas sob autorização explícita.
 
 ## Limitações
 
 - Os sinais de risco dependem da mudança declarada ou dos metadados e nomes de arquivos fornecidos pelos adaptadores; o AIMA não lê o conteúdo do diff.
 - A integração com GitHub é opcional, somente de leitura e requer autenticação local prévia no GitHub CLI; o projeto não publica comentários nem altera PRs.
-- Não há LLM, memória persistente, MCP nem provider externo nesta versão.
+- Não há LLM, memória persistente nem provider externo nesta versão. O adaptador MCP opcional em `integrations/mcp` é somente leitura e não introduz LLM nem escrita externa.
 - A recomendação de release requer revisão humana e evidências de execução no sistema alvo.
 
 ## Licença

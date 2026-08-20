@@ -1,10 +1,11 @@
 {
   "id": "local-evidence-operations",
   "name": "Local Evidence Operations Policy",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Define os limites operacionais do AIMA Agentic QE. Escritas externas permanecem proibidas por padrão.",
   "operations": {
     "analyze-declared-change": "allowed",
+    "read-framework-registry": "allowed",
     "write-local-report": "allowed-with-user-action",
     "read-github-pr": "requires-human-authorization",
     "execute-evidence-command": "requires-human-authorization",
