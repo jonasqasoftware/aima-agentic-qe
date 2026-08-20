@@ -29,6 +29,10 @@ function validateFramework(framework, file) {
   }
 }
 
+export function getFrameworkById(frameworks, id) {
+  return frameworks.find((framework) => framework.id === id);
+}
+
 export function selectFramework(frameworks, change) {
   const hasDataSurface = change.changedFiles.some((file) => /migration|schema|database|data/i.test(file));
   const frameworkId = hasDataSurface ? 'data-quality-validation' : 'risk-based-testing';

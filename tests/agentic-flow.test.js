@@ -33,6 +33,7 @@ import {
   loadReleasePolicy,
   loadOperationPermissionPolicy,
   loadFrameworkRegistry,
+  getFrameworkById,
   qualityConfidence,
   saveDeclaredReport,
   selectFramework,
@@ -178,6 +179,16 @@ test('data change selects the data-quality framework from the registry', async (
 
   assert.equal(selection.framework.id, 'data-quality-validation');
   assert.match(selection.evidence.at(-1), /sinal de dados/);
+});
+
+test('getFrameworkById finds a registered framework and returns undefined for an unknown id', async () => {
+  const frameworks = await loadFrameworkRegistry(path.join(root, 'aima', 'frameworks'));
+
+  const found = getFrameworkById(frameworks, 'risk-based-testing');
+  assert.equal(found.id, 'risk-based-testing');
+  assert.equal(found.name, 'Risk-Based Testing');
+
+  assert.equal(getFrameworkById(frameworks, 'does-not-exist'), undefined);
 });
 
 test('evidence ledger keeps declared unknowns separate from deterministic inferences', () => {

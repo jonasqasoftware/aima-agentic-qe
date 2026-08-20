@@ -59,6 +59,7 @@ O adaptador de Git lê a lista local de arquivos alterados e, opcionalmente, est
 | Manifesto de relatório | Permite verificar integridade dos artefatos gerados | Não comprova veracidade da entrada. |
 | Avaliação golden | Detecta regressão em decisões determinísticas | Cobertura limitada aos cenários versionados. |
 | Dashboard local | Agrega relatórios para leitura visual | Não persiste dados nem consulta remoto. |
+| Adaptador MCP isolado ([`integrations/mcp`](integrations/mcp)) | Expõe o core a clientes MCP sem acoplar o pacote raiz ao SDK | Somente leitura: resources do registry e a tool `analyze_change`, todos sob `assertOperationPermitted`. Ver [ADR 0002](docs/adr/0002-adaptador-mcp-stdio-isolado.md). |
 
 O próximo marco é uma interface interativa e governança de permissões. Qualquer nova integração deve manter leitura mínima, escrita sempre autorizada e incertezas explícitas.
 

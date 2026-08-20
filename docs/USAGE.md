@@ -37,6 +37,18 @@ Use **Gerar pacote de relatório** quando quiser preservar a análise. Os arquiv
 
 O dashboard também apresenta uma tendência visual do `Quality Confidence` das análises salvas e a variação de cada relatório em relação ao anterior. É um acompanhamento histórico, não uma previsão, explicação causal ou aprovação automática de release.
 
+## Adaptador MCP local (opcional)
+
+Para expor o motor determinístico a um cliente MCP (por exemplo, um assistente de IDE), use o adaptador isolado em [`integrations/mcp`](../integrations/mcp):
+
+```bash
+cd integrations/mcp
+npm install
+npm start
+```
+
+O binário fala exclusivamente o protocolo MCP em stdout. Ele expõe o resource `aima://frameworks` (registry completo), o resource `aima://frameworks/{id}` (um framework por id) e a tool `analyze_change` (executa `analyzeDeclaredChange` e retorna o relatório completo). Nenhuma escrita em disco é feita a partir do MCP; toda operação passa pela mesma política de permissões descrita abaixo. Veja [`integrations/mcp/README.md`](../integrations/mcp/README.md) para detalhes e a suíte de testes.
+
 ## Governança de permissões
 
 Consulte os limites operacionais ativos:

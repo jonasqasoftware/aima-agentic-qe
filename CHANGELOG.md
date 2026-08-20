@@ -1,5 +1,14 @@
 # Changelog
 
+## Não lançado — MVP 4 em andamento
+
+- Adaptador MCP local e somente leitura em `integrations/mcp`, isolado do pacote raiz (dependências próprias, `package.json` da raiz inalterado).
+- Resources `aima://frameworks` (registry completo) e `aima://frameworks/{id}` (framework por id); id inexistente é erro de leitura, nunca recurso fabricado.
+- Tool `analyze_change`, reutilizando `analyzeDeclaredChange` sem duplicar a lógica de risco, estratégia ou ledger de evidências.
+- Toda leitura do registry e toda chamada da tool passam por `assertOperationPermitted` contra a política já versionada em `aima/policies/operation-permissions.json`.
+- Suíte de testes dedicada: protocolo MCP em memória, negação de política injetada, guardrails estáticos de import e stdout, e verificação do processo stdio real (stdout limpo e falha fatal em stderr com código de saída diferente de zero).
+- Workflow de CI dedicado (`mcp-integration.yml`), acionado apenas por mudanças relevantes ao adaptador, sem alterar o gate de qualidade existente.
+
 ## 0.2.0 — MVP 3 concluído
 
 - Interface web local em `127.0.0.1` para analisar uma mudança declarada pelo mesmo motor determinístico da CLI, sem execução de comandos nem acesso remoto.

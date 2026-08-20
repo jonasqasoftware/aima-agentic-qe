@@ -1,6 +1,6 @@
 ---
 name: aima-verify-change
-description: Runs this repository's repeatable verification procedure over local changes before commit, push, or PR — git status, the relevant diff, git diff --check, a check for weakened/removed tests, and npm run check — then reports PASS / PASS WITH RISKS / FAIL with evidence. Use before committing, pushing, or opening a PR in this repository, or whenever someone asks to verify, sanity-check, or review local changes before they go further.
+description: Runs this repository's repeatable verification procedure over local changes before commit, push, or PR — git status, the relevant diff, git diff --check, a check for weakened/removed tests, the root/core npm run check gate, and — when integrations/mcp/ has changes — the separate MCP integration gate — then reports PASS / PASS WITH RISKS / FAIL with evidence. Use before committing, pushing, or opening a PR in this repository, or whenever someone asks to verify, sanity-check, or review local changes before they go further.
 ---
 
 # aima-verify-change
@@ -29,7 +29,8 @@ Run these in order and keep the raw output — the final report is built from it
    - Output naming a specific whitespace problem (e.g. `<file>:N: trailing whitespace.`) → failure. Record the exit code actually observed as evidence, not as a rule — this procedure was verified against a git version where that exit code was `3`; do not assume it's always `3`.
    - Anything else (a git error, an unrecognized message) → Unknown. Do not guess a result.
 4. Test-integrity check — only if the diff touches test files: for every test file touched, compare before/after — was a test deleted, skipped, had its assertions loosened, or had its expected value changed to match new (possibly wrong) behavior instead of the behavior being fixed to match a still-valid expectation? Read `reference.md` for the detailed rubric and examples before judging this; skip reading it if no test files are touched. Flag anything ambiguous rather than assuming it's fine.
-5. `npm run check` — full local gate (syntax check, tests, golden evaluation, site check). Capture pass/fail per stage from its output; do not summarize it as "passed" if any stage failed.
+5. `npm run check` — root/core gate (syntax check, tests, golden evaluation, site check) for the root package. Capture pass/fail per stage from its output; do not summarize it as "passed" if any stage failed. This exercises the root/core package only — it does not touch `integrations/mcp/`.
+6. MCP integration gate — only if step 1's `git status` shows any change (staged, unstaged, or untracked) under `integrations/mcp/`: run `npm --prefix integrations/mcp run check`. Never run `npm ci` or `npm install` automatically to make this possible. If the MCP package's dependencies aren't already installed and the check can't run as a result, record this step as Unknown/Not done — do not report the MCP integration as verified, and do not let the root/core gate's result stand in for it.
 
 ## Evidence discipline
 
@@ -43,10 +44,10 @@ Every claim in the report is one of:
 End with:
 
 - **Files changed** — from `git status`, listed separately as staged, unstaged (tracked), and untracked.
-- **Checks executed** — each of the 5 procedure steps, with a one-line result and the evidence it's based on. For step 2, confirm explicitly whether every untracked file was read in full — never report this step as covering "the whole diff" if untracked files exist and weren't read.
-- **Findings** — anything notable from steps 2–5, each tagged fact/inference/unknown.
+- **Checks executed** — each procedure step that applies (steps 1–5 always; step 6 only when `integrations/mcp/` changed), with a one-line result and the evidence it's based on. For step 2, confirm explicitly whether every untracked file was read in full — never report this step as covering "the whole diff" if untracked files exist and weren't read. Show the root/core gate (step 5) and the MCP integration gate (step 6, when applicable) as separate lines — never merge them into one result.
+- **Findings** — anything notable from steps 2–6, each tagged fact/inference/unknown.
 - **Verdict** — `PASS`, `PASS WITH RISKS`, or `FAIL`:
-  - `FAIL`: `npm run check` failed, `git diff --check` found whitespace errors, or a test was clearly weakened/removed to force a pass.
+  - `FAIL`: the root/core gate failed, the MCP integration gate failed (when applicable), `git diff --check` found whitespace errors, or a test was clearly weakened/removed to force a pass.
   - `PASS WITH RISKS`: all checks passed, but something in the diff is a judgment call (ambiguous test change, unexpected scope, missing coverage for new behavior) worth a human look before proceeding.
   - `PASS`: all checks passed and nothing else raised a concern.
 - **Not done** — anything the procedure normally covers that couldn't be executed this time, and why.

@@ -1,0 +1,20 @@
+{
+  "name": "aima-mcp-integration",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Adaptador MCP local (stdio) opcional para o AIMA Agentic QE. Reutiliza o core determinístico, sem duplicar lógica de negócio.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node bin/aima-mcp-stdio.js",
+    "test": "node --test tests/mcp-server.mcp-spec.mjs tests/guardrails.mcp-spec.mjs tests/stdio-process.mcp-spec.mjs",
+    "check": "node --check src/*.js bin/*.js && npm test"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.30.0",
+    "zod": "4.4.3"
+  }
+}

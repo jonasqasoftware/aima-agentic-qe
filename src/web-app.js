@@ -2,12 +2,8 @@ import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { normalizeChangeInput } from './change-input.js';
-import { loadFrameworkRegistry, selectFramework } from './framework-registry.js';
-import { assessRisks, qualityConfidence } from './risk-engine.js';
-import { loadReleasePolicy } from './release-policy.js';
-import { buildStrategy } from './strategy.js';
-import { createReport, writeReports } from './report.js';
+import { analyzeDeclaredChange } from './declared-analysis.js';
+import { writeReports } from './report-writer.js';
 import { buildDashboard } from './dashboard.js';
 import { assertOperationPermitted, loadOperationPermissionPolicy } from './permission-policy.js';
 
@@ -27,15 +23,6 @@ async function readJson(request) {
     chunks.push(chunk);
   }
   return JSON.parse(Buffer.concat(chunks).toString('utf8'));
-}
-
-export async function analyzeDeclaredChange(input) {
-  const change = normalizeChangeInput(input);
-  const frameworks = await loadFrameworkRegistry(path.join(root, 'aima', 'frameworks'));
-  const risks = assessRisks(change);
-  const confidence = qualityConfidence(risks, change.knownUnknowns);
-  const policy = await loadReleasePolicy(path.join(root, 'aima', 'policies', 'evidence-aware-release.json'));
-  return createReport(change, selectFramework(frameworks, change), risks, confidence, buildStrategy(risks, change.knownUnknowns, policy));
 }
 
 function reportDirectoryFor(report, reportsDirectory) {
