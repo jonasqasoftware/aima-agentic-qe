@@ -2,7 +2,7 @@
 
 - **Estado:** concluído
 - **Data:** 2026-08-19
-- **Escopo do documento:** este case study é um artefato documental aprovado *após* a entrega técnica descrita aqui. `docs/` estava fora do escopo original da implementação (que cobria apenas `site/`); a criação deste arquivo é um novo escopo, aprovado separadamente.
+- **Escopo do documento:** este case study é um artefato documental aprovado *após* a entrega técnica descrita aqui. `docs/` estava fora do escopo original da implementação (que cobria apenas `site/`); a criação deste arquivo é um novo escopo, aprovado separadamente **[compactado]** — essa aprovação foi dada nesta conversa e não deixou nenhum artefato persistido equivalente (issue, comentário de PR, ADR) que a registre de forma independente.
 
 Cada afirmação abaixo é marcada com sua fonte:
 
@@ -36,7 +36,8 @@ O diff de `site/styles.css` no commit `705160f` **[persistente]** (`git show 705
 
 | Par | Antes | Depois | Contraste antes | Contraste depois | Critério |
 |---|---|---|---|---|---|
-| Bordas `nav-cta`/`menu-button`/`button` sobre `--ink` (`#111111`) | `#464646` | `--line-ui` `#6b6b6b` | 2.00:1 | 3.54:1 | WCAG 1.4.11 (UI, ≥3:1) |
+| Bordas `nav-cta`/`menu-button` sobre `--ink` (`#111111`) | `#464646` | `--line-ui` `#6b6b6b` | 2.00:1 | 3.54:1 | WCAG 1.4.11 (UI, ≥3:1) |
+| Borda `.button` sobre `--ink` (`#111111`) | `#454545` | `--line-ui` `#6b6b6b` | ≈1.97:1 | 3.54:1 | WCAG 1.4.11 (UI, ≥3:1) |
 | Bordas `filter-button`/`answer-options`/`assessment-result` sobre `--ink` | `#3a3a3a` | `--line-ui` `#6b6b6b` | 1.66:1 | 3.54:1 | WCAG 1.4.11 (UI, ≥3:1) |
 | Kicker dourado sobre `--paper` (`#f2ede3`) | `#8c6811` | `#7d5d0f` | 4.39:1 | 5.23:1 | WCAG 1.4.3 (texto, ≥4.5:1) |
 | Bordas `search-input`/`select-input` sobre `#fffdf8` | `--line-light` `#d8d1c4` | `--line-ui-light` `#867e6c` | 1.49:1 | 3.96:1 | WCAG 1.4.11 (UI, ≥3:1) |
@@ -87,7 +88,7 @@ O último item ficou **pendente no momento do merge** — a validação em produ
 ## PR e CI
 
 - PR #18, `feat/site-visual-refresh` → `main`, aberto e squash-merged por `jonasqasoftware`, `mergedAt: 2026-08-19T21:16:52Z` **[persistente]** (`gh pr view 18`).
-- Check `validate` (workflow `quality.yml`, job `npm run check` + `analyze-pr`) passou em 11s **[persistente]** (`gh pr checks 18`).
+- Check `validate` (workflow `quality.yml`) passou em 11s **[persistente]** (`gh pr checks 18`). O job `validate` executa, em steps distintos, `npm run check` (step "Execute source validation and tests") e `node src/cli.js analyze-pr ...` (step "Generate evidence-aware quality report") **[persistente]** (`.github/workflows/quality.yml`).
 
 ## Deploy
 
@@ -100,11 +101,11 @@ Histórico de execuções do workflow `Deploy AIMA 2.0 site` (`.github/workflows
 | 2026-08-19T21:16:54Z | push | `705160f` | falha |
 | 2026-08-19T21:31:05Z | workflow_dispatch | `705160f` | **sucesso** |
 
-Causa raiz das três falhas, confirmada no log do step `Configure Pages` **[persistente]** (`gh run view 32303060000 --log-failed`):
+Causa raiz das três falhas, confirmada no log do step `Configure Pages` **[persistente]** (`gh run view 32303060000 --log-failed`). Trecho abreviado — a linha de erro original é mais longa e foi resumida aqui, não copiada literalmente:
 
 ```
 ##[error]Get Pages site failed. Please verify that the repository has Pages enabled
-and configured to build using GitHub Actions...
+and configured to build using GitHub Actions... [linha abreviada]
 ##[error]HttpError: Not Found
 ```
 
@@ -116,7 +117,9 @@ Estado atual, verificado nesta sessão **[persistente]**:
 
 - `dig aima20.dev A +short` → `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153` (os 4 IPs do GitHub Pages).
 - `dig www.aima20.dev CNAME +short` → `jonasqasoftware.github.io.`
-- `gh api repos/jonasqasoftware/aima-agentic-qe/pages`: `cname: "aima20.dev"`, `build_type: "workflow"`, `https_certificate.state: "approved"` (domínios `aima20.dev` e `www.aima20.dev`, expira `2026-11-17`), `https_enforced: true`.
+- `gh api repos/jonasqasoftware/aima-agentic-qe/pages`: `cname: "aima20.dev"`, `build_type: "workflow"`, `https_certificate.state: "approved"` (domínios `aima20.dev` e `www.aima20.dev`), `https_enforced: true`.
+
+A data de expiração do certificado (`expires_at: "2026-11-17"` no momento desta validação, em 2026-08-19) é um **snapshot**, não um fato permanente: o GitHub renova certificados Let's Encrypt automaticamente, então esse valor muda silenciosamente com o tempo. Para o estado atual, reconsulte `gh api repos/jonasqasoftware/aima-agentic-qe/pages` em vez de confiar na data registrada aqui.
 
 A jornada de propagação — estado anterior do DNS (Cloudflare/Next.js), comparação entre nameservers autoritativos da Hostinger e o resolver padrão, tempo de espera por TTL — não deixou artefato persistido; o estado "antes" já não é reproduzível, pois foi substituído **[compactado]**.
 
