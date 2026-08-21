@@ -1,6 +1,6 @@
 # Arquitetura
 
-O projeto concluiu três fatias verticais (MVP 0 a MVP 2), sem se apresentar como plataforma completa. O CLI coordena módulos determinísticos para entrada declarada, diff Git local ou PR autorizado; coleta evidências locais explícitas; aplica registry, risco e estratégia; e gera relatórios auditáveis.
+O projeto concluiu quatro fatias verticais (MVP 0 a MVP 3) e avança no MVP 4, sem se apresentar como plataforma completa. O CLI coordena módulos determinísticos para entrada declarada, diff Git local ou PR autorizado; coleta evidências locais explícitas; aplica registry, risco e estratégia; e gera relatórios auditáveis.
 
 ## Visão de execução
 
@@ -63,7 +63,7 @@ O adaptador de Git lê a lista local de arquivos alterados e, opcionalmente, est
 | Core browser-portable (`analyzeChange`) | Permite executar a mesma análise no navegador sem servidor, bundler ou framework | Só `change-input-core.js`, `framework-selection.js`, `risk-engine.js`, `strategy.js`, `report.js`, `evidence-ledger.js` e `analyze-change.js` são portáveis; carregamento de arquivo, escrita e HTTP continuam fora do core, nos adapters. |
 | Metadata editorial da Preview Edition (`site/edition.mjs`) | Mantém versão, nome e status da edição pública independentes da versão técnica de `package.json`, com contadores de frameworks/conceitos/diagramas derivados de `site/content.mjs` | Só pode depender de `site/content.mjs`; representações estáticas no `<head>` e no corpo (badge maiúsculo, `aria-label`) são deliberadas e validadas contra a fonte por `scripts/check-site.mjs`, não eliminadas. |
 
-O próximo marco é uma interface interativa e governança de permissões. Qualquer nova integração deve manter leitura mínima, escrita sempre autorizada e incertezas explícitas.
+A evolução em andamento concentra-se em integrações autorizadas de escrita, sempre sob revisão humana. Qualquer nova integração deve manter leitura mínima, escrita sempre autorizada e incertezas explícitas.
 
 ### Core e adapters
 
