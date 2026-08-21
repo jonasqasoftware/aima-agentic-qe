@@ -6,6 +6,11 @@ on:
       - main
     paths:
       - 'site/**'
+      - 'src/**'
+      - 'aima/frameworks/**'
+      - 'aima/policies/evidence-aware-release.json'
+      - 'scripts/build-site.mjs'
+      - 'package.json'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
@@ -28,13 +33,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
+      - name: Configure Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build site
+        run: npm run build:site
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload static site
+      - name: Upload built site
         uses: actions/upload-pages-artifact@v4
         with:
-          path: site
+          path: dist/site
 
       - name: Deploy to GitHub Pages
         id: deployment

@@ -60,8 +60,13 @@ O adaptador de Git lê a lista local de arquivos alterados e, opcionalmente, est
 | Avaliação golden | Detecta regressão em decisões determinísticas | Cobertura limitada aos cenários versionados. |
 | Dashboard local | Agrega relatórios para leitura visual | Não persiste dados nem consulta remoto. |
 | Adaptador MCP isolado ([`integrations/mcp`](integrations/mcp)) | Expõe o core a clientes MCP sem acoplar o pacote raiz ao SDK | Somente leitura: resources do registry e a tool `analyze_change`, todos sob `assertOperationPermitted`. Ver [ADR 0002](docs/adr/0002-adaptador-mcp-stdio-isolado.md). |
+| Core browser-portable (`analyzeChange`) | Permite executar a mesma análise no navegador sem servidor, bundler ou framework | Só `change-input-core.js`, `framework-selection.js`, `risk-engine.js`, `strategy.js`, `report.js`, `evidence-ledger.js` e `analyze-change.js` são portáveis; carregamento de arquivo, escrita e HTTP continuam fora do core, nos adapters. |
 
 O próximo marco é uma interface interativa e governança de permissões. Qualquer nova integração deve manter leitura mínima, escrita sempre autorizada e incertezas explícitas.
+
+### Core e adapters
+
+`src/` é a fonte canônica de todo o motor determinístico, incluindo o subconjunto browser-portable. Três adapters chamam o mesmo core sem duplicar regra de negócio: o adapter Node (`analyzeDeclaredChange`, usado pela CLI e pela interface local), o adapter MCP (`integrations/mcp`) e o adapter Browser (`site/analyze.mjs`, via `analyzeChange`). `dist/site` é artefato gerado por `npm run build:site`, nunca versionado (ver `.gitignore`): o script copia os módulos puros de `src/` para `dist/site/core/` e gera `dist/site/generated/aima-data.mjs` a partir de `aima/frameworks/**` e `aima/policies/evidence-aware-release.json`, usando os mesmos loaders (`loadFrameworkRegistry`, `loadReleasePolicy`) que o adapter Node já usa — sem manter uma segunda cópia manual dos dados. `site/` nunca deve reimplementar risco, framework, estratégia, ledger ou decisão de release; só pode consumir o core copiado no build.
 
 ## Contratos e rastreabilidade
 

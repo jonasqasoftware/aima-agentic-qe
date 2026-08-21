@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Analise uma mudança de software com o motor determinístico do AIMA, executado inteiramente no seu navegador — sem servidor, sem envio de dados." />
+  <link rel="canonical" href="https://aima20.dev/analyze.html" />
+  <meta property="og:title" content="Analisar uma mudança — AIMA 2.0" />
+  <meta property="og:description" content="Riscos, framework, estratégia e recomendação de release, calculados localmente no navegador a partir do mesmo motor determinístico do AIMA Agentic QE." />
+  <title>Analisar uma mudança — AIMA 2.0</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#analyze">Ir para a análise</a>
+  <header class="topbar"><a class="brand" href="./index.html"><span class="brand-mark">AIMA</span><span class="brand-version">2.0</span></a><nav class="nav" id="site-nav" aria-label="Navegação principal"><a href="./index.html#metodo">Método</a><a href="./index.html#frameworks">Frameworks</a><a href="./index.html#lexico">Léxico</a><a href="./index.html#diagramas">Diagramas</a><a href="./assessment.html">Assessment</a><a href="./preview.html">Preview</a><a href="./insights.html">Insights</a><a class="nav-cta" href="https://github.com/jonasqasoftware/aima-agentic-qe">GitHub</a></nav><button class="menu-button" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="site-nav">Menu</button></header>
+
+  <main id="analyze" class="section-shell assessment-shell">
+    <a class="back-link" href="./index.html">← Voltar ao AIMA 2.0</a>
+    <div class="eyebrow">ANALISAR MUDANÇA · MOTOR DETERMINÍSTICO</div>
+    <h1>Analise uma mudança de software.</h1>
+    <p class="assessment-intro">Esta página executa o mesmo motor determinístico do AIMA Agentic QE (riscos, framework, estratégia de testes e recomendação de release) inteiramente no seu navegador, a partir do código-fonte público do projeto.</p>
+    <p class="assessment-intro"><strong>A análise é executada localmente no seu navegador. Os dados informados não são enviados para um servidor.</strong></p>
+
+    <form id="analyze-form" class="analyze-form">
+      <label>ID da mudança
+        <input name="id" value="WEB-ANALYZE-001" required />
+      </label>
+      <label>Impacto de negócio
+        <select name="businessImpact">
+          <option>low</option>
+          <option selected>medium</option>
+          <option>high</option>
+        </select>
+      </label>
+      <label class="full">Resumo
+        <input name="summary" value="Mudança analisada localmente no navegador" required />
+      </label>
+      <label class="full">Arquivos alterados (um por linha)
+        <textarea name="changedFiles" required>src/payments/authorization.js</textarea>
+      </label>
+      <label>Complexidade técnica
+        <select name="technicalComplexity">
+          <option>low</option>
+          <option selected>medium</option>
+          <option>high</option>
+        </select>
+      </label>
+      <label>Incertezas conhecidas (uma por linha)
+        <textarea name="knownUnknowns">Resultado de teste de regressão não fornecido.</textarea>
+      </label>
+      <label class="full">Evidências declaradas (JSON opcional — array de objetos com id, type e summary)
+        <textarea name="declaredEvidence" placeholder='[{"id":"UNIT-1","type":"unit-test","summary":"Suíte executada localmente pelo autor."}]'></textarea>
+      </label>
+      <div class="actions">
+        <button class="button button-primary" type="submit">Analisar mudança</button>
+      </div>
+    </form>
+
+    <section id="analyze-result" class="assessment-result analyze-result" hidden aria-live="polite"></section>
+  </main>
+
+  <footer class="footer section-shell">
+    <div><strong>AIMA 2.0</strong><p>AI-driven Intelligent Method for Assurance</p></div>
+    <div><span>Jonas Dávila da Silva</span><p>Quality Engineer · Porto Alegre · 2026</p></div>
+    <div><a href="./assessment.html">Assessment</a><a href="./index.html">AIMA 2.0</a><a href="https://github.com/jonasqasoftware/aima-agentic-qe">GitHub</a></div>
+  </footer>
+
+  <script type="module" src="./app.mjs"></script>
+  <script type="module" src="./analyze.mjs"></script>
+</body>
+</html>

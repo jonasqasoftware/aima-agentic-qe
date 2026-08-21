@@ -8,6 +8,10 @@
 - Toda leitura do registry e toda chamada da tool passam por `assertOperationPermitted` contra a política já versionada em `aima/policies/operation-permissions.json`.
 - Suíte de testes dedicada: protocolo MCP em memória, negação de política injetada, guardrails estáticos de import e stdout, e verificação do processo stdio real (stdout limpo e falha fatal em stderr com código de saída diferente de zero).
 - Workflow de CI dedicado (`mcp-integration.yml`), acionado apenas por mudanças relevantes ao adaptador, sem alterar o gate de qualidade existente.
+- Core determinístico extraído para um subconjunto browser-portable (`analyzeChange` e suas dependências puras), sem duplicar risco, estratégia, seleção de framework ou ledger de evidências.
+- Nova página pública `site/analyze.html`, que executa a análise inteiramente no navegador — os dados informados não são enviados a nenhum servidor.
+- Build estático (`npm run build:site`) que gera `dist/site`, copiando o core puro e os dados de frameworks/política a partir das mesmas fontes canônicas (`src/`, `aima/frameworks`, `aima/policies`).
+- GitHub Pages agora publica o artefato gerado `dist/site`, não `site/` diretamente; nenhuma API ou backend externo foi introduzido.
 
 ## 0.2.0 — MVP 3 concluído
 

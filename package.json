@@ -12,6 +12,7 @@
     "serve": "node src/cli.js serve",
     "evaluate": "node src/cli.js evaluate --change examples/payment-refactor.change.json --expected evals/golden/payment-refactor.expected.json",
     "test": "node --test",
+    "build:site": "node scripts/build-site.mjs",
     "check:site": "node scripts/check-site.mjs",
     "check": "node --check src/*.js && npm test && npm run evaluate && npm run check:site"
   },
