@@ -182,6 +182,19 @@ Recomendação de release
 
 O diretório [`evals/golden`](evals/golden) contém expectativas conhecidas para o cenário de pagamento. `npm run evaluate` valida framework, categorias de risco, recomendação e limite de evidência; `npm run check` inclui essa avaliação e os testes, evitando regressões silenciosas nas regras.
 
+## Três formas de consumir o mesmo núcleo
+
+O motor determinístico é um único core puro, sem I/O, com três adapters diferentes por cima dele — nenhum reimplementa risco, framework, estratégia ou ledger:
+
+```text
+Pure core (src/analyze-change.js e dependências sem I/O)
+├── Node adapter    → CLI / interface local (npm run serve)
+├── MCP adapter     → agentes (integrations/mcp)
+└── Browser adapter → aima20.dev (site/analyze.html)
+```
+
+`analyzeChange(input, { frameworks, releasePolicy })` é a função pura, síncrona e sem I/O que faz a análise (validação, riscos, seleção de framework, estratégia, ledger e relatório). `analyzeDeclaredChange(input)` é o adapter Node que carrega frameworks e política do filesystem e delega ao core puro — é o que a CLI, a interface local e a tool MCP `analyze_change` usam hoje. O site público em `site/analyze.html` chama `analyzeChange` diretamente no navegador, com frameworks e política gerados no build a partir das mesmas fontes canônicas (`aima/frameworks`, `aima/policies`) — os dados informados no formulário não saem do navegador.
+
 ## Adaptador MCP (opcional)
 
 Um adaptador local [Model Context Protocol](https://modelcontextprotocol.io) em [`integrations/mcp`](integrations/mcp) expõe o mesmo motor determinístico a clientes MCP via stdio, como pacote Node isolado com suas próprias dependências — o `package.json` da raiz não é afetado. Ele é somente leitura: o resource `aima://frameworks` lista o registry completo, `aima://frameworks/{id}` lê um framework por id, e a tool `analyze_change` executa `analyzeDeclaredChange` e retorna o relatório completo, sem gravar arquivos. Toda operação passa pela mesma [política de permissões](aima/policies/operation-permissions.json) usada pela CLI. Veja [`integrations/mcp/README.md`](integrations/mcp/README.md) e o racional em [`docs/adr/0002-adaptador-mcp-stdio-isolado.md`](docs/adr/0002-adaptador-mcp-stdio-isolado.md).

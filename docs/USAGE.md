@@ -37,6 +37,18 @@ Use **Gerar pacote de relatório** quando quiser preservar a análise. Os arquiv
 
 O dashboard também apresenta uma tendência visual do `Quality Confidence` das análises salvas e a variação de cada relatório em relação ao anterior. É um acompanhamento histórico, não uma previsão, explicação causal ou aprovação automática de release.
 
+## Site público local (análise no navegador)
+
+O site público (`aima20.dev`) inclui uma página que executa o mesmo motor determinístico direto no navegador, sem servidor. Para rodá-la localmente, gere o artefato de build primeiro — servir `site/` diretamente **não é suficiente** para `analyze.html`, porque `core/` e `generated/` só existem no artefato de build, não no diretório fonte:
+
+```bash
+npm run build:site
+cd dist/site
+python3 -m http.server 8000
+```
+
+Depois acesse `http://localhost:8000/analyze.html`. `npm run build:site` copia os módulos puros de `src/` para `dist/site/core/` e gera `dist/site/generated/aima-data.mjs` a partir de `aima/frameworks/**` e `aima/policies/evidence-aware-release.json`; `dist/` não é versionado e é recriado a cada execução.
+
 ## Adaptador MCP local (opcional)
 
 Para expor o motor determinístico a um cliente MCP (por exemplo, um assistente de IDE), use o adaptador isolado em [`integrations/mcp`](../integrations/mcp):

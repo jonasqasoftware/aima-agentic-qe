@@ -214,7 +214,35 @@ h3 { letter-spacing: -.025em; }
   .framework-card { min-height: 220px; }
   .answer-options { grid-template-columns: 1fr; }
   .footer { grid-template-columns: 1fr; }
+  .analyze-form { grid-template-columns: 1fr; }
 }
+
+.analyze-form { margin-top: 3rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+.analyze-form label { display: grid; gap: .5rem; color: #aaa; font-size: .85rem; }
+.analyze-form label.full { grid-column: 1 / -1; }
+.analyze-form input, .analyze-form select, .analyze-form textarea { font: inherit; padding: .7rem .8rem; color: var(--white); background: var(--graphite); border: 1px solid var(--line-ui); border-radius: var(--radius); }
+.analyze-form textarea { min-height: 84px; resize: vertical; }
+.analyze-form .actions { grid-column: 1 / -1; }
+.analyze-result h3 { margin: 2rem 0 1rem; font-size: 1.05rem; }
+.analyze-result ul, .analyze-result ol { padding-left: 1.3rem; color: #c9c9c9; }
+.analyze-result li + li { margin-top: .5rem; }
+.analyze-muted { color: #9b9b9b; }
+.analyze-decision { font-size: 1.6rem; font-weight: 900; margin: .5rem 0 1rem; }
+.analyze-decision.no-go { color: #d97a7a; }
+.analyze-decision.go-with-risks { color: var(--gold); }
+.analyze-decision.go { color: #7fbf95; }
+.analyze-risks { display: grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: 1rem; }
+.analyze-risk { border: 1px solid var(--line-ui); border-top: 3px solid var(--line-ui); padding: 1rem; border-radius: var(--radius); }
+.analyze-risk h4 { margin: .5rem 0; font-size: .95rem; }
+.analyze-risk.high { border-top-color: #d97a7a; }
+.analyze-risk.medium { border-top-color: var(--gold); }
+.analyze-risk.low { border-top-color: #7fbf95; }
+.analyze-unknown { color: var(--gold); }
+.analyze-table-wrap { overflow-x: auto; border: 1px solid var(--line-ui); }
+.analyze-ledger { width: 100%; border-collapse: collapse; min-width: 640px; }
+.analyze-ledger th, .analyze-ledger td { padding: .7rem .8rem; text-align: left; border-bottom: 1px solid var(--line-dark); font-size: .85rem; vertical-align: top; }
+.analyze-ledger th { color: #9b9b9b; font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; }
+.analyze-error { color: #d97a7a; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
