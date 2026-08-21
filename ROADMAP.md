@@ -18,7 +18,7 @@ Já entregue:
 
 Pendente:
 
-- Integrações autorizadas orientadas por evidências, começando por operações de leitura com escopo mínimo.
+- Integrações autorizadas de escrita orientadas por evidências, com escopo mínimo e aprovação humana explícita.
 - Expansão de agentes somente quando houver uma etapa real que não seja resolvida por regras determinísticas e evidências rastreáveis.
 
 Cada novo marco deve preservar autonomia limitada, incertezas explícitas, evidências rastreáveis e aprovação humana para escritas externas. O resumo público dos marcos também está no [README](README.md#roadmap).
