@@ -21,5 +21,13 @@ export function evaluateChange(change, expected, frameworks, policy) {
     failures.push(`Recomendação esperada ${expected.expectedRecommendation}, recebida ${strategy.recommendation}.`);
   }
   if (expected.evidenceBoundaryRequired && !report.evidenceBoundary) failures.push('Limite de evidência ausente no relatório.');
+  if (expected.expectedConfidenceModel) {
+    if (confidence.model?.id !== expected.expectedConfidenceModel.id) {
+      failures.push(`Modelo de confiança esperado ${expected.expectedConfidenceModel.id}, recebido ${confidence.model?.id ?? 'ausente'}.`);
+    }
+    if (confidence.model?.version !== expected.expectedConfidenceModel.version) {
+      failures.push(`Versão do modelo de confiança esperada ${expected.expectedConfidenceModel.version}, recebida ${confidence.model?.version ?? 'ausente'}.`);
+    }
+  }
   return { passed: failures.length === 0, failures, selection, risks, confidence, strategy, report };
 }

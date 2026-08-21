@@ -269,6 +269,11 @@ h3 { letter-spacing: -.025em; }
 #evidence-advanced textarea { width: 100%; margin-top: .6rem; font: inherit; padding: .7rem .8rem; color: var(--white); background: var(--graphite); border: 1px solid var(--line-ui); border-radius: var(--radius); min-height: 84px; resize: vertical; }
 .analyze-top-risk { border-top-width: 4px; margin: 1.2rem 0; padding: 1.2rem; }
 .analyze-top-risk h3 { margin: .4rem 0; }
+.analyze-calculation { border: 1px solid var(--line-ui); border-radius: var(--radius); padding: 1rem 1.1rem; margin: 1.2rem 0; display: grid; gap: .5rem; }
+.analyze-calculation summary { cursor: pointer; color: #aaa; font-size: .9rem; font-weight: 700; }
+.analyze-calculation summary:hover, .analyze-calculation summary:focus-visible { color: var(--gold-soft); }
+.analyze-calculation p { margin: 0; color: #c9c9c9; font-size: .85rem; }
+.analyze-calculation p.analyze-muted { color: #9b9b9b; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

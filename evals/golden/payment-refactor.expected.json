@@ -2,5 +2,9 @@
   "framework": "risk-based-testing",
   "mustIncludeRiskCategories": ["financial", "integration"],
   "expectedRecommendation": "NO-GO",
-  "evidenceBoundaryRequired": true
+  "evidenceBoundaryRequired": true,
+  "expectedConfidenceModel": {
+    "id": "highest-risk-residual-confidence",
+    "version": "1.0.0"
+  }
 }

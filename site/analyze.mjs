@@ -131,7 +131,12 @@ function renderReport(report) {
   const decision = el('p', { className: `analyze-decision ${recommendationClass(report.strategy.recommendation)}`, text: report.strategy.recommendation });
   nodes.push(decision);
   nodes.push(el('p', { text: report.strategy.rationale }));
+  nodes.push(el('p', {
+    className: 'analyze-muted',
+    text: `Política: ${report.strategy.policy.name} (${report.strategy.policy.id} · v${report.strategy.policy.version})${report.strategy.decisionReasonCode ? ` · ${report.strategy.decisionReasonCode}` : ''}`
+  }));
   nodes.push(el('p', { text: `Quality Confidence experimental: ${report.qualityConfidence.score}/100` }));
+  nodes.push(el('p', { className: 'analyze-muted', text: 'Quality Confidence ≠ Recomendação: a recomendação vem da política acima, não do score de Quality Confidence.' }));
 
   if (topRisk) {
     nodes.push(el('div', { className: `analyze-risk analyze-top-risk ${topRisk.level.toLowerCase()}` }, [
@@ -148,6 +153,21 @@ function renderReport(report) {
 
   nodes.push(el('h3', { text: 'Por que esse resultado?' }));
   for (const factor of report.qualityConfidence.factors) nodes.push(el('p', { className: 'analyze-muted', text: factor }));
+
+  const { model, calculation } = report.qualityConfidence;
+  if (model && calculation) {
+    const details = el('details', { className: 'analyze-calculation' }, [
+      el('summary', { text: 'Como este resultado foi calculado?' }),
+      el('p', { text: `Modelo: ${model.id} v${model.version}` }),
+      el('p', { text: `Maior risco: ${calculation.highestRiskScore}/100` }),
+      el('p', { text: `Penalidade de risco: ${calculation.riskPenalty} ponto(s) (limite: ${calculation.caps.riskPenalty})` }),
+      el('p', { text: `UNKNOWNs declarados: ${calculation.unknownCount}` }),
+      el('p', { text: `Penalidade de incerteza: ${calculation.unknownPenalty} ponto(s) (limite: ${calculation.caps.unknownPenalty})` }),
+      el('p', { text: `Total: 100 − ${calculation.riskPenalty} − ${calculation.unknownPenalty} = ${report.qualityConfidence.score}` }),
+      el('p', { className: 'analyze-muted', text: 'Quality Confidence não é probabilidade, não aumenta com evidências positivas nesta versão e não aprova releases.' })
+    ]);
+    nodes.push(details);
+  }
 
   nodes.push(el('h3', { text: 'O que testar agora?' }));
   const riskList = el('div', { className: 'analyze-risks' }, report.risks.map((risk) => el('article', { className: `analyze-risk ${risk.level.toLowerCase()}` }, [
