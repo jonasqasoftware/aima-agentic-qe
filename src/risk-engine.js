@@ -94,16 +94,46 @@ export function assessRisks(change) {
   return risks.sort((left, right) => right.score - left.score || left.id.localeCompare(right.id));
 }
 
+export const CONFIDENCE_MODEL = { id: 'highest-risk-residual-confidence', version: '1.0.0' };
+const RISK_MULTIPLIER = 0.55;
+const RISK_PENALTY_CAP = 55;
+const UNKNOWN_PENALTY_PER_ITEM = 10;
+const UNKNOWN_PENALTY_CAP = 30;
+
+/**
+ * Residual-confidence model: the penalty is driven by the single most severe
+ * declared risk, not by an average of every risk. Averaging let additional,
+ * weaker risks (including genuine negative evidence like a coverage or CI
+ * failure) dilute a severe risk's score and raise the resulting confidence —
+ * confirmed as a real, reproducible defect. Reducing to `max()` makes the
+ * result independent of how many other risks are present, at the documented
+ * trade-off that risks below the highest do not further lower the score.
+ */
 export function qualityConfidence(risks, unknowns) {
-  const riskPenalty = Math.min(55, Math.round(risks.reduce((total, risk) => total + risk.score, 0) / Math.max(risks.length, 1) * 0.55));
-  const unknownPenalty = Math.min(30, unknowns.length * 10);
-  const score = Math.max(0, 100 - riskPenalty - unknownPenalty);
+  const highestRiskScore = risks.reduce((max, risk) => Math.max(max, risk.score), 0);
+  const riskPenalty = Math.min(RISK_PENALTY_CAP, Math.round(highestRiskScore * RISK_MULTIPLIER));
+  const unknownCount = unknowns.length;
+  const unknownPenalty = Math.min(UNKNOWN_PENALTY_CAP, unknownCount * UNKNOWN_PENALTY_PER_ITEM);
+  const totalPenalty = riskPenalty + unknownPenalty;
+  const score = Math.max(0, 100 - totalPenalty);
   return {
     score,
     factors: [
-      `Penalidade de risco: ${riskPenalty} ponto(s), calculada a partir de sinais declarados.`,
-      `Penalidade de incerteza: ${unknownPenalty} ponto(s), baseada em ${unknowns.length} desconhecido(s) declarado(s).`,
+      `Penalidade de risco: ${riskPenalty} ponto(s), calculada a partir do maior risco declarado (${highestRiskScore}/100).`,
+      `Penalidade de incerteza: ${unknownPenalty} ponto(s), baseada em ${unknownCount} desconhecido(s) declarado(s).`,
       'O score é experimental; não representa aprovação automática de release.'
-    ]
+    ],
+    model: { ...CONFIDENCE_MODEL },
+    calculation: {
+      highestRiskScore,
+      riskMultiplier: RISK_MULTIPLIER,
+      riskPenalty,
+      unknownCount,
+      unknownPenaltyPerItem: UNKNOWN_PENALTY_PER_ITEM,
+      unknownPenalty,
+      totalPenalty,
+      caps: { riskPenalty: RISK_PENALTY_CAP, unknownPenalty: UNKNOWN_PENALTY_CAP },
+      rounding: 'Math.round'
+    }
   };
 }

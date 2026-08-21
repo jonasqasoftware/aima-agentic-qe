@@ -13,6 +13,13 @@ export async function loadBaselineReport(file) {
   return baseline;
 }
 
+const LEGACY_MODEL_KEY = 'legacy-unversioned';
+
+function confidenceModelKey(report) {
+  const model = report.qualityConfidence?.model;
+  return model ? `${model.id}@${model.version}` : LEGACY_MODEL_KEY;
+}
+
 /** Compares declared analysis outputs; it does not infer regression from code. */
 export function compareWithBaseline(current, baseline) {
   const previousById = new Map(baseline.risks.map((risk) => [risk.id, risk]));
@@ -26,14 +33,25 @@ export function compareWithBaseline(current, baseline) {
   const changedRisks = current.risks
     .filter((risk) => previousById.has(risk.id) && previousById.get(risk.id).score !== risk.score)
     .map((risk) => ({ id: risk.id, previousScore: previousById.get(risk.id).score, currentScore: risk.score }));
+  const baselineConfidenceModel = baseline.qualityConfidence?.model ?? null;
+  const currentConfidenceModel = current.qualityConfidence?.model ?? null;
+  // Scores are only semantically comparable when both reports were produced
+  // by the exact same confidence model id and version — a legacy report
+  // predating model metadata is treated as its own, non-comparable model.
+  const qualityConfidenceComparable = confidenceModelKey(baseline) === confidenceModelKey(current);
   return {
     baselineChangeId: baseline.context.changeId,
     baselineRecommendation: baseline.strategy?.recommendation ?? 'UNKNOWN',
     currentRecommendation: current.strategy.recommendation,
     qualityConfidenceDelta: current.qualityConfidence.score - baseline.qualityConfidence.score,
+    qualityConfidenceComparable,
+    baselineConfidenceModel,
+    currentConfidenceModel,
     newRisks,
     resolvedRisks,
     changedRisks,
-    boundary: 'Comparação entre relatórios declarados. Não comprova regressão de código nem execução de testes.'
+    boundary: qualityConfidenceComparable
+      ? 'Comparação entre relatórios declarados. Não comprova regressão de código nem execução de testes.'
+      : 'Comparação entre relatórios declarados de modelos de Quality Confidence diferentes. A variação numérica é preservada por compatibilidade, mas não representa uma tendência comparável — não comprova regressão de código nem execução de testes.'
   };
 }
