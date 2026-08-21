@@ -12,7 +12,6 @@
 </head>
 <body>
   <a class="skip-link" href="#analyze">Ir para a análise</a>
-  <header class="topbar"><a class="brand" href="./index.html"><span class="brand-mark">AIMA</span><span class="brand-version">2.0</span></a><nav class="nav" id="site-nav" aria-label="Navegação principal"><a href="./index.html#metodo">Método</a><a href="./index.html#frameworks">Frameworks</a><a href="./index.html#lexico">Léxico</a><a href="./index.html#diagramas">Diagramas</a><a href="./assessment.html">Assessment</a><a href="./preview.html">Preview</a><a href="./insights.html">Insights</a><a class="nav-cta" href="https://github.com/jonasqasoftware/aima-agentic-qe">GitHub</a></nav><button class="menu-button" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="site-nav">Menu</button></header>
 
   <main id="analyze" class="section-shell assessment-shell">
     <a class="back-link" href="./index.html">← Voltar ao AIMA 2.0</a>
@@ -26,31 +25,46 @@
         <input name="id" value="WEB-ANALYZE-001" required />
       </label>
       <label>Impacto de negócio
-        <select name="businessImpact">
-          <option>low</option>
-          <option selected>medium</option>
-          <option>high</option>
+        <select name="businessImpact" aria-describedby="help-impacto">
+          <option value="low">Baixo</option>
+          <option value="medium" selected>Médio</option>
+          <option value="high">Alto</option>
         </select>
+        <small id="help-impacto" class="field-help">Quanto essa mudança afeta o negócio se algo der errado.</small>
       </label>
       <label class="full">Resumo
         <input name="summary" value="Mudança analisada localmente no navegador" required />
       </label>
       <label class="full">Arquivos alterados (um por linha)
-        <textarea name="changedFiles" required>src/payments/authorization.js</textarea>
+        <textarea name="changedFiles" required aria-describedby="help-arquivos">src/payments/authorization.js</textarea>
+        <small id="help-arquivos" class="field-help">Caminhos dos arquivos alterados — um por linha.</small>
       </label>
       <label>Complexidade técnica
-        <select name="technicalComplexity">
-          <option>low</option>
-          <option selected>medium</option>
-          <option>high</option>
+        <select name="technicalComplexity" aria-describedby="help-complexidade">
+          <option value="low">Baixa</option>
+          <option value="medium" selected>Média</option>
+          <option value="high">Alta</option>
         </select>
+        <small id="help-complexidade" class="field-help">Quão difícil é implementar e testar esta mudança corretamente.</small>
       </label>
       <label>Incertezas conhecidas (uma por linha)
-        <textarea name="knownUnknowns">Resultado de teste de regressão não fornecido.</textarea>
+        <textarea name="knownUnknowns" aria-describedby="help-incertezas">Resultado de teste de regressão não fornecido.</textarea>
+        <small id="help-incertezas" class="field-help">O que você ainda não sabe — declare em vez de assumir.</small>
       </label>
-      <label class="full">Evidências declaradas (JSON opcional — array de objetos com id, type e summary)
-        <textarea name="declaredEvidence" placeholder='[{"id":"UNIT-1","type":"unit-test","summary":"Suíte executada localmente pelo autor."}]'></textarea>
-      </label>
+
+      <fieldset class="full evidence-field">
+        <legend>Evidências declaradas</legend>
+        <p class="field-help">Testes, análises ou verificações já realizadas sobre esta mudança.</p>
+        <p class="field-help">Prefere JSON? Use o modo avançado abaixo — preenchê-lo substitui esta lista; os dois nunca são combinados.</p>
+        <p id="evidence-mode-note" class="field-help evidence-mode-note" hidden>Modo avançado ativo — os campos abaixo estão desativados e não serão usados.</p>
+        <div id="evidence-list" class="evidence-list"></div>
+        <button type="button" class="button button-secondary" id="evidence-add">+ Adicionar evidência</button>
+        <details id="evidence-advanced">
+          <summary>Modo avançado: JSON</summary>
+          <textarea name="declaredEvidence" id="evidence-json" placeholder='[{"id":"UNIT-1","type":"unit-test","summary":"Suíte executada localmente pelo autor."}]'></textarea>
+        </details>
+      </fieldset>
+
       <div class="actions">
         <button class="button button-primary" type="submit">Analisar mudança</button>
       </div>
@@ -59,13 +73,6 @@
     <section id="analyze-result" class="assessment-result analyze-result" hidden aria-live="polite"></section>
   </main>
 
-  <footer class="footer section-shell">
-    <div><strong>AIMA 2.0</strong><p>AI-driven Intelligent Method for Assurance</p></div>
-    <div><span>Jonas Dávila da Silva</span><p>Quality Engineer · Porto Alegre · 2026</p></div>
-    <div><a href="./assessment.html">Assessment</a><a href="./index.html">AIMA 2.0</a><a href="https://github.com/jonasqasoftware/aima-agentic-qe">GitHub</a></div>
-  </footer>
-
-  <script type="module" src="./app.mjs"></script>
   <script type="module" src="./analyze.mjs"></script>
 </body>
 </html>

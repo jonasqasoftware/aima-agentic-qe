@@ -20,10 +20,34 @@ const sitemapPath = join(site, 'sitemap.xml');
 check(existsSync(join(site, 'index.html')), 'site/index.html ausente.');
 check(existsSync(join(site, 'assessment.html')), 'site/assessment.html ausente.');
 check(existsSync(join(site, 'preview.html')), 'site/preview.html ausente.');
+check(existsSync(join(site, 'insights.html')), 'site/insights.html ausente.');
 check(existsSync(join(site, 'analyze.html')), 'site/analyze.html ausente.');
 check(existsSync(join(site, 'analyze.mjs')), 'site/analyze.mjs ausente.');
+check(existsSync(join(site, 'como-usar.html')), 'site/como-usar.html ausente.');
 check(existsSync(sitemapPath), 'site/sitemap.xml ausente.');
 const sitemap = existsSync(sitemapPath) ? readFileSync(sitemapPath, 'utf8') : '';
+
+check(sitemap.includes('https://aima20.dev/analyze.html'), 'analyze.html não está no sitemap.');
+check(sitemap.includes('https://aima20.dev/como-usar.html'), 'como-usar.html não está no sitemap.');
+
+// Both the analyzer and the assessment declare, on their own pages, that
+// input is processed locally and never sent to a server. This guardrail
+// makes that claim mechanically enforced, not just documented, for every
+// file that carries the promise — not just one of them.
+const NETWORK_API_PATTERN = /\bfetch\s*\(|\bXMLHttpRequest\b|\bWebSocket\b|\bnavigator\.sendBeacon\b|\bEventSource\b/;
+
+function checkNoNetworkApi(relativePath) {
+  const filePath = join(site, relativePath);
+  if (!existsSync(filePath)) return;
+  const source = readFileSync(filePath, 'utf8');
+  check(
+    !NETWORK_API_PATTERN.test(source),
+    `site/${relativePath} não pode conter fetch(), XMLHttpRequest, WebSocket, sendBeacon ou EventSource — a análise deve permanecer local ao navegador.`
+  );
+}
+
+checkNoNetworkApi('analyze.mjs');
+checkNoNetworkApi('assessment.mjs');
 
 for (const framework of frameworks) {
   const relative = `frameworks/${framework.slug}.html`;

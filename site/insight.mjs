@@ -5,7 +5,7 @@ const slug = document.body.dataset.insight;
 const insight = insights.find((item) => item.slug === slug);
 const root = document.querySelector('#insight-root');
 
-mountChrome({ base: '../', rootId: 'insight-root' });
+mountChrome({ base: '../', rootId: 'insight-root', current: 'insights' });
 
 if (!insight || !root) {
   if (root) root.innerHTML = '<section class="article-shell"><h1>Insight não encontrado</h1><a href="../insights.html">Voltar aos Insights</a></section>';
