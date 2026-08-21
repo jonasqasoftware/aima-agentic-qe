@@ -45,6 +45,17 @@ test('branch: no high risk -> policy.recommendationWhenNoHighRisk, decisionReaso
   assert.equal(strategy.decisionReasonCode, 'POLICY_NO_HIGH_RISK');
 });
 
+test('regression: buildStrategy must not depend on risks[0] — a HIGH risk in a later position must still trigger the high-risk branch', () => {
+  const policy = { id: 'test-policy', name: 'Test', version: '1.0.0', blockOnAnyUnknown: false, blockOnHighRiskWithUnknown: true, recommendationWhenHighRisk: 'GO WITH RISKS', recommendationWhenNoHighRisk: 'GO' };
+  const risks = [
+    { id: 'R-LOW', score: 10, level: 'LOW', recommendedTests: ['t-low'] },
+    { id: 'R-HIGH', score: 90, level: 'HIGH', recommendedTests: ['t-high'] }
+  ];
+  const strategy = buildStrategy(risks, [], policy);
+  assert.equal(strategy.decisionReasonCode, 'POLICY_HIGH_RISK');
+  assert.equal(strategy.recommendation, policy.recommendationWhenHighRisk);
+});
+
 test('the default shipped policy is untouched by this PR: GO WITH RISKS/NO-GO reachable, GO not produced automatically', async () => {
   const policy = await loadReleasePolicy(path.join(root, 'aima', 'policies', 'evidence-aware-release.json'));
   assert.equal(policy.blockOnAnyUnknown, false);

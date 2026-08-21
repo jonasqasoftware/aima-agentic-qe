@@ -1,7 +1,6 @@
 export function buildStrategy(risks, unknowns, policy) {
   const tests = [...new Set(risks.flatMap((risk) => risk.recommendedTests))];
-  const highest = risks[0];
-  const hasHighRisk = highest?.level === 'HIGH';
+  const hasHighRisk = risks.some((risk) => risk.level === 'HIGH');
   const hasUnknowns = unknowns.length > 0;
   const blockForUnknowns = hasUnknowns && policy.blockOnAnyUnknown;
   const blockForHighRisk = hasHighRisk && hasUnknowns && policy.blockOnHighRiskWithUnknown;
