@@ -37,5 +37,7 @@ jobs:
           cache-dependency-path: integrations/mcp/package-lock.json
       - name: Install MCP adapter dependencies
         run: npm ci
+      - name: Audit dependencies for known vulnerabilities
+        run: npm audit --audit-level=high
       - name: Check syntax and run the MCP adapter suite
         run: npm run check
