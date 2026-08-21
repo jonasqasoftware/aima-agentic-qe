@@ -12,6 +12,8 @@
 - Nova página pública `site/analyze.html`, que executa a análise inteiramente no navegador — os dados informados não são enviados a nenhum servidor.
 - Build estático (`npm run build:site`) que gera `dist/site`, copiando o core puro e os dados de frameworks/política a partir das mesmas fontes canônicas (`src/`, `aima/frameworks`, `aima/policies`).
 - GitHub Pages agora publica o artefato gerado `dist/site`, não `site/` diretamente; nenhuma API ou backend externo foi introduzido.
+- Quality Confidence adota o modelo versionado `highest-risk-residual-confidence` v1.0.0, corrigindo a diluição do score por riscos adicionais menores: o cálculo passa a reagir ao maior risco conhecido, com `qualityConfidence.calculation` explicando cada penalidade aplicada.
+- Baseline e dashboard passam a considerar a versão do modelo antes de comparar scores entre relatórios; a estratégia registra `decisionReasonCode` para cada recomendação. A política de release (`aima/policies/evidence-aware-release.json`) permanece inalterada.
 - `site/edition.mjs` passa a ser a fonte canônica da metadata da Preview Edition: `label`, `version` e `status` são declarados explicitamente, e os contadores de frameworks, conceitos e diagramas são derivados de `site/content.mjs`. A versão editorial permanece independente da versão em `package.json`.
 - `site/layout.mjs`, `site/framework.mjs`, `site/insight.mjs` e `site/app.mjs` passam a interpolar `edition.version`/`edition.label` em vez de texto de versão hardcoded.
 - Atributos `data-edition-*` hidratam a metadata visível no corpo de `index.html` e `preview.html` via JavaScript no navegador, preservando um fallback estático correto para quando o JavaScript está desabilitado.

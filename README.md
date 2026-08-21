@@ -237,7 +237,7 @@ Este repositório usa Markdown, Mermaid e ADRs (*Architecture Decision Records*)
 - **MVP 1 — concluído:** adaptadores de diff Git local e de PRs do GitHub com leitura autorizada de metadados, arquivos e checks.
 - **MVP 2 — concluído:** execução estruturada de evidências, importação de JUnit/JSON/LCOV, manifesto de evidências e geração do relatório também no CI.
 - **MVP 3 — concluído:** interface web local, geração de pacotes de relatório, dashboard navegável com histórico e tendências, e governança explícita de permissões.
-- **MVP 4 — em andamento:** adaptador MCP local e somente leitura ([`integrations/mcp`](integrations/mcp)) concluído; integrações autorizadas de escrita e comparação entre análises seguem pendentes, sempre preservando revisão humana e operações externas sob autorização explícita.
+- **MVP 4 — em andamento:** adaptador MCP local e somente leitura ([`integrations/mcp`](integrations/mcp)), core browser-portable com análise pública no navegador (`site/analyze.html`), evolução de UX e arquitetura de informação do site público, e metadata editorial canônica da Preview Edition com gate determinístico contra drift antes da publicação no GitHub Pages — todos concluídos; integrações autorizadas de escrita seguem pendentes, sempre preservando revisão humana e operações externas sob autorização explícita.
 
 ## Limitações
 
