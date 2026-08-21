@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Como usar o AIMA 2.0 em 5 minutos: quando aplicar, um exemplo prático, como usar o Analisador de Mudanças e como interpretar o resultado." />
+  <link rel="canonical" href="https://aima20.dev/como-usar.html" />
+  <meta property="og:title" content="Como usar — AIMA 2.0" />
+  <meta property="og:description" content="O guia canônico de onboarding do AIMA 2.0: da decisão ao Analisador de Mudanças." />
+  <title>Como usar — AIMA 2.0</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body data-page="como-usar">
+  <a class="skip-link" href="#como-usar">Ir para o conteúdo</a>
+
+  <main id="como-usar">
+    <section class="section-shell framework-hero">
+      <a class="back-link" href="./index.html">← Voltar ao AIMA 2.0</a>
+      <div class="eyebrow">COMO USAR · GUIA CANÔNICO</div>
+      <h1>Como usar o AIMA 2.0.</h1>
+      <p class="lead">Este é o guia único de onboarding do método — da primeira decisão até o Analisador de Mudanças. As demais páginas do site linkam para cá em vez de repetir este conteúdo.</p>
+    </section>
+
+    <section class="section-shell section-dark">
+      <div class="section-heading"><span class="kicker">01 · O QUE É O AIMA</span><h2>Um sistema de decisões, não uma lista de ferramentas.</h2></div>
+      <p class="lead">AIMA 2.0 ajuda profissionais e organizações a transformar contexto, riscos e evidências em estratégias de Qualidade mais explícitas, rastreáveis e confiáveis. O princípio central: <strong>menos achismo, mais inteligência</strong> — IA amplia a capacidade de decisão do profissional de Qualidade, mas não substitui pensamento crítico.</p>
+    </section>
+
+    <section class="section-shell">
+      <div class="section-heading"><span class="kicker">02 · QUANDO USAR</span><h2>Antes de decidir, não depois.</h2></div>
+      <ul class="article-body">
+        <li>Antes de definir a estratégia de testes de uma mudança relevante.</li>
+        <li>Antes de uma decisão de release com risco pouco claro.</li>
+        <li>Quando o time precisa alinhar linguagem antes de discutir risco ou evidência.</li>
+        <li>Quando "o pipeline está verde" não é suficiente para decidir sozinho.</li>
+      </ul>
+    </section>
+
+    <section class="section-shell section-dark">
+      <div class="section-heading"><span class="kicker">03 · COMO USAR EM 5 MINUTOS</span><h2>Leia por decisão, não por sequência.</h2></div>
+      <div class="steps-grid" role="list" aria-label="Sequência de uso do AIMA 2.0">
+        <div role="listitem"><strong>01</strong><h3>Nomeie a decisão</h3><p>Escreva o que precisa ser decidido e qual resultado deve ser protegido.</p></div>
+        <div role="listitem"><strong>02</strong><h3>Consulte o léxico</h3><p>Alinhe os termos que sustentam a conversa e torne diferenças explícitas.</p></div>
+        <div role="listitem"><strong>03</strong><h3>Escolha um framework</h3><p>Use a pergunta e a incerteza para selecionar somente a estrutura necessária.</p></div>
+        <div role="listitem"><strong>04</strong><h3>Registre evidências</h3><p>Associe sinais ao risco, declare incertezas e evite métricas de vaidade.</p></div>
+        <div role="listitem"><strong>05</strong><h3>Feche o ciclo</h3><p>Defina ação, responsável, prazo e como o resultado será revisado.</p></div>
+      </div>
+    </section>
+
+    <section class="section-shell">
+      <div class="section-heading"><span class="kicker">04 · UM EXEMPLO PRÁTICO</span><h2>Uma mudança simples, aplicada aos 5 passos.</h2></div>
+      <div class="framework-detail-grid">
+        <article class="wide example-panel">
+          <span class="kicker">EXEMPLO</span>
+          <p class="detail-lead">Mudança em <code>src/payments/authorization.js</code>, impacto de negócio <strong>médio</strong>, complexidade técnica <strong>média</strong>, uma incerteza declarada: "resultado de teste de regressão não fornecido".</p>
+        </article>
+        <article><span class="kicker">01–02 · NOMEIE E ALINHE</span><p>A decisão é "podemos liberar esta mudança de autorização de pagamento?". O termo-chave a alinhar é <em>risco</em>: o que pode comprometer valor e confiança aqui.</p></article>
+        <article><span class="kicker">03 · ESCOLHA</span><p>Como o arquivo toca autorização, o sinal de risco financeiro/segurança é relevante — um framework como o Risk Strategy Map ajuda a estruturar controles.</p></article>
+        <article><span class="kicker">04 · REGISTRE</span><p>A incerteza sobre teste de regressão é declarada, não escondida — ela entra explicitamente na análise em vez de ser assumida como "provavelmente ok".</p></article>
+        <article><span class="kicker">05 · FECHE</span><p>A decisão registrada tem responsável, prazo e critério de revisão — não termina só com "parece seguro".</p></article>
+      </div>
+    </section>
+
+    <section class="section-shell section-dark">
+      <div class="section-heading"><span class="kicker">05 · O ANALISADOR DE MUDANÇAS</span><h2>O mesmo exemplo, executado pelo motor determinístico.</h2></div>
+      <p class="lead">O <a href="./analyze.html">Analisador de Mudanças</a> aplica o passo 3–5 automaticamente: recebe a mudança declarada (como no exemplo acima) e devolve riscos, um framework executável sugerido, estratégia de verificação e as incertezas que continuam em aberto — tudo calculado localmente no seu navegador, sem enviar nada a um servidor.</p>
+      <div class="hero-actions"><a class="button button-primary" href="./analyze.html">Analisar uma mudança</a></div>
+    </section>
+
+    <section id="como-interpretar-o-resultado" class="section-shell">
+      <div class="section-heading"><span class="kicker">06 · COMO INTERPRETAR O RESULTADO</span><h2>Quatro elementos, nessa ordem.</h2></div>
+      <div class="framework-detail-grid">
+        <article><span class="kicker">RECOMENDAÇÃO</span><p>GO, GO WITH RISKS ou NO-GO — um ponto de partida para revisão humana, não uma aprovação automática de release.</p></article>
+        <article><span class="kicker">QUALITY CONFIDENCE</span><p>Uma pontuação experimental de 0 a 100, calculada a partir dos riscos e das incertezas declaradas. Não é uma métrica científica.</p></article>
+        <article><span class="kicker">FRAMEWORK EXECUTÁVEL SUGERIDO</span><p>O framework machine-readable que o motor usou para montar a estratégia — um subconjunto da biblioteca pública de 20 frameworks editoriais, não a lista inteira.</p></article>
+        <article><span class="kicker">O QUE AINDA NÃO SABEMOS</span><p>As incertezas (<code>UNKNOWN</code>) que você declarou continuam explícitas no resultado — elas nunca viram evidência automaticamente.</p></article>
+      </div>
+    </section>
+
+    <section class="section-shell section-dark">
+      <div class="section-heading"><span class="kicker">07 · ONDE APROFUNDAR</span><h2>Do exemplo para o método completo.</h2></div>
+      <div class="hero-actions">
+        <a class="button button-secondary" href="./index.html#frameworks">Explorar os 20 frameworks</a>
+        <a class="button button-secondary" href="./index.html#lexico">Consultar o léxico</a>
+        <a class="button button-secondary" href="./assessment.html">Fazer o Assessment</a>
+        <a class="button button-secondary" href="./insights.html">Ler os Insights</a>
+      </div>
+    </section>
+
+    <section class="section-shell">
+      <div class="section-heading"><span class="kicker">08 · LIMITES ATUAIS</span><h2>O que o AIMA 2.0 não afirma.</h2></div>
+      <ul class="article-body">
+        <li>A análise considera somente o que foi declarado — não lê código, não executa testes, não acessa repositórios.</li>
+        <li>O resultado apoia revisão humana; não é aprovação automática de release.</li>
+        <li>Quality Confidence é uma pontuação experimental, não uma métrica científica ou preditiva.</li>
+        <li>O motor executável opera hoje sobre um subconjunto machine-readable dos frameworks — os 20 frameworks editoriais continuam sendo material de referência, não todos executáveis.</li>
+      </ul>
+      <p class="article-note">Origem e evolução: o AIMA nasceu como <em>Análise → Impacto → Metrificação → Apresentação</em> (ver o <a href="https://www.thoughtworks.com/pt-br/insights/blog/aima-how-increase-performance-qa-analysts-through-indicators">artigo original na Thoughtworks</a>). O AIMA 2.0 evolui esse núcleo para <em>Contexto → Risco → Evidência → Decisão → Ação → Aprendizado</em> — a mesma preocupação com indicadores que sustentam decisão, aplicada a um ciclo mais completo.</p>
+    </section>
+  </main>
+
+  <script type="module" src="./app.mjs"></script>
+</body>
+</html>

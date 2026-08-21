@@ -15,23 +15,8 @@
   <link rel="stylesheet" href="./styles.css" />
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"AIMA 2.0","url":"https://aima20.dev/","description":"Método de Engenharia de Qualidade baseado em contexto, riscos, evidências e decisões.","author":{"@type":"Person","name":"Jonas Dávila da Silva","url":"https://jonasdavila.com.br/"}}</script>
 </head>
-<body>
+<body data-page="index">
   <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
-
-  <header class="topbar">
-    <a class="brand" href="#inicio" aria-label="AIMA 2.0 — início"><span class="brand-mark">AIMA</span><span class="brand-version">2.0</span></a>
-    <nav class="nav" id="site-nav" aria-label="Navegação principal">
-      <a href="#metodo">Método</a>
-      <a href="#frameworks">Frameworks</a>
-      <a href="#lexico">Léxico</a>
-      <a href="#diagramas">Diagramas</a>
-      <a href="./assessment.html">Assessment</a>
-      <a href="./preview.html">Preview</a>
-      <a href="./insights.html">Insights</a>
-      <a class="nav-cta" href="https://github.com/jonasqasoftware/aima-agentic-qe">GitHub</a>
-    </nav>
-    <button class="menu-button" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="site-nav">Menu</button>
-  </header>
 
   <main id="conteudo">
     <section id="inicio" class="hero section-shell">
@@ -41,11 +26,10 @@
           <h1>Engenharia de Qualidade baseada em decisões.</h1>
           <p class="lead">AIMA 2.0 ajuda profissionais e organizações a transformar contexto, riscos e evidências em estratégias de Qualidade mais explícitas, rastreáveis e confiáveis.</p>
           <div class="hero-actions">
-            <a class="button button-primary" href="#frameworks">Explorar os 20 frameworks</a>
-            <a class="button button-secondary" href="./assessment.html">Fazer o Assessment</a>
-            <a class="button button-secondary" href="./analyze.html">Analisar uma mudança</a>
-            <a class="button button-secondary" href="./preview.html">Abrir Preview 0.9</a>
+            <a class="button button-primary" href="./analyze.html">Analisar uma mudança</a>
+            <a class="button button-secondary" href="./como-usar.html">Entender como funciona</a>
           </div>
+          <p class="hero-links"><a href="#frameworks">Frameworks</a> · <a href="./assessment.html">Assessment</a> · <a href="./preview.html">Release 0.9</a></p>
         </div>
         <aside class="manifesto-card" aria-label="Princípio do AIMA 2.0">
           <span>PRINCÍPIO</span>
@@ -125,14 +109,8 @@
     </section>
 
     <section id="aplicar" class="section-shell">
-      <div class="section-heading"><span class="kicker">COMO USAR</span><h2>Leia por decisão, não por sequência.</h2></div>
-      <div class="steps-grid">
-        <div><strong>01</strong><h3>Nomeie a decisão</h3><p>Escreva o que precisa ser decidido e qual resultado deve ser protegido.</p></div>
-        <div><strong>02</strong><h3>Consulte o léxico</h3><p>Alinhe os termos que sustentam a conversa e torne diferenças explícitas.</p></div>
-        <div><strong>03</strong><h3>Escolha um framework</h3><p>Use a pergunta e a incerteza para selecionar somente a estrutura necessária.</p></div>
-        <div><strong>04</strong><h3>Registre evidências</h3><p>Associe sinais ao risco, declare incertezas e evite métricas de vaidade.</p></div>
-        <div><strong>05</strong><h3>Feche o ciclo</h3><p>Defina ação, responsável, prazo e como o resultado será revisado.</p></div>
-      </div>
+      <div class="section-heading"><span class="kicker">COMO USAR</span><h2>Leia por decisão, não por sequência.</h2><p>Nomeie a decisão, alinhe a linguagem, escolha um framework, registre evidências e feche o ciclo — o guia completo, com exemplo prático e o Analisador de Mudanças, está em um só lugar.</p></div>
+      <div class="hero-actions"><a class="button button-primary" href="./como-usar.html">Ver guia completo</a></div>
     </section>
 
     <section class="section-shell section-dark product-grid-section">
@@ -163,12 +141,6 @@
       </div>
     </section>
   </main>
-
-  <footer class="footer section-shell">
-    <div><strong>AIMA 2.0</strong><p>AI-driven Intelligent Method for Assurance</p></div>
-    <div><span>Jonas Dávila da Silva</span><p>Quality Engineer · Porto Alegre · 2026</p></div>
-    <div><a href="./preview.html">Preview</a><a href="./assessment.html">Assessment</a><a href="https://github.com/jonasqasoftware/aima-agentic-qe">GitHub</a></div>
-  </footer>
 
   <script type="module" src="./app.mjs"></script>
 </body>

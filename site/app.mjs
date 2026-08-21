@@ -1,18 +1,18 @@
 import { frameworks, lexicon, insights } from './content.mjs';
+import { mountChrome } from './layout.mjs';
 
-const menuButton = document.querySelector('.menu-button');
-const nav = document.querySelector('.nav');
-
-if (menuButton && nav) {
-  menuButton.addEventListener('click', () => {
-    const isOpen = nav.classList.toggle('open');
-    menuButton.setAttribute('aria-expanded', String(isOpen));
-  });
-  nav.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => {
-    nav.classList.remove('open');
-    menuButton.setAttribute('aria-expanded', 'false');
-  }));
-}
+// app.mjs is shared by every top-level page that has no page-specific
+// controller of its own (index, preview, insights, como-usar). Pages with
+// their own controller (assessment.mjs, analyze.mjs) mount their own chrome
+// instead and do not load this script, to avoid mounting header/footer twice.
+const PAGE_CHROME = {
+  index: { rootId: 'conteudo' },
+  preview: { rootId: 'preview' },
+  insights: { rootId: 'insights', current: 'insights' },
+  'como-usar': { rootId: 'como-usar', current: 'como-usar' }
+};
+const page = document.body.dataset.page || 'index';
+mountChrome({ base: './', ...PAGE_CHROME[page] });
 
 const frameworkGrid = document.querySelector('#framework-grid');
 const filterButtons = document.querySelectorAll('.filter-button');
