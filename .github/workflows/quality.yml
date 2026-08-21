@@ -29,6 +29,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+      - name: Install MCP adapter dependencies for security audit
+        working-directory: integrations/mcp
+        run: npm ci
+      - name: Audit MCP dependencies for known vulnerabilities
+        working-directory: integrations/mcp
+        run: npm audit --audit-level=high
       - name: Execute source validation and tests
         run: npm run check
       - name: Generate evidence-aware quality report
