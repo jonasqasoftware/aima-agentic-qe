@@ -1,3 +1,5 @@
+import { edition } from './edition.mjs';
+
 const NAV_ITEMS = [
   { label: 'Método', href: 'index.html#metodo' },
   { label: 'Como usar', href: 'como-usar.html', current: 'como-usar' },
@@ -22,7 +24,7 @@ const FOOTER_GROUPS = [
       { label: 'Frameworks', href: 'index.html#frameworks' },
       { label: 'Léxico', href: 'index.html#lexico' },
       { label: 'Diagramas', href: 'index.html#diagramas' },
-      { label: 'Release 0.9', href: 'preview.html' }
+      { label: `Release ${edition.version}`, href: 'preview.html' }
     ]
   },
   {

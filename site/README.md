@@ -10,6 +10,7 @@ Separar a apresentação pública do método do núcleo executável do repositó
 - `site/styles.css` — sistema visual editorial;
 - `site/app.mjs` — navegação mobile e filtros dos frameworks/léxico/insights na home;
 - `site/layout.mjs` — header e footer compartilhados, injetados nas páginas de framework e insight;
+- `site/edition.mjs` — fonte canônica da metadata editorial da Preview Edition (`label`, `version`, `status` e contadores derivados de `content.mjs`);
 - `site/analyze.html`/`site/analyze.mjs` — análise do motor determinístico executada no navegador; `analyze.mjs` não contém nenhuma regra de negócio, apenas consome `analyzeChange`, copiado automaticamente do core (`src/`) durante o build — nunca duplicado manualmente aqui;
 - `site/CNAME` — domínio pretendido `aima20.dev`.
 
@@ -19,12 +20,12 @@ A página foi reconstruída a partir da Preview Edition 0.9 e do Guia de Uso dos
 
 ## Deploy
 
-`site/` é a fonte estática; `src/` + `aima/` são o core e os dados canônicos. O workflow `.github/workflows/pages.yml` executa `npm run build:site` e publica o artefato gerado, não `site/` diretamente:
+`site/` é a fonte estática; `src/` + `aima/` são o core e os dados canônicos. O workflow `.github/workflows/pages.yml` executa `npm run check:site`, que executa o build e valida o contrato editorial antes da publicação, e publica o artefato gerado, não `site/` diretamente:
 
 ```text
 site/        = fonte estática
 src/ + aima/ = core e dados canônicos
-       ↓ npm run build:site
+       ↓ npm run check:site (valida e constrói)
 dist/site/   = artefato publicado no GitHub Pages
 ```
 

@@ -38,8 +38,8 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Build site
-        run: npm run build:site
+      - name: Validate and build site
+        run: npm run check:site
 
       - name: Configure Pages
         uses: actions/configure-pages@v5

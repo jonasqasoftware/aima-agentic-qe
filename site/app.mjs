@@ -1,5 +1,6 @@
 import { frameworks, lexicon, insights } from './content.mjs';
 import { mountChrome } from './layout.mjs';
+import { edition } from './edition.mjs';
 
 // app.mjs is shared by every top-level page that has no page-specific
 // controller of its own (index, preview, insights, como-usar). Pages with
@@ -13,6 +14,27 @@ const PAGE_CHROME = {
 };
 const page = document.body.dataset.page || 'index';
 mountChrome({ base: './', ...PAGE_CHROME[page] });
+
+// Hydrates every element carrying a data-edition-* hook with the matching
+// field from edition.mjs — the canonical source for editorial metadata.
+// querySelectorAll returns an empty NodeList when a hook is absent from the
+// page (safe no-op) and every match when a hook repeats (no unique id
+// required).
+function hydrateEdition() {
+  const bindings = [
+    ['data-edition-label', edition.label],
+    ['data-edition-version', edition.version],
+    ['data-edition-frameworks-count', edition.frameworksCount],
+    ['data-edition-concepts-count', edition.conceptsCount],
+    ['data-edition-diagrams-count', edition.diagramsCount]
+  ];
+  for (const [attribute, value] of bindings) {
+    document.querySelectorAll(`[${attribute}]`).forEach((element) => {
+      element.textContent = String(value);
+    });
+  }
+}
+hydrateEdition();
 
 const frameworkGrid = document.querySelector('#framework-grid');
 const filterButtons = document.querySelectorAll('.filter-button');
