@@ -1,5 +1,6 @@
 import { insights } from './content.mjs';
 import { mountChrome } from './layout.mjs';
+import { edition } from './edition.mjs';
 
 const slug = document.body.dataset.insight;
 const insight = insights.find((item) => item.slug === slug);
@@ -14,7 +15,7 @@ if (!insight || !root) {
   root.innerHTML = `
     <article class="article-shell">
       <a class="back-link" href="../insights.html">← Voltar aos AIMA Insights</a>
-      <div class="eyebrow">AIMA INSIGHTS · RELEASE 0.9</div>
+      <div class="eyebrow">AIMA INSIGHTS · RELEASE ${edition.version}</div>
       <h1>${insight.title}</h1>
       <p class="lead">${insight.description}</p>
       <div class="article-body">${insight.body.map((paragraph) => `<p>${paragraph}</p>`).join('')}</div>

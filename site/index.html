@@ -20,7 +20,7 @@
 
   <main id="conteudo">
     <section id="inicio" class="hero section-shell">
-      <div class="eyebrow">PREVIEW EDITION · RELEASE 0.9</div>
+      <div class="eyebrow">PREVIEW EDITION · RELEASE <span data-edition-version>0.9</span></div>
       <div class="hero-grid">
         <div>
           <h1>Engenharia de Qualidade baseada em decisões.</h1>
@@ -29,7 +29,7 @@
             <a class="button button-primary" href="./analyze.html">Analisar uma mudança</a>
             <a class="button button-secondary" href="./como-usar.html">Entender como funciona</a>
           </div>
-          <p class="hero-links"><a href="#frameworks">Frameworks</a> · <a href="./assessment.html">Assessment</a> · <a href="./preview.html">Release 0.9</a></p>
+          <p class="hero-links"><a href="#frameworks">Frameworks</a> · <a href="./assessment.html">Assessment</a> · <a href="./preview.html">Release <span data-edition-version>0.9</span></a></p>
         </div>
         <aside class="manifesto-card" aria-label="Princípio do AIMA 2.0">
           <span>PRINCÍPIO</span>
@@ -38,9 +38,9 @@
         </aside>
       </div>
       <div class="metrics" aria-label="Conteúdo da Preview Edition">
-        <div><strong>28</strong><span>conceitos</span></div>
-        <div><strong>20</strong><span>frameworks</span></div>
-        <div><strong>20</strong><span>diagramas</span></div>
+        <div><strong data-edition-concepts-count>28</strong><span>conceitos</span></div>
+        <div><strong data-edition-frameworks-count>20</strong><span>frameworks</span></div>
+        <div><strong data-edition-diagrams-count>20</strong><span>diagramas</span></div>
         <div><strong>1</strong><span>ciclo de validação pública</span></div>
       </div>
     </section>
@@ -63,7 +63,7 @@
 
     <section id="frameworks" class="section-shell">
       <div class="section-heading split-heading">
-        <div><span class="kicker">GUIA DE USO</span><h2>20 frameworks para decisões diferentes.</h2></div>
+        <div><span class="kicker">GUIA DE USO</span><h2><span data-edition-frameworks-count>20</span> frameworks para decisões diferentes.</h2></div>
         <p>Escolha pela pergunta e pelo tipo de incerteza. Cada card agora abre uma página própria com finalidade, aplicação, exemplo, anti-padrões e métricas.</p>
       </div>
       <div class="framework-toolbar" role="group" aria-label="Filtrar frameworks">
@@ -80,8 +80,8 @@
 
     <section id="lexico" class="section-shell section-paper">
       <div class="section-heading split-heading">
-        <div><span class="kicker">LÉXICO OFICIAL</span><h2>28 conceitos. Uma linguagem comum.</h2></div>
-        <p>Pesquise termos e consulte as definições canônicas da Preview Edition 0.9.</p>
+        <div><span class="kicker">LÉXICO OFICIAL</span><h2><span data-edition-concepts-count>28</span> conceitos. Uma linguagem comum.</h2></div>
+        <p>Pesquise termos e consulte as definições canônicas da <span data-edition-label>Preview Edition</span> <span data-edition-version>0.9</span>.</p>
       </div>
       <div class="search-panel">
         <label for="lexicon-search">Pesquisar conceito</label>
@@ -102,7 +102,7 @@
 
     <section id="diagramas" class="section-shell section-dark">
       <div class="section-heading split-heading">
-        <div><span class="kicker">BIBLIOTECA VISUAL</span><h2>20 diagramas para ler o método por fluxo.</h2></div>
+        <div><span class="kicker">BIBLIOTECA VISUAL</span><h2><span data-edition-diagrams-count>20</span> diagramas para ler o método por fluxo.</h2></div>
         <p>Cada diagrama deriva do fluxo conceitual do framework correspondente e leva à sua página detalhada.</p>
       </div>
       <div id="diagram-grid" class="diagram-grid"></div>
@@ -117,7 +117,7 @@
       <div class="section-heading"><span class="kicker">APLICAÇÃO</span><h2>Do conceito para a prática.</h2></div>
       <div class="product-grid">
         <a href="./assessment.html"><span>ASSESSMENT</span><h3>Descubra onde começar</h3><p>Um diagnóstico inicial, local e sem benchmark para sugerir frameworks úteis ao seu contexto.</p></a>
-        <a href="./preview.html"><span>PREVIEW EDITION 0.9</span><h3>Leia a arquitetura do método</h3><p>Uma visão web da Release 0.9: fundamentos, léxico, frameworks, diagramas e ciclo de validação.</p></a>
+        <a href="./preview.html"><span>PREVIEW EDITION <span data-edition-version>0.9</span></span><h3>Leia a arquitetura do método</h3><p>Uma visão web da Release <span data-edition-version>0.9</span>: fundamentos, léxico, frameworks, diagramas e ciclo de validação.</p></a>
         <a href="./insights.html"><span>AIMA INSIGHTS</span><h3>Aprofunde decisões de Qualidade</h3><p>Ensaios curtos sobre cobertura, automação, release, confiança e pensamento crítico.</p></a>
       </div>
     </section>
@@ -133,7 +133,7 @@
 
     <section class="section-shell final-cta section-dark">
       <span class="kicker">CONSTRUÇÃO PÚBLICA</span>
-      <h2>A Preview Edition é o começo.</h2>
+      <h2>A <span data-edition-label>Preview Edition</span> é o começo.</h2>
       <p>O AIMA 2.0 evolui pela aplicação em contextos reais, perguntas qualificadas, evidências e revisão pública do método.</p>
       <div class="hero-actions">
         <a class="button button-primary" href="https://github.com/jonasqasoftware/aima-agentic-qe">Ver projeto no GitHub</a>

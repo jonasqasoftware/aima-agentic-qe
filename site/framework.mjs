@@ -1,5 +1,6 @@
 import { frameworks } from './content.mjs';
 import { mountChrome } from './layout.mjs';
+import { edition } from './edition.mjs';
 
 const slug = document.body.dataset.framework;
 const framework = frameworks.find((item) => item.slug === slug);
@@ -20,7 +21,7 @@ if (!framework || !root) {
   root.innerHTML = `
     <section class="framework-hero section-shell">
       <a class="back-link" href="../index.html#frameworks">← Voltar aos 20 frameworks</a>
-      <div class="eyebrow">AIMA 2.0 · FRAMEWORK ${number} · RELEASE 0.9</div>
+      <div class="eyebrow">AIMA 2.0 · FRAMEWORK ${number} · RELEASE ${edition.version}</div>
       <h1>${framework.name}</h1>
       <p class="lead">${framework.summary}</p>
       <div class="framework-meta">
