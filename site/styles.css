@@ -189,6 +189,7 @@ h3 { letter-spacing: -.025em; }
 .footer-group ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .5rem; }
 .footer a:hover, .footer a:focus-visible { color: var(--gold); }
 :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.section-paper :focus-visible { outline-color: var(--ink); }
 
 @media (max-width: 980px) {
   .hero-grid, .split-heading { grid-template-columns: 1fr; gap: 2.5rem; }
