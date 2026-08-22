@@ -152,7 +152,7 @@ h3 { letter-spacing: -.025em; }
 .detail-lead { font-size: 1.25rem; color: #d7d7d7; }
 .example-panel { background: var(--paper); color: var(--ink); }
 .example-panel .kicker { color: #7d5d0f; }
-.example-panel p { max-width: 900px; font-size: 1.18rem; }
+.example-panel p { max-width: 900px; font-size: 1.18rem; color: var(--ink); }
 .framework-next { border-top: 1px solid var(--line-dark); }
 
 .assessment-shell { max-width: 920px; }
