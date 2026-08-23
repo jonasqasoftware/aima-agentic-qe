@@ -57,6 +57,7 @@ h3 { letter-spacing: -.025em; }
 .button { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: .8rem 1.05rem; border: 1px solid var(--line-ui); font-size: .85rem; font-weight: 800; }
 .button-primary { background: var(--gold); border-color: var(--gold); color: var(--ink); }
 .button-primary:hover, .button-primary:focus-visible { background: var(--gold-soft); }
+.button-primary:hover { border-color: var(--ink); }
 .button-secondary:hover, .button-secondary:focus-visible { border-color: var(--gold); color: var(--gold-soft); }
 
 .manifesto-card { border-top: 3px solid var(--gold); border-bottom: 1px solid var(--line-dark); padding: 1.5rem 0 1.8rem; }
