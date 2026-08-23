@@ -233,6 +233,7 @@ h3 { letter-spacing: -.025em; }
 .analyze-form label { display: grid; gap: .5rem; color: #aaa; font-size: .85rem; }
 .analyze-form label.full { grid-column: 1 / -1; }
 .analyze-form input, .analyze-form select, .analyze-form textarea { font: inherit; padding: .7rem .8rem; color: var(--white); background: var(--graphite); border: 1px solid var(--line-ui); border-radius: var(--radius); }
+.analyze-form ::placeholder { color: #969696; opacity: 1; }
 .analyze-form textarea { min-height: 84px; resize: vertical; }
 .analyze-form .actions { grid-column: 1 / -1; }
 .analyze-result h3 { margin: 2rem 0 1rem; font-size: 1.05rem; }
