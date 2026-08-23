@@ -1,0 +1,20 @@
+{
+  "name": "aima-site-quality",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Automação isolada de regressão visual e acessibilidade para o site público do AIMA 2.0 (dist/site), via Playwright + axe-core.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "playwright test",
+    "test:a11y": "playwright test tests/a11y.spec.js",
+    "test:visual": "playwright test tests/visual.spec.js"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "1.62.1",
+    "@axe-core/playwright": "4.13.0"
+  }
+}
