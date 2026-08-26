@@ -155,7 +155,8 @@ async function main() {
   const policyPath = argument('--policy', path.join(root, 'aima', 'policies', 'evidence-aware-release.json'));
   const policy = await loadReleasePolicy(path.resolve(policyPath));
   const strategy = buildStrategy(risks, change.knownUnknowns, policy);
-  const report = createReport(change, selection, risks, confidence, strategy);
+  const featureFlags = { qualityPerspectives: process.env.AIMA_FEATURE_QUALITY_PERSPECTIVES === '1' };
+  const report = createReport(change, selection, risks, confidence, strategy, featureFlags);
   const baselinePath = argument('--baseline');
   if (baselinePath) report.baselineComparison = compareWithBaseline(report, await loadBaselineReport(path.resolve(baselinePath)));
   const files = await writeReports(report, path.resolve(outputDirectory));

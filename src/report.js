@@ -1,5 +1,44 @@
 import { buildEvidenceLedger } from './evidence-ledger.js';
 
+const QUALITY_PERSPECTIVE_KEYS = ['product', 'user', 'manufacturing', 'value'];
+const QUALITY_PERSPECTIVE_STATUSES = new Set(['covered', 'partial', 'unknown']);
+
+/**
+ * Builds the optional Quality Perspective Coverage block from explicitly
+ * declared input only — never inferred from file names, diffs, or
+ * heuristics. A perspective absent from the declared input is UNKNOWN, not
+ * an error: UNKNOWN is a valid, explicit condition here, matching the
+ * evidence-ledger's treatment of unknowns elsewhere in this project.
+ */
+function buildQualityPerspectiveCoverage(raw) {
+  if (raw !== undefined && (typeof raw !== 'object' || raw === null || Array.isArray(raw))) {
+    throw new Error('qualityPerspectives must be an object when provided.');
+  }
+  const declared = raw ?? {};
+  for (const key of Object.keys(declared)) {
+    if (!QUALITY_PERSPECTIVE_KEYS.includes(key)) {
+      throw new Error(`qualityPerspectives has an unknown perspective: ${key}.`);
+    }
+  }
+  const coverage = {};
+  for (const key of QUALITY_PERSPECTIVE_KEYS) {
+    const entry = declared[key];
+    if (entry === undefined) {
+      coverage[key] = { status: 'unknown', evidence: [] };
+      continue;
+    }
+    if (typeof entry !== 'object' || entry === null || !QUALITY_PERSPECTIVE_STATUSES.has(entry.status)) {
+      throw new Error(`qualityPerspectives.${key}.status must be one of covered, partial, or unknown.`);
+    }
+    const evidence = entry.evidence ?? [];
+    if (!Array.isArray(evidence) || evidence.some((item) => typeof item !== 'string' || item.length === 0)) {
+      throw new Error(`qualityPerspectives.${key}.evidence must be an array of non-empty strings when provided.`);
+    }
+    coverage[key] = { status: entry.status, evidence };
+  }
+  return coverage;
+}
+
 function escapeHtml(value) {
   return String(value)
     .replaceAll('&', '&amp;')
@@ -9,7 +48,7 @@ function escapeHtml(value) {
     .replaceAll("'", '&#39;');
 }
 
-export function createReport(change, selection, risks, confidence, strategy) {
+export function createReport(change, selection, risks, confidence, strategy, featureFlags = {}) {
   const evidenceBoundary = change.source === 'local-git-diff-stats'
     ? 'Relatório baseado nos nomes de arquivos e estatísticas de linhas de um diff Git local, além de regras determinísticas. Não afirma leitura do conteúdo do diff, de PR remoto, execução de testes ou aprovação de release.'
     : change.source === 'local-git-name-only'
@@ -17,7 +56,7 @@ export function createReport(change, selection, risks, confidence, strategy) {
     : change.source === 'github-pr-metadata'
     ? 'Relatório baseado em metadados autenticados, nomes de arquivos e checks de CI disponíveis de um PR do GitHub, além de regras determinísticas. Não afirma leitura do conteúdo do diff, cobertura dos checks, aprovações ou aprovação de release.'
     : 'Relatório baseado somente na entrada declarada e em regras determinísticas. Não afirma leitura de PR remoto, execução de testes ou aprovação de release.';
-  return {
+  const report = {
     reportVersion: '0.2.0',
     evidenceBoundary,
     context: {
@@ -43,6 +82,10 @@ export function createReport(change, selection, risks, confidence, strategy) {
       { agent: 'release-agent', status: 'completed', output: `Decisão recomendada: ${strategy.recommendation}.` }
     ]
   };
+  if (featureFlags.qualityPerspectives) {
+    report.qualityPerspectiveCoverage = buildQualityPerspectiveCoverage(change.qualityPerspectives);
+  }
+  return report;
 }
 
 export function formatMarkdown(report) {
@@ -64,7 +107,15 @@ export function formatMarkdown(report) {
     ? `\n- **Cálculo:** maior risco ${report.qualityConfidence.calculation.highestRiskScore}/100 → penalidade de risco ${report.qualityConfidence.calculation.riskPenalty}; ${report.qualityConfidence.calculation.unknownCount} desconhecido(s) → penalidade de incerteza ${report.qualityConfidence.calculation.unknownPenalty}; 100 - ${report.qualityConfidence.calculation.riskPenalty} - ${report.qualityConfidence.calculation.unknownPenalty} = ${report.qualityConfidence.score}`
     : '';
   const decisionReasonCode = report.strategy.decisionReasonCode ? `\n- **Motivo da decisão:** \`${report.strategy.decisionReasonCode}\`` : '';
-  return `# AIMA Agentic QE report\n\n> ${report.evidenceBoundary}\n\n## Contexto\n\n- **Mudança:** \`${report.context.changeId}\`\n- **Resumo:** ${report.context.summary}\n- **Arquivos declarados:** ${report.context.changedFiles.map((file) => `\`${file}\``).join(', ')}\n\n## Framework AIMA selecionado\n\n- **${report.framework.name}** (\`${report.framework.id}\`)\n${report.framework.selectionEvidence.map((item) => `- ${item}`).join('\n')}\n\n## Política de release\n\n- **${report.strategy.policy.name}** (\`${report.strategy.policy.id}\` · v${report.strategy.policy.version})${decisionReasonCode}\n\n## Ledger de evidências\n\n| ID | Tipo | Origem | Declaração |\n| --- | --- | --- | --- |\n${evidence}\n\n## Riscos\n\n| ID | Nível | Score | Hipótese de risco |\n| --- | --- | ---: | --- |\n${risks}\n\n## Estratégia recomendada\n\n${tests}\n\n## Evidências ausentes / incertezas\n\n${unknowns}\n\n## Quality Confidence experimental\n\n**${report.qualityConfidence.score}/100**${confidenceModel}${confidenceCalculation}\n\n${report.qualityConfidence.factors.map((item) => `- ${item}`).join('\n')}\n\n_Quality Confidence não é probabilidade, não aumenta com evidências positivas nesta versão e não aprova releases. A recomendação de release é independente deste score e vem da política aplicada._\n${comparison}\n## Recomendação de release\n\n**${report.strategy.recommendation}**\n\n${report.strategy.rationale}\n\n## Rastreabilidade de agentes\n\n${report.agentTrace.map((entry) => `- **${entry.agent}:** ${entry.status} — ${entry.output}`).join('\n')}\n`;
+  const qualityPerspectives = report.qualityPerspectiveCoverage
+    ? `\n## Quality Perspective Coverage\n\n${QUALITY_PERSPECTIVE_KEYS.map((key) => {
+      const entry = report.qualityPerspectiveCoverage[key];
+      const label = key === 'user' ? 'User' : key.charAt(0).toUpperCase() + key.slice(1);
+      const evidence = entry.evidence.length ? ` (${entry.evidence.join('; ')})` : '';
+      return `- **${label}:** ${entry.status.toUpperCase()}${evidence}`;
+    }).join('\n')}\n`
+    : '';
+  return `# AIMA Agentic QE report\n\n> ${report.evidenceBoundary}\n\n## Contexto\n\n- **Mudança:** \`${report.context.changeId}\`\n- **Resumo:** ${report.context.summary}\n- **Arquivos declarados:** ${report.context.changedFiles.map((file) => `\`${file}\``).join(', ')}\n\n## Framework AIMA selecionado\n\n- **${report.framework.name}** (\`${report.framework.id}\`)\n${report.framework.selectionEvidence.map((item) => `- ${item}`).join('\n')}\n\n## Política de release\n\n- **${report.strategy.policy.name}** (\`${report.strategy.policy.id}\` · v${report.strategy.policy.version})${decisionReasonCode}\n\n## Ledger de evidências\n\n| ID | Tipo | Origem | Declaração |\n| --- | --- | --- | --- |\n${evidence}\n\n## Riscos\n\n| ID | Nível | Score | Hipótese de risco |\n| --- | --- | ---: | --- |\n${risks}\n\n## Estratégia recomendada\n\n${tests}\n\n## Evidências ausentes / incertezas\n\n${unknowns}\n\n## Quality Confidence experimental\n\n**${report.qualityConfidence.score}/100**${confidenceModel}${confidenceCalculation}\n\n${report.qualityConfidence.factors.map((item) => `- ${item}`).join('\n')}\n\n_Quality Confidence não é probabilidade, não aumenta com evidências positivas nesta versão e não aprova releases. A recomendação de release é independente deste score e vem da política aplicada._\n${comparison}\n## Recomendação de release\n\n**${report.strategy.recommendation}**\n\n${report.strategy.rationale}\n\n## Rastreabilidade de agentes\n\n${report.agentTrace.map((entry) => `- **${entry.agent}:** ${entry.status} — ${entry.output}`).join('\n')}\n${qualityPerspectives}`;
 }
 
 export function formatHtml(report) {
@@ -85,6 +136,14 @@ export function formatHtml(report) {
   const files = report.context.changedFiles.map((file) => `<code>${escapeHtml(file)}</code>`).join('');
   const comparison = report.baselineComparison
     ? `<section class="two-columns"><article class="panel"><p class="eyebrow">Comparação com baseline</p><h3>${escapeHtml(report.baselineComparison.baselineChangeId)}</h3><p>Quality Confidence: ${report.baselineComparison.qualityConfidenceDelta >= 0 ? '+' : ''}${escapeHtml(report.baselineComparison.qualityConfidenceDelta)}${report.baselineComparison.qualityConfidenceComparable ? '' : ' (modelos diferentes — não comparável)'}</p></article><article class="panel"><p class="eyebrow">Mudanças de risco</p><p>Novos: ${escapeHtml(report.baselineComparison.newRisks.map((risk) => risk.id).join(', ') || 'nenhum')}</p><p>Resolvidos: ${escapeHtml(report.baselineComparison.resolvedRisks.map((risk) => risk.id).join(', ') || 'nenhum')}</p></article></section>`
+    : '';
+  const qualityPerspectives = report.qualityPerspectiveCoverage
+    ? `<h2>Quality Perspective Coverage</h2><ul>${QUALITY_PERSPECTIVE_KEYS.map((key) => {
+      const entry = report.qualityPerspectiveCoverage[key];
+      const label = key === 'user' ? 'User' : key.charAt(0).toUpperCase() + key.slice(1);
+      const evidence = entry.evidence.length ? ` (${escapeHtml(entry.evidence.join('; '))})` : '';
+      return `<li><strong>${label}:</strong> ${escapeHtml(entry.status.toUpperCase())}${evidence}</li>`;
+    }).join('')}</ul>`
     : '';
   return `<!doctype html>
 <html lang="pt-BR">
@@ -120,6 +179,7 @@ export function formatHtml(report) {
   <section class="two-columns"><article class="panel"><h2>Verificações recomendadas</h2><ol>${tests}</ol></article><article class="panel"><h2>Evidências ausentes</h2><ul>${unknowns}</ul></article></section>
   ${comparison}
   <h2>Ledger de evidências</h2><div class="table-wrap"><table><thead><tr><th>ID</th><th>Tipo</th><th>Origem</th><th>Declaração</th></tr></thead><tbody>${evidenceRows}</tbody></table></div>
+  ${qualityPerspectives}
   <footer>Gerado pelo AIMA Agentic QE · relatório baseado em evidências declaradas e regras determinísticas.</footer>
 </main></body></html>`;
 }
