@@ -9,5 +9,6 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 export async function analyzeDeclaredChange(input) {
   const frameworks = await loadFrameworkRegistry(path.join(root, 'aima', 'frameworks'));
   const policy = await loadReleasePolicy(path.join(root, 'aima', 'policies', 'evidence-aware-release.json'));
-  return analyzeChange(input, { frameworks, releasePolicy: policy });
+  const featureFlags = { qualityPerspectives: process.env.AIMA_FEATURE_QUALITY_PERSPECTIVES === '1' };
+  return analyzeChange(input, { frameworks, releasePolicy: policy, featureFlags });
 }

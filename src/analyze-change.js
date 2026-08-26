@@ -4,9 +4,9 @@ import { assessRisks, qualityConfidence } from './risk-engine.js';
 import { buildStrategy } from './strategy.js';
 import { createReport } from './report.js';
 
-export function analyzeChange(input, { frameworks, releasePolicy }) {
+export function analyzeChange(input, { frameworks, releasePolicy, featureFlags = {} }) {
   const change = normalizeChangeInput(input);
   const risks = assessRisks(change);
   const confidence = qualityConfidence(risks, change.knownUnknowns);
-  return createReport(change, selectFramework(frameworks, change), risks, confidence, buildStrategy(risks, change.knownUnknowns, releasePolicy));
+  return createReport(change, selectFramework(frameworks, change), risks, confidence, buildStrategy(risks, change.knownUnknowns, releasePolicy), featureFlags);
 }
