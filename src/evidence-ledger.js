@@ -5,6 +5,13 @@ function sourceLabel(change) {
   return 'declared-input';
 }
 
+/** Verification label reflects which parser actually produced the result; never claims JUnit for a non-JUnit parser. */
+function testResultVerification(result) {
+  if (result.parser === 'junit-subset-v1') return 'local-junit-result-parse';
+  if (result.parser === 'aima-json-test-results-v1') return 'local-json-test-results-parse';
+  return 'local-test-result-parse';
+}
+
 /** Builds an inspectable ledger; it never upgrades unknowns into evidence. */
 export function buildEvidenceLedger(change, risks) {
   const source = sourceLabel(change);
@@ -67,7 +74,7 @@ export function buildEvidenceLedger(change, risks) {
     statement: `[${result.status}] ${result.summary}${result.failedCases?.length ? ` Casos com falha: ${result.failedCases.map((item) => `${item.suite} › ${item.name}`).join('; ')}.` : ''}`,
     reference: result.id,
     sha256: result.transcriptSha256,
-    verification: 'local-junit-result-parse'
+    verification: testResultVerification(result)
   }));
   const coverageEvidence = change.coverage ? [{
     id: 'V-001',
