@@ -146,6 +146,24 @@ function renderReport(report) {
     ]));
   }
 
+  nodes.push(el('p', { className: 'analyze-muted', text: 'Use os riscos e as verificações abaixo como próximos passos concretos para essa revisão.' }));
+
+  nodes.push(el('h3', { text: 'O que testar agora?' }));
+  const riskList = el('div', { className: 'analyze-risks' }, report.risks.map((risk) => el('article', { className: `analyze-risk ${risk.level.toLowerCase()}` }, [
+    el('p', { className: 'analyze-muted', text: `${risk.id} · ${risk.category} · ${risk.score}/100` }),
+    el('h4', { text: risk.statement }),
+    el('p', { text: risk.inference })
+  ])));
+  nodes.push(riskList);
+  nodes.push(el('ol', {}, report.strategy.recommendedTests.map((test) => el('li', { text: test }))));
+
+  nodes.push(el('h3', { text: 'O que ainda não sabemos?' }));
+  nodes.push(
+    report.strategy.missingEvidence.length
+      ? el('ul', {}, report.strategy.missingEvidence.map((item) => el('li', { className: 'analyze-unknown', text: item })))
+      : el('p', { className: 'analyze-muted', text: 'Nenhuma incerteza declarada.' })
+  );
+
   nodes.push(el('h3', { text: `Framework executável sugerido: ${report.framework.name}` }));
   nodes.push(el('p', { className: 'analyze-muted', text: 'O motor executável utiliza atualmente um subconjunto machine-readable da biblioteca pública de frameworks.' }));
   const frameworkEvidence = el('ul', {}, report.framework.selectionEvidence.map((item) => el('li', { text: item })));
@@ -168,22 +186,6 @@ function renderReport(report) {
     ]);
     nodes.push(details);
   }
-
-  nodes.push(el('h3', { text: 'O que testar agora?' }));
-  const riskList = el('div', { className: 'analyze-risks' }, report.risks.map((risk) => el('article', { className: `analyze-risk ${risk.level.toLowerCase()}` }, [
-    el('p', { className: 'analyze-muted', text: `${risk.id} · ${risk.category} · ${risk.score}/100` }),
-    el('h4', { text: risk.statement }),
-    el('p', { text: risk.inference })
-  ])));
-  nodes.push(riskList);
-  nodes.push(el('ol', {}, report.strategy.recommendedTests.map((test) => el('li', { text: test }))));
-
-  nodes.push(el('h3', { text: 'O que ainda não sabemos?' }));
-  nodes.push(
-    report.strategy.missingEvidence.length
-      ? el('ul', {}, report.strategy.missingEvidence.map((item) => el('li', { className: 'analyze-unknown', text: item })))
-      : el('p', { className: 'analyze-muted', text: 'Nenhuma incerteza declarada.' })
-  );
 
   nodes.push(el('h3', { text: 'Evidências utilizadas' }));
   const table = el('table', { className: 'analyze-ledger' });
