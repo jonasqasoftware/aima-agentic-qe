@@ -60,8 +60,8 @@ export function assessRisks(change) {
       level: 'HIGH',
       statement: `Resultado de teste com falhas: ${result.failed}/${result.total}`,
       facts: [],
-      inference: `O parser JUnit encontrou falhas em ${result.failedCases.map((item) => `${item.suite} › ${item.name}`).join('; ')}.`,
-      recommendedTests: ['Investigar as falhas registradas no resultado JUnit e executar novamente a suíte afetada']
+      inference: `O parser de resultados de teste encontrou falhas em ${result.failedCases.map((item) => `${item.suite} › ${item.name}`).join('; ')}.`,
+      recommendedTests: ['Investigar as falhas registradas no resultado de testes e executar novamente a suíte afetada']
     });
   }
   if (change.coverage?.minimum != null && change.coverage.lineCoverage != null && change.coverage.lineCoverage < change.coverage.minimum) {

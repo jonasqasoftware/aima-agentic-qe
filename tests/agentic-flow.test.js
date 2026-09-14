@@ -389,6 +389,13 @@ test('JUnit failures are parsed without retaining failure bodies and become a hi
   const evidence = ledger.find((entry) => entry.kind === 'TEST_RESULTS_EVIDENCE');
   assert.match(evidence.statement, /recusa cartão expirado/);
   assert.doesNotMatch(evidence.statement, /detalhe omitido/);
+  assert.equal(evidence.source, 'junit-subset-v1');
+  assert.equal(evidence.verification, 'local-junit-result-parse');
+  const risk = risks.find((item) => item.category === 'test-results');
+  assert.equal(risk.score, 90);
+  assert.equal(risk.level, 'HIGH');
+  assert.doesNotMatch(risk.inference, /JUnit/);
+  assert.doesNotMatch(risk.recommendedTests[0], /JUnit/);
 });
 
 test('normalized JSON test results use the same evidence and risk contract', async () => {
@@ -399,6 +406,40 @@ test('normalized JSON test results use the same evidence and risk contract', asy
   assert.equal(result.failedCases[0].suite, 'checkout.payment');
   assert.equal(result.parser, 'aima-json-test-results-v1');
   await assert.rejects(loadJsonTestResults(path.join(root, 'examples', 'payment-refactor.change.json')));
+});
+
+test('JSON test result provenance is never mislabeled as JUnit in the ledger or in risk inference', () => {
+  const jsonResult = {
+    id: 'checkout-json-fixture', status: 'failed', summary: 'JSON de testes: 1 caso, 1 com falha.',
+    total: 1, failed: 1, skipped: 0,
+    failedCases: [{ suite: 'checkout.payment', name: 'recusa cartão expirado', outcome: 'failed' }],
+    transcriptSha256: 'a'.repeat(64), parser: 'aima-json-test-results-v1'
+  };
+  const change = { businessImpact: 'low', technicalComplexity: 'low', changedFiles: ['lib/normalizer.js'], testResults: [jsonResult] };
+
+  const ledger = buildEvidenceLedger(change, []);
+  const evidence = ledger.find((entry) => entry.kind === 'TEST_RESULTS_EVIDENCE');
+  assert.equal(evidence.source, 'aima-json-test-results-v1');
+  assert.equal(evidence.verification, 'local-json-test-results-parse');
+  assert.notEqual(evidence.verification, 'local-junit-result-parse');
+
+  const risk = assessRisks(change).find((item) => item.category === 'test-results');
+  assert.equal(risk.score, 90);
+  assert.equal(risk.level, 'HIGH');
+  assert.doesNotMatch(risk.inference, /JUnit/);
+  assert.doesNotMatch(risk.recommendedTests[0], /JUnit/);
+});
+
+test('test result of an unrecognized parser falls back to a neutral verification label, never JUnit', () => {
+  const unknownResult = {
+    id: 'future-tool-result', status: 'failed', summary: 'Resultado de ferramenta futura.',
+    total: 1, failed: 1, skipped: 0,
+    failedCases: [{ suite: 'x', name: 'y', outcome: 'failed' }],
+    transcriptSha256: 'b'.repeat(64), parser: 'some-future-tool-v1'
+  };
+  const ledger = buildEvidenceLedger({ businessImpact: 'low', technicalComplexity: 'low', changedFiles: ['lib/normalizer.js'], testResults: [unknownResult] }, []);
+  const evidence = ledger.find((entry) => entry.kind === 'TEST_RESULTS_EVIDENCE');
+  assert.equal(evidence.verification, 'local-test-result-parse');
 });
 
 test('LCOV line coverage is hashed and only enforces an explicit threshold', async () => {
