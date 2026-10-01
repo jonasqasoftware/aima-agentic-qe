@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="AIMA Canvas — a ferramenta prática do método: Análise, Impacto, Metrificação e Apresentação, preenchível no navegador e exportável em Markdown." />
+  <link rel="canonical" href="https://aima20.dev/canvas.html" />
+  <meta property="og:title" content="AIMA Canvas — AIMA 2.0" />
+  <meta property="og:description" content="Preencha as quatro etapas do AIMA para o seu contexto e exporte o resultado em Markdown." />
+  <title>AIMA Canvas — AIMA 2.0</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#canvas">Ir para o conteúdo</a>
+  <main id="canvas" class="section-shell assessment-shell">
+    <a class="back-link" href="./aima.html">← Voltar ao método</a>
+    <div class="eyebrow">AIMA CANVAS · FERRAMENTA PRINCIPAL</div>
+    <h1>Aplique o AIMA ao seu contexto.</h1>
+    <p class="assessment-intro">Preencha as quatro etapas abaixo. Não há campo obrigatório nem framework a escolher antes — comece pelo que você já sabe.</p>
+    <p class="assessment-intro"><strong>Privacidade:</strong> tudo fica só no seu navegador. Nada é enviado a um servidor; use "Copiar como Markdown" para salvar ou compartilhar.</p>
+
+    <form id="canvas-form" class="analyze-form">
+      <fieldset class="full evidence-field" data-step="analise">
+        <legend><span class="kicker">A</span> Análise</legend>
+        <label>Qual problema queremos resolver?<textarea name="analise-problema"></textarea></label>
+        <label>O que pode dar errado?<textarea name="analise-risco"></textarea></label>
+        <label>O que ainda não sabemos?<textarea name="analise-incerteza"></textarea></label>
+      </fieldset>
+
+      <fieldset class="full evidence-field" data-step="impacto">
+        <legend><span class="kicker">I</span> Impacto</legend>
+        <label>Onde podemos gerar mais valor?<textarea name="impacto-valor"></textarea></label>
+        <label>Qual ação vamos testar?<textarea name="impacto-acao"></textarea></label>
+      </fieldset>
+
+      <fieldset class="full evidence-field" data-step="metrificacao">
+        <legend><span class="kicker">M</span> Metrificação</legend>
+        <label>Que evidência precisamos?<textarea name="metrificacao-evidencia"></textarea></label>
+        <label>Qual métrica ou sinal vamos observar?<textarea name="metrificacao-sinal"></textarea></label>
+        <label>Qual resultado esperamos?<textarea name="metrificacao-esperado"></textarea></label>
+      </fieldset>
+
+      <fieldset class="full evidence-field" data-step="apresentacao">
+        <legend><span class="kicker">A</span> Apresentação</legend>
+        <label>O que aconteceu?<textarea name="apresentacao-resultado"></textarea></label>
+        <label>O que aprendemos?<textarea name="apresentacao-aprendizado"></textarea></label>
+        <label>Qual decisão tomamos?<textarea name="apresentacao-decisao"></textarea></label>
+        <label>Qual é o próximo ciclo?<textarea name="apresentacao-proximo"></textarea></label>
+      </fieldset>
+
+      <div class="actions">
+        <button class="button button-primary" type="button" id="canvas-copy">Copiar como Markdown</button>
+        <button class="button button-secondary" type="reset">Limpar</button>
+      </div>
+    </form>
+
+    <section id="canvas-output" class="assessment-result" hidden aria-live="polite">
+      <span class="kicker">MARKDOWN</span>
+      <p id="canvas-copy-status" class="field-help"></p>
+      <textarea id="canvas-markdown" class="full" readonly rows="16"></textarea>
+    </section>
+  </main>
+  <script type="module" src="./canvas.mjs"></script>
+</body>
+</html>

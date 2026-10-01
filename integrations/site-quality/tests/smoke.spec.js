@@ -10,7 +10,7 @@ test.describe('smoke: home', () => {
     await page.goto('/index.html');
     await expect(page.locator('main')).toBeVisible();
     await expect(page.locator('.nav-cta')).toBeAttached();
-    await expect(page.locator('.nav-cta')).toHaveText('Analisar mudança');
+    await expect(page.locator('.nav-cta')).toHaveText('Aplicar AIMA');
     if (testInfo.project.name === 'desktop') {
       await expect(page.locator('.nav-cta')).toBeVisible();
     }

@@ -1,30 +1,31 @@
 import { edition } from './edition.mjs';
 
 const NAV_ITEMS = [
-  { label: 'Método', href: 'index.html#metodo' },
+  { label: 'AIMA', href: 'aima.html', current: 'aima' },
   { label: 'Como usar', href: 'como-usar.html', current: 'como-usar' },
-  { label: 'Frameworks', href: 'index.html#frameworks' },
-  { label: 'Insights', href: 'insights.html', current: 'insights' }
+  { label: 'Exemplos', href: 'exemplos.html', current: 'exemplos' },
+  { label: 'Labs', href: 'labs.html', current: 'labs' },
+  { label: 'Sobre', href: 'sobre.html', current: 'sobre' }
 ];
 
-const CTA = { label: 'Analisar mudança', href: 'analyze.html', current: 'analyze' };
+const CTA = { label: 'Aplicar AIMA', href: 'canvas.html', current: 'canvas' };
 
 const FOOTER_GROUPS = [
   {
     title: 'Produto',
     links: [
-      { label: 'Analisar mudança', href: 'analyze.html' },
-      { label: 'Assessment', href: 'assessment.html' },
-      { label: 'Como usar', href: 'como-usar.html' }
+      { label: 'Aplicar AIMA', href: 'canvas.html' },
+      { label: 'AIMA em 5 minutos', href: 'como-usar.html#5-minutos' },
+      { label: 'Exemplos', href: 'exemplos.html' }
     ]
   },
   {
     title: 'Método',
     links: [
-      { label: 'Frameworks', href: 'index.html#frameworks' },
-      { label: 'Léxico', href: 'index.html#lexico' },
-      { label: 'Diagramas', href: 'index.html#diagramas' },
-      { label: `Release ${edition.version}`, href: 'preview.html' }
+      { label: 'O método AIMA', href: 'aima.html' },
+      { label: 'Labs', href: 'labs.html' },
+      { label: 'Reference (léxico)', href: 'reference.html' },
+      { label: `Sobre · Release ${edition.version}`, href: 'sobre.html' }
     ]
   },
   {

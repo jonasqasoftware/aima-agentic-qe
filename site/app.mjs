@@ -1,16 +1,21 @@
-import { frameworks, lexicon, insights } from './content.mjs';
+import { frameworks, lexicon, insights, examples } from './content.mjs';
 import { mountChrome } from './layout.mjs';
 import { edition } from './edition.mjs';
 
 // app.mjs is shared by every top-level page that has no page-specific
-// controller of its own (index, preview, insights, como-usar). Pages with
-// their own controller (assessment.mjs, analyze.mjs) mount their own chrome
-// instead and do not load this script, to avoid mounting header/footer twice.
+// controller of its own (index, insights, como-usar, aima, sobre, exemplos,
+// labs, reference). Pages with their own controller (assessment.mjs,
+// analyze.mjs, canvas.mjs) mount their own chrome instead and do not load
+// this script, to avoid mounting header/footer twice.
 const PAGE_CHROME = {
   index: { rootId: 'conteudo' },
-  preview: { rootId: 'preview' },
   insights: { rootId: 'insights', current: 'insights' },
-  'como-usar': { rootId: 'como-usar', current: 'como-usar' }
+  'como-usar': { rootId: 'como-usar', current: 'como-usar' },
+  aima: { rootId: 'aima', current: 'aima' },
+  sobre: { rootId: 'sobre', current: 'sobre' },
+  exemplos: { rootId: 'exemplos', current: 'exemplos' },
+  labs: { rootId: 'labs', current: 'labs' },
+  reference: { rootId: 'reference', current: 'reference' }
 };
 const page = document.body.dataset.page || 'index';
 mountChrome({ base: './', ...PAGE_CHROME[page] });
@@ -91,14 +96,14 @@ lexiconSearch?.addEventListener('input', renderLexicon);
 lexiconCategory?.addEventListener('change', renderLexicon);
 renderLexicon();
 
-const diagramGrid = document.querySelector('#diagram-grid');
-if (diagramGrid) {
-  diagramGrid.innerHTML = frameworks.map((item) => `
-    <a class="diagram-card" href="./frameworks/${item.slug}.html">
-      <div class="diagram-card-head"><span>${String(item.id).padStart(2, '0')}</span><strong>${item.name}</strong></div>
-      <div class="mini-flow" aria-label="${item.name}: ${item.flow.join(' para ')}">
-        ${item.flow.map((step) => `<span>${step}</span>`).join('<b aria-hidden="true">→</b>')}
-      </div>
+const exampleGrid = document.querySelector('#example-grid');
+if (exampleGrid) {
+  exampleGrid.innerHTML = examples.map((item) => `
+    <a class="framework-card" href="./exemplos/${item.slug}.html">
+      <span>${item.category}</span>
+      <h3>${item.title}</h3>
+      <p>${item.summary}</p>
+      <small>Ver exemplo →</small>
     </a>`).join('');
 }
 
