@@ -1,20 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://aima20.dev/</loc></url>
-  <url><loc>https://aima20.dev/aima.html</loc></url>
   <url><loc>https://aima20.dev/como-usar.html</loc></url>
-  <url><loc>https://aima20.dev/canvas.html</loc></url>
-  <url><loc>https://aima20.dev/exemplos.html</loc></url>
-  <url><loc>https://aima20.dev/exemplos/api.html</loc></url>
-  <url><loc>https://aima20.dev/exemplos/release.html</loc></url>
-  <url><loc>https://aima20.dev/exemplos/agente-ia.html</loc></url>
-  <url><loc>https://aima20.dev/exemplos/software-tradicional.html</loc></url>
-  <url><loc>https://aima20.dev/labs.html</loc></url>
-  <url><loc>https://aima20.dev/labs/agentic-qe.html</loc></url>
-  <url><loc>https://aima20.dev/labs/safe-failure.html</loc></url>
-  <url><loc>https://aima20.dev/reference.html</loc></url>
-  <url><loc>https://aima20.dev/sobre.html</loc></url>
   <url><loc>https://aima20.dev/analyze.html</loc></url>
+  <url><loc>https://aima20.dev/preview.html</loc></url>
   <url><loc>https://aima20.dev/assessment.html</loc></url>
   <url><loc>https://aima20.dev/insights.html</loc></url>
   <url><loc>https://aima20.dev/insights/cobertura-nao-e-confianca.html</loc></url>
