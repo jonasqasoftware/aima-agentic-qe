@@ -1,0 +1,35 @@
+name: Update site visual snapshots (temporary)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  update:
+    name: Regenerate Playwright snapshots
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Build the public site
+        run: npm run build:site
+      - name: Install site-quality dependencies
+        working-directory: integrations/site-quality
+        run: npm ci
+      - name: Install Chromium
+        working-directory: integrations/site-quality
+        run: npx playwright install --with-deps chromium
+      - name: Update snapshots
+        working-directory: integrations/site-quality
+        run: npx playwright test --update-snapshots
+      - name: Upload regenerated snapshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: updated-snapshots
+          path: integrations/site-quality/tests/visual.spec.js-snapshots/
+          if-no-files-found: error
