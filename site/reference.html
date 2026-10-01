@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Reference AIMA — léxico oficial com 28 conceitos de Engenharia de Qualidade, para consulta, não para onboarding." />
+  <link rel="canonical" href="https://aima20.dev/reference.html" />
+  <meta property="og:title" content="Reference — AIMA 2.0" />
+  <meta property="og:description" content="Definições canônicas dos termos usados pelo AIMA. Consulte quando precisar; não é pré-requisito para começar." />
+  <title>Reference — AIMA 2.0</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body data-page="reference">
+  <a class="skip-link" href="#reference">Ir para o conteúdo</a>
+  <main id="reference" class="section-shell section-paper">
+    <div class="eyebrow">REFERENCE · LÉXICO OFICIAL</div>
+    <h1><span data-edition-concepts-count>28</span> conceitos. Uma linguagem comum.</h1>
+    <p class="lead">Consulte um termo quando precisar alinhar linguagem com o time. Você não precisa ler isto antes de aplicar o AIMA.</p>
+    <div class="search-panel">
+      <label for="lexicon-search">Pesquisar conceito</label>
+      <input id="lexicon-search" class="search-input" type="search" placeholder="Ex.: risco, confiança, automação..." autocomplete="off" />
+      <label for="lexicon-category">Categoria</label>
+      <select id="lexicon-category" class="select-input">
+        <option value="all">Todas</option>
+        <option value="Núcleo essencial">Núcleo essencial</option>
+        <option value="Engenharia de Qualidade">Engenharia de Qualidade</option>
+        <option value="Confiabilidade e Entrega">Confiabilidade e Entrega</option>
+        <option value="Métricas de Fluxo">Métricas de Fluxo</option>
+        <option value="IA e Raciocínio">IA e Raciocínio</option>
+      </select>
+      <span id="lexicon-count" class="search-count" aria-live="polite"></span>
+    </div>
+    <div id="lexicon-grid" class="lexicon-grid"></div>
+  </main>
+  <script type="module" src="./app.mjs"></script>
+</body>
+</html>

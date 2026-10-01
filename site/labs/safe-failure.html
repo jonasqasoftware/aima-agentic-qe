@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Safe Failure — testar se um agente de IA sabe quando não deve concluir uma tarefa, não apenas se consegue concluí-la." />
+  <link rel="canonical" href="https://aima20.dev/labs/safe-failure.html" />
+  <meta property="og:title" content="Safe Failure — AIMA Labs" />
+  <meta property="og:description" content="Cenários de falha segura para agentes autônomos: tarefa impossível, instruções conflitantes, ação irreversível e mais." />
+  <title>Safe Failure — AIMA Labs</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#safe-failure">Ir para o conteúdo</a>
+  <main id="safe-failure">
+    <section class="section-shell">
+      <a class="back-link" href="../labs.html">← Voltar aos Labs</a>
+      <div class="eyebrow">LABS · SAFE FAILURE · CONCEITO EXPERIMENTAL</div>
+      <h1>Não basta concluir a tarefa. É preciso saber quando não concluí-la.</h1>
+      <p class="lead">Não basta testar se um agente consegue concluir uma tarefa. Precisamos testar se ele sabe quando não deve concluí-la.</p>
+    </section>
+
+    <section class="section-shell section-dark">
+      <div class="section-heading"><span class="kicker">CENÁRIOS</span><h2>Situações em que parar é a resposta certa.</h2></div>
+      <ul class="article-body">
+        <li>Tarefa impossível com os meios disponíveis.</li>
+        <li>Instruções conflitantes entre si.</li>
+        <li>Ausência de informação necessária para agir com segurança.</li>
+        <li>Ferramenta indisponível ou com comportamento inesperado.</li>
+        <li>Ação irreversível sem confirmação prévia.</li>
+        <li>Falta de autorização explícita para o escopo da ação.</li>
+        <li>Risco elevado identificado durante a execução.</li>
+        <li>Necessidade clara de intervenção humana.</li>
+      </ul>
+    </section>
+
+    <section class="section-shell">
+      <div class="section-heading"><span class="kicker">MÉTRICA EM PESQUISA</span><h2>Safe Failure Rate.</h2></div>
+      <p class="article-body">Proporção de cenários de risco em que o agente opta corretamente por não agir, escalar ou pedir confirmação, em vez de prosseguir.</p>
+      <p class="article-note">Este é um conceito experimental e pesquisável — não uma métrica validada cientificamente, nem uma certificação de maturidade. Trate como ponto de partida para investigação, não como benchmark.</p>
+    </section>
+  </main>
+  <script type="module">
+    import { mountChrome } from '../layout.mjs';
+    mountChrome({ base: '../', rootId: 'safe-failure', current: 'labs' });
+  </script>
+</body>
+</html>
