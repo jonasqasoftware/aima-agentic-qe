@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { dirname, join } from 'node:path';
-import { frameworks, lexicon, insights, examples } from '../site/content.mjs';
+import { frameworks, lexicon, insights } from '../site/content.mjs';
 import { edition } from '../site/edition.mjs';
 import { build, BROWSER_CORE_FILES, distSite, coreDirectory, generatedDirectory } from './build-site.mjs';
 
@@ -16,8 +16,6 @@ check(new Set(frameworks.map((item) => item.slug)).size === 20, 'Slugs de framew
 check(lexicon.length === 28, `Esperados 28 conceitos; encontrados ${lexicon.length}.`);
 check(new Set(lexicon.map((item) => item.term)).size === 28, 'Termos do léxico precisam ser únicos.');
 check(insights.length >= 3, 'AIMA Insights deve possuir pelo menos três textos iniciais.');
-check(examples.length >= 3, 'AIMA Exemplos deve possuir pelo menos três casos iniciais.');
-check(new Set(examples.map((item) => item.slug)).size === examples.length, 'Slugs de exemplos precisam ser únicos.');
 
 // --- Preview Edition metadata (site/edition.mjs) --------------------------
 check(/^\d+\.\d+$/.test(edition.version), `edition.version deve seguir o formato N.N; encontrado "${edition.version}".`);
@@ -77,16 +75,6 @@ checkEditionIndependence('edition.mjs');
 
 const sitemapPath = join(site, 'sitemap.xml');
 check(existsSync(join(site, 'index.html')), 'site/index.html ausente.');
-check(existsSync(join(site, 'aima.html')), 'site/aima.html ausente.');
-check(existsSync(join(site, 'canvas.html')), 'site/canvas.html ausente.');
-check(existsSync(join(site, 'canvas.mjs')), 'site/canvas.mjs ausente.');
-check(existsSync(join(site, 'exemplos.html')), 'site/exemplos.html ausente.');
-check(existsSync(join(site, 'example.mjs')), 'site/example.mjs ausente.');
-check(existsSync(join(site, 'labs.html')), 'site/labs.html ausente.');
-check(existsSync(join(site, 'labs', 'agentic-qe.html')), 'site/labs/agentic-qe.html ausente.');
-check(existsSync(join(site, 'labs', 'safe-failure.html')), 'site/labs/safe-failure.html ausente.');
-check(existsSync(join(site, 'reference.html')), 'site/reference.html ausente.');
-check(existsSync(join(site, 'sobre.html')), 'site/sobre.html ausente.');
 check(existsSync(join(site, 'assessment.html')), 'site/assessment.html ausente.');
 check(existsSync(join(site, 'preview.html')), 'site/preview.html ausente.');
 check(existsSync(join(site, 'insights.html')), 'site/insights.html ausente.');
@@ -98,17 +86,6 @@ const sitemap = existsSync(sitemapPath) ? readFileSync(sitemapPath, 'utf8') : ''
 
 check(sitemap.includes('https://aima20.dev/analyze.html'), 'analyze.html não está no sitemap.');
 check(sitemap.includes('https://aima20.dev/como-usar.html'), 'como-usar.html não está no sitemap.');
-check(sitemap.includes('https://aima20.dev/aima.html'), 'aima.html não está no sitemap.');
-check(sitemap.includes('https://aima20.dev/canvas.html'), 'canvas.html não está no sitemap.');
-check(sitemap.includes('https://aima20.dev/exemplos.html'), 'exemplos.html não está no sitemap.');
-check(sitemap.includes('https://aima20.dev/labs.html'), 'labs.html não está no sitemap.');
-check(sitemap.includes('https://aima20.dev/labs/agentic-qe.html'), 'labs/agentic-qe.html não está no sitemap.');
-check(sitemap.includes('https://aima20.dev/labs/safe-failure.html'), 'labs/safe-failure.html não está no sitemap.');
-check(sitemap.includes('https://aima20.dev/reference.html'), 'reference.html não está no sitemap.');
-check(sitemap.includes('https://aima20.dev/sobre.html'), 'sobre.html não está no sitemap.');
-// preview.html is now a noindex redirect stub to sobre.html — intentionally
-// absent from the sitemap, it no longer represents indexable content.
-check(!sitemap.includes('https://aima20.dev/preview.html'), 'preview.html é um redirect (noindex) e não deve estar no sitemap.');
 
 // Both the analyzer and the assessment declare, on their own pages, that
 // input is processed locally and never sent to a server. This guardrail
@@ -128,7 +105,6 @@ function checkNoNetworkApi(relativePath) {
 
 checkNoNetworkApi('analyze.mjs');
 checkNoNetworkApi('assessment.mjs');
-checkNoNetworkApi('canvas.mjs');
 
 // --- Preview Edition consistency across site/ ------------------------------
 // Guards against a release version hardcoded back into a module that
@@ -151,7 +127,6 @@ function checkNoHardcodedEditionVersion(relativePath, expectedSnippet) {
 checkNoHardcodedEditionVersion('layout.mjs', 'Release ${edition.version}');
 checkNoHardcodedEditionVersion('framework.mjs', 'RELEASE ${edition.version}');
 checkNoHardcodedEditionVersion('insight.mjs', 'RELEASE ${edition.version}');
-checkNoHardcodedEditionVersion('example.mjs', 'RELEASE ${edition.version}');
 
 function extractHead(html) {
   const match = html.match(/<head[^>]*>([\s\S]*?)<\/head>/i);
@@ -173,21 +148,16 @@ function extractMetaContent(head, attrName, attrValue) {
   return match ? (match[1] ?? match[2]) : null;
 }
 
-// index.html keeps <head> metadata static (title, meta description, Open
-// Graph tags) for SEO/social-preview crawlers that don't reliably execute
-// JS. The AIMA core is four named steps — Análise, Impacto, Metrificação,
-// Apresentação — and the site previously drifted away from that core
-// silently (replaced on the home page by an undocumented six-step flow).
-// This check makes that specific regression mechanically impossible: the
-// home page's own metadata must always name all four steps.
-const AIMA_STEP_NAMES = ['Análise', 'Impacto', 'Metrificação', 'Apresentação'];
-
-function checkMentionsAimaSteps(label, text) {
-  for (const step of AIMA_STEP_NAMES) {
-    check(text.includes(step), `${label} não menciona a etapa "${step}" (conteúdo: "${text}").`);
-  }
+function extractTitle(head) {
+  const match = head.match(/<title>([\s\S]*?)<\/title>/i);
+  return match ? match[1] : null;
 }
 
+// index.html and preview.html keep <head> metadata static (title, meta
+// description, Open Graph tags) for SEO/social-preview crawlers that don't
+// reliably execute JS. Each tag is validated individually, on its own
+// extracted content — not a whole-file substring search — so the required
+// values must all appear together in the specific tag that carries them.
 function checkIndexHead() {
   const filePath = join(site, 'index.html');
   if (!existsSync(filePath)) return;
@@ -195,39 +165,66 @@ function checkIndexHead() {
 
   const description = extractMetaContent(head, 'name', 'description');
   check(description !== null, 'site/index.html: <meta name="description"> ausente.');
-  if (description !== null) checkMentionsAimaSteps('site/index.html: <meta name="description">', description);
+  if (description !== null) {
+    check(
+      description.includes(`${edition.frameworksCount} frameworks`) && description.includes(`${edition.conceptsCount} conceitos`),
+      `site/index.html: meta description não reflete os contadores de edition.mjs (conteúdo: "${description}").`
+    );
+  }
 
   const ogDescription = extractMetaContent(head, 'property', 'og:description');
   check(ogDescription !== null, 'site/index.html: <meta property="og:description"> ausente.');
-  if (ogDescription !== null) checkMentionsAimaSteps('site/index.html: <meta property="og:description">', ogDescription);
+  if (ogDescription !== null) {
+    check(
+      ogDescription.includes(`${edition.conceptsCount} conceitos`) &&
+        ogDescription.includes(`${edition.frameworksCount} frameworks`) &&
+        ogDescription.includes(`${edition.diagramsCount} diagramas`),
+      `site/index.html: og:description não reflete os contadores de edition.mjs (conteúdo: "${ogDescription}").`
+    );
+  }
 }
 
-// preview.html used to be a content page (Preview Edition architecture); it
-// is now a thin, noindex redirect stub pointing at sobre.html, where that
-// content was merged. This replaces the old counters/title contract with a
-// much smaller one: it must actually redirect, and must not be indexed.
-function checkPreviewRedirect() {
+function checkPreviewHead() {
   const filePath = join(site, 'preview.html');
   if (!existsSync(filePath)) return;
-  const html = readFileSync(filePath, 'utf8');
-  const head = extractHead(html);
+  const head = extractHead(readFileSync(filePath, 'utf8'));
 
-  check(
-    /<meta\s+http-equiv="refresh"\s+content="0;\s*url=\.\/sobre\.html/i.test(head),
-    'site/preview.html deve conter um meta refresh imediato para ./sobre.html.'
-  );
-  check(
-    /<meta\s+name="robots"\s+content="noindex"/i.test(head),
-    'site/preview.html deve declarar <meta name="robots" content="noindex"> — não é mais conteúdo indexável.'
-  );
-  check(
-    head.includes('https://aima20.dev/sobre.html'),
-    'site/preview.html deve ter canonical apontando para https://aima20.dev/sobre.html.'
-  );
+  const description = extractMetaContent(head, 'name', 'description');
+  check(description !== null, 'site/preview.html: <meta name="description"> ausente.');
+  if (description !== null) {
+    check(
+      description.includes(`${edition.label} ${edition.version}`),
+      `site/preview.html: meta description não contém "${edition.label} ${edition.version}" (conteúdo: "${description}").`
+    );
+    check(
+      description.includes(`${edition.conceptsCount} conceitos`) &&
+        description.includes(`${edition.frameworksCount} frameworks`) &&
+        description.includes(`${edition.diagramsCount} diagramas`),
+      `site/preview.html: meta description não contém os contadores de edition.mjs no mesmo trecho (conteúdo: "${description}").`
+    );
+  }
+
+  const ogTitle = extractMetaContent(head, 'property', 'og:title');
+  check(ogTitle !== null, 'site/preview.html: <meta property="og:title"> ausente.');
+  if (ogTitle !== null) {
+    check(
+      ogTitle.includes(`${edition.label} ${edition.version}`),
+      `site/preview.html: og:title não contém "${edition.label} ${edition.version}" (conteúdo: "${ogTitle}").`
+    );
+  }
+
+  const title = extractTitle(head);
+  check(title !== null, 'site/preview.html: <title> ausente.');
+  if (title !== null) {
+    check(
+      title.includes(`${edition.label} ${edition.version}`),
+      `site/preview.html: <title> não contém "${edition.label} ${edition.version}" (conteúdo: "${title}").`
+    );
+  }
 }
 
 checkIndexHead();
-checkPreviewRedirect();
+checkPreviewHead();
 
 const EDITION_HOOK_FIELDS = {
   'data-edition-label': 'label',
@@ -237,19 +234,22 @@ const EDITION_HOOK_FIELDS = {
   'data-edition-diagrams-count': 'diagramsCount'
 };
 
-// index.html is the home page: it must stay understandable in under two
-// minutes, with no framework/concept/diagram counters and no edition
-// metadata on it at all. This is a hard contract, not a style preference —
-// it is what makes the "simple on the outside" principle mechanically
-// enforced instead of just documented: any data-edition-* hook reintroduced
-// here (e.g. a counter creeping back into the hero) fails the build.
+// Counted directly from the current markup of each file — not carried over
+// from any earlier estimate.
 const EXPECTED_EDITION_HOOK_COUNTS = {
   'index.html': {
+    'data-edition-label': 2,
+    'data-edition-version': 5,
+    'data-edition-frameworks-count': 2,
+    'data-edition-concepts-count': 2,
+    'data-edition-diagrams-count': 2
+  },
+  'preview.html': {
     'data-edition-label': 0,
-    'data-edition-version': 0,
-    'data-edition-frameworks-count': 0,
-    'data-edition-concepts-count': 0,
-    'data-edition-diagrams-count': 0
+    'data-edition-version': 5,
+    'data-edition-frameworks-count': 3,
+    'data-edition-concepts-count': 2,
+    'data-edition-diagrams-count': 2
   }
 };
 
@@ -344,23 +344,35 @@ function checkEditionHooksInHtml(relativePath) {
 }
 
 checkEditionHooksInHtml('index.html');
+checkEditionHooksInHtml('preview.html');
 
-// The home page must not carry a static, uppercase "PREVIEW EDITION" badge
-// either — same principle as the hook check above, applied to the one piece
-// of edition framing that wouldn't be caught by a data-edition-* scan.
-function checkNoUppercaseLabel(relativePath) {
+// The three intentionally-uppercase "PREVIEW EDITION" badges don't carry
+// data-edition-label (their casing doesn't match edition.label) but must
+// still track it — counted within <body>, not substring-searched, so a
+// corrupted second occurrence can't hide behind a correct first one.
+function checkUppercaseLabelOccurrences(relativePath, expectedCount) {
   const filePath = join(site, relativePath);
   if (!existsSync(filePath)) return;
   const body = extractBody(readFileSync(filePath, 'utf8'));
   const uppercaseLabel = edition.label.toUpperCase();
   const actualCount = countOccurrences(body, uppercaseLabel);
   check(
-    actualCount === 0,
-    `site/${relativePath}: a home não deve exibir "${uppercaseLabel}" — encontrada(s) ${actualCount} ocorrência(s).`
+    actualCount === expectedCount,
+    `site/${relativePath}: esperada(s) ${expectedCount} ocorrência(s) estática(s) de "${uppercaseLabel}" no body; encontrada(s) ${actualCount}.`
   );
 }
 
-checkNoUppercaseLabel('index.html');
+checkUppercaseLabelOccurrences('index.html', 2);
+checkUppercaseLabelOccurrences('preview.html', 1);
+
+function checkAriaLabelReflectsEdition(relativePath, expected) {
+  const filePath = join(site, relativePath);
+  if (!existsSync(filePath)) return;
+  const body = extractBody(readFileSync(filePath, 'utf8'));
+  check(body.includes(expected), `site/${relativePath}: aria-label esperado "${expected}" não encontrado no body.`);
+}
+
+checkAriaLabelReflectsEdition('index.html', `aria-label="Conteúdo da ${edition.label}"`);
 
 for (const framework of frameworks) {
   const relative = `frameworks/${framework.slug}.html`;
@@ -376,17 +388,6 @@ for (const framework of frameworks) {
 for (const insight of insights) {
   const relative = `insights/${insight.slug}.html`;
   check(existsSync(join(site, relative)), `${relative} ausente.`);
-  check(sitemap.includes(`https://aima20.dev/${relative}`), `${relative} não está no sitemap.`);
-}
-
-for (const example of examples) {
-  const relative = `exemplos/${example.slug}.html`;
-  const file = join(site, relative);
-  check(existsSync(file), `${relative} ausente.`);
-  if (!existsSync(file)) continue;
-  const html = readFileSync(file, 'utf8');
-  check(html.includes(`data-example="${example.slug}"`), `${relative} não referencia o slug canônico.`);
-  check(html.includes(`https://aima20.dev/${relative}`), `${relative} não possui canonical esperado.`);
   check(sitemap.includes(`https://aima20.dev/${relative}`), `${relative} não está no sitemap.`);
 }
 
