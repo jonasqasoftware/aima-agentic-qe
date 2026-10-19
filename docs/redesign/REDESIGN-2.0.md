@@ -76,3 +76,19 @@ Publicação só via PR → revisão independente → merge autorizado (o merge 
 - 1ª execução: 1 violação serious em todas as 16 combinações — `label-content-name-mismatch` no logo (`aria-label` "AIMA 2.0 — início" vs texto visível "AIMA2.0"; WCAG 2.5.3). Um `<span>` oculto com espaço não resolveu (o axe o ignora).
 - Correção: texto visível único "AIMA 2.0" em `site/layout.mjs`. 2ª execução: **0 violações nas 16 combinações**.
 - Limites: axe detecta só parte dos problemas; teclado completo, leitor de tela, zoom real do navegador e Lighthouse permanecem NOT_RUN. Conformidade WCAG 2.2 AA **não declarada**.
+
+## 11. Identidade "Blueprint técnico" (branch `redesign/blueprint`, local, não commitado)
+Escolhida pelo autor entre quatro propostas desenhadas num canvas: A editorial verde, B blueprint, C mapa de metrô e D revista em duas tintas. Base: `redesign/aima-2-0-ui` @ a0f2f11 (PR #48). `src/`, `aima/`, `integrations/` e workflows não foram alterados.
+- **Direção:** folha de desenho técnico. O traço (ciano no escuro, azul no claro) desenha estrutura e fluxo. O âmbar no escuro e o ferrugem no claro marcam só a decisão e a ação principal. Grade de fundo de 16/80px.
+- **Tipografia:** títulos em Barlow Condensed SemiBold, maiúsculos; rótulos, navegação e dados em JetBrains Mono; corpo na sans do sistema. As fontes ficam hospedadas em `site/fonts/` (OFL, licenças junto) e não fazem requisição externa. Fica `font-display: swap`. Não foi possível gerar subconjuntos porque faltou o brotli no ambiente; os 3 arquivos somam ~247 KB.
+- **Diagramas da home:**
+  - Método em trilho com estações; a Decisão vem em losango âmbar e o Aprendizado em tracejado, voltando ao 01. Fica vertical no celular.
+  - Novo **Fig. 01**: os 8 estágios do motor, com a cota do núcleo puro (S-02 a S-06). Também fica vertical abaixo de 1100px.
+  - Novo **Fig. 02**: pirâmide de evidências em SVG com legenda HTML, com camadas tiradas do exemplo do framework (checkout).
+  - Novo **Fig. 03**: barras de frameworks por categoria, calculadas em `app.mjs` a partir de `content.mjs`, sem números escritos à mão.
+  - Fluxos das páginas de framework viram estações ligadas por setas, com o último passo em âmbar.
+- **Contraste medido (pior caso de cada token sobre paper, surface, surface-2 e hover):**
+  - Claro: texto 13,2; secundário 6,0; traço 5,8; acento 5,0; GO 5,1 (antes 4,46, corrigido); NO-GO 5,5; borda de controle 3,5; texto sobre botão 6,0.
+  - Escuro: texto 12,8; secundário 9,0; traço 8,8; acento 8,3; GO 9,2; NO-GO 6,4; borda 3,8; texto sobre botão 10,0.
+- **Verificado (Chromium, local):** `npm run check` PASS; reflow em 8 páginas × 7 larguras (320 a 1920) PASS; heurística de contraste de texto PASS nos dois temas; console sem erros; Analisador mantém a ordem do resultado, o foco no resultado e o erro de JSON com `role=alert`; os filtros mantêm `aria-pressed`.
+- **NOT_RUN:** axe nesta branch, leitor de tela, zoom real do navegador, outros navegadores, Lighthouse. Conformidade WCAG não declarada.

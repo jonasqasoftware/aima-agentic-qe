@@ -81,6 +81,23 @@ filterButtons.forEach((button) => button.addEventListener('click', () => {
 }));
 renderFrameworks();
 
+// Fig. 03 — frameworks por categoria, derivado de content.mjs (sem números
+// duplicados à mão). Barras ordenadas da maior para a menor; o valor fica na
+// ponta da barra e o nome da categoria em texto, nunca só na cor.
+function renderFrameworkChart() {
+  const figure = document.querySelector('#framework-chart');
+  const list = document.querySelector('#framework-chart-list');
+  if (!figure || !list) return;
+  const counts = new Map();
+  for (const item of frameworks) counts.set(item.categoryLabel, (counts.get(item.categoryLabel) || 0) + 1);
+  const rows = [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'pt-BR'));
+  const max = rows[0]?.[1] || 1;
+  list.innerHTML = rows.map(([label, count]) => `
+    <li><span>${label}</span><span class="bar"><i style="--w:${Math.round((count / max) * 100)}%" aria-hidden="true"></i><b>${count}</b></span></li>`).join('');
+  figure.hidden = rows.length === 0;
+}
+renderFrameworkChart();
+
 const lexiconSearch = document.querySelector('#lexicon-search');
 const lexiconCategory = document.querySelector('#lexicon-category');
 const lexiconGrid = document.querySelector('#lexicon-grid');
