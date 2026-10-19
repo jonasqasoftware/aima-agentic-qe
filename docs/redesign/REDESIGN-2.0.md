@@ -95,7 +95,7 @@ Escolhida pelo autor entre quatro propostas desenhadas num canvas: A editorial v
 - **NOT_RUN:** leitor de tela, zoom real do navegador, outros navegadores, Lighthouse. O axe detecta só parte dos problemas; conformidade WCAG não declarada.
 - **Tema escuro por padrão, com troca para o claro (pedido do autor):**
   - O site abre no escuro, independente da preferência do sistema.
-  - O botão "Tema claro" no cabeçalho usa `aria-pressed`, com nome acessível estável, e alterna para o papel vegetal via `[data-theme="light"]`.
+  - O botão do cabeçalho é uma ação: mostra o tema de destino ("☀ Tema claro" no escuro, "☾ Tema escuro" no claro), e o texto visível é o próprio nome acessível. Alterna via `[data-theme="light"]`.
   - A escolha fica no `localStorage` e é aplicada antes da pintura por `site/theme-init.js`, incluído no `<head>` das 30 páginas. Se o armazenamento estiver bloqueado, o site continua no escuro.
   - Verificado em Chromium:
     - padrão escuro com o SO em claro;
