@@ -93,3 +93,14 @@ Escolhida pelo autor entre quatro propostas desenhadas num canvas: A editorial v
 - **Verificado (Chromium, local):** `npm run check` PASS; reflow em 8 páginas × 7 larguras (320 a 1920) PASS; heurística de contraste de texto PASS nos dois temas; console sem erros; Analisador mantém a ordem do resultado, o foco no resultado e o erro de JSON com `role=alert`; os filtros mantêm `aria-pressed`.
 - **axe-core (notebook do autor, Chrome 155, commit 526ac67):** 8 páginas (index, analyze, assessment, como-usar, preview, insights, evidence-pyramid, um insight) × tema claro e escuro, viewport 1280×900, tags wcag2a/2aa/21a/21aa/22aa → **0 violações nas 16 combinações**.
 - **NOT_RUN:** leitor de tela, zoom real do navegador, outros navegadores, Lighthouse. O axe detecta só parte dos problemas; conformidade WCAG não declarada.
+- **Tema escuro por padrão, com troca para o claro (pedido do autor):**
+  - O site abre no escuro, independente da preferência do sistema.
+  - O botão "Tema claro" no cabeçalho usa `aria-pressed`, com nome acessível estável, e alterna para o papel vegetal via `[data-theme="light"]`.
+  - A escolha fica no `localStorage` e é aplicada antes da pintura por `site/theme-init.js`, incluído no `<head>` das 30 páginas. Se o armazenamento estiver bloqueado, o site continua no escuro.
+  - Verificado em Chromium:
+    - padrão escuro com o SO em claro;
+    - troca e persistência entre páginas;
+    - Enter pelo teclado;
+    - contraste de texto PASS nos dois temas em 8 páginas;
+    - reflow PASS de 320 a 1440px e com fonte a 200% em 320px, depois de permitir quebra de linha nos botões do cabeçalho;
+    - `npm run check` PASS.

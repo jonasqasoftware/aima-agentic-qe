@@ -3,7 +3,7 @@
    âmbar/ferrugem só para decisão e ação principal.
    Estados de decisão nunca dependem só de cor: sempre há texto e marcador de forma.
    Fontes hospedadas no próprio site (OFL, ver site/fonts/OFL-*.txt): sem requisições externas.
-   Tema claro ("papel vegetal") e escuro ("blueprint") via light-dark() e prefers-color-scheme.
+   Tema escuro ("blueprint") por padrão; botão no cabeçalho alterna para o claro ("papel vegetal") via [data-theme="light"] e light-dark().
    Contraste dos pares texto/fundo medido e registrado em docs/redesign/REDESIGN-2.0.md. */
 
 @font-face { font-family: "Barlow Condensed"; src: url("./fonts/BarlowCondensed-SemiBold.woff2") format("woff2"); font-weight: 600; font-style: normal; font-display: swap; }
@@ -11,7 +11,8 @@
 @font-face { font-family: "JetBrains Mono"; src: url("./fonts/JetBrainsMono-Bold.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
 
 :root {
-  color-scheme: light dark;
+  /* Escuro por padrão; [data-theme="light"] (botão do cabeçalho) liga o papel vegetal. */
+  color-scheme: dark;
 
   /* Cor — fundações */
   --paper: light-dark(#f2f6fa, #0a1a2f);
@@ -55,6 +56,8 @@
   --radius: 0;
 }
 
+:root[data-theme="light"] { color-scheme: light; }
+
 /* Fundações */
 [id] { scroll-margin-top: 80px; }
 * { box-sizing: border-box; }
@@ -92,6 +95,11 @@ h3 { font-size: var(--step-1); }
 .nav .nav-cta { background: var(--signal); color: var(--on-signal); padding: .6rem .9rem; font-weight: 700; border: 1px solid var(--signal); }
 .nav .nav-cta::before { content: "▶ "; }
 .nav .nav-cta:hover { background: transparent; color: var(--signal); }
+.topbar-tools { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); min-width: 0; }
+.theme-toggle { min-height: 44px; padding: .55rem .85rem; background: transparent; color: var(--trace); border: 1px solid var(--trace); cursor: pointer; font-family: var(--font-mono); font-size: var(--step--1); text-transform: uppercase; letter-spacing: .04em; }
+.theme-toggle::before { content: "○ "; }
+.theme-toggle[aria-pressed="true"]::before { content: "● "; }
+.theme-toggle:hover { background: var(--signal-soft); }
 .menu-button { display: none; background: transparent; color: var(--ink); border: 1px solid var(--trace); padding: .55rem .85rem; min-height: 44px; cursor: pointer; font-family: var(--font-mono); text-transform: uppercase; font-size: var(--step--1); }
 
 /* Estrutura */
@@ -436,6 +444,6 @@ h3 { font-size: var(--step-1); }
 }
 
 @media print {
-  .topbar, .skip-link, .menu-button { display: none; }
+  .topbar, .skip-link, .menu-button, .theme-toggle { display: none; }
   body { background: #fff; color: #000; }
 }
