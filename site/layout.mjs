@@ -3,7 +3,8 @@ import { edition } from './edition.mjs';
 const NAV_ITEMS = [
   { label: 'Método', href: 'index.html#metodo' },
   { label: 'Como usar', href: 'como-usar.html', current: 'como-usar' },
-  { label: 'Frameworks', href: 'index.html#frameworks' },
+  { label: 'Biblioteca', href: 'index.html#frameworks' },
+  { label: 'Assessment', href: 'assessment.html', current: 'assessment' },
   { label: 'Insights', href: 'insights.html', current: 'insights' }
 ];
 
@@ -36,6 +37,38 @@ const FOOTER_GROUPS = [
   }
 ];
 
+// Tema: escuro por padrão; o botão alterna e a escolha fica no localStorage
+// (lida antes da pintura por theme-init.js). O botão é uma ação: o texto
+// visível diz para qual tema ele leva ("Tema claro" no escuro, "Tema escuro"
+// no claro), e esse texto é o próprio nome acessível.
+const THEME_KEY = 'aima-theme';
+const THEME_COLOR = { dark: '#0a1a2f', light: '#f2f6fa' };
+
+function applyTheme(theme) {
+  const root = document.documentElement;
+  if (theme === 'light') root.dataset.theme = 'light';
+  else delete root.dataset.theme;
+  document.querySelectorAll('meta[name="theme-color"]').forEach((meta) => meta.setAttribute('content', THEME_COLOR[theme]));
+  const target = theme === 'light' ? 'dark' : 'light';
+  document.querySelectorAll('.theme-toggle').forEach((button) => {
+    button.dataset.target = target;
+    button.textContent = target === 'light' ? 'Tema claro' : 'Tema escuro';
+  });
+}
+
+function bindThemeToggle() {
+  const current = document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
+  applyTheme(current);
+  document.querySelector('.theme-toggle')?.addEventListener('click', () => {
+    const next = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
+    applyTheme(next);
+    try {
+      if (next === 'light') localStorage.setItem(THEME_KEY, 'light');
+      else localStorage.removeItem(THEME_KEY);
+    } catch (error) { /* armazenamento indisponível: vale só nesta página */ }
+  });
+}
+
 function resolveHref(base, href, external) {
   return external ? href : `${base}${href}`;
 }
@@ -64,10 +97,15 @@ export function mountChrome({ base, rootId, current }) {
 
   skipLink.insertAdjacentHTML('afterend', `
     <header class="topbar">
-      <a class="brand" href="${base}index.html" aria-label="AIMA 2.0 — início"><span class="brand-mark">AIMA</span><span class="brand-version">2.0</span></a>
+      <a class="brand" href="${base}index.html" aria-label="AIMA 2.0 — início">AIMA <span class="brand-version">2.0</span></a>
       <nav class="nav" id="site-nav" aria-label="Navegação principal">${navLinks}${ctaLink}</nav>
-      <button class="menu-button" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <div class="topbar-tools">
+        <button class="theme-toggle" type="button" data-target="light">Tema claro</button>
+        <button class="menu-button" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      </div>
     </header>`);
+
+  bindThemeToggle();
 
   const footerGroups = FOOTER_GROUPS.map((group) => `
     <div class="footer-group">

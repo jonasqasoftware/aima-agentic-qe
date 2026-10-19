@@ -1,7 +1,7 @@
 import { frameworks } from './content.mjs';
 import { mountChrome } from './layout.mjs';
 
-mountChrome({ base: './', rootId: 'assessment' });
+mountChrome({ base: './', rootId: 'assessment', current: 'assessment' });
 
 const form = document.querySelector('#assessment-form');
 const result = document.querySelector('#assessment-result');

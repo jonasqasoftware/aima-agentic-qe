@@ -37,8 +37,28 @@ function hydrateEdition() {
 hydrateEdition();
 
 const frameworkGrid = document.querySelector('#framework-grid');
+const frameworkStatus = document.querySelector('#framework-status');
 const filterButtons = document.querySelectorAll('.filter-button');
 let activeFilter = 'all';
+const PREVIEW_LIMIT = { lexicon: 9, diagrams: 6 };
+const expanded = { lexicon: false, diagrams: false };
+
+// Botão "Mostrar todos / Mostrar menos" com estado semântico (aria-expanded).
+function bindToggle(id, key, rerender) {
+  const button = document.querySelector(id);
+  button?.addEventListener('click', () => {
+    expanded[key] = !expanded[key];
+    rerender();
+  });
+  return button;
+}
+function syncToggle(button, key, total) {
+  if (!button) return;
+  const limit = PREVIEW_LIMIT[key];
+  button.hidden = total <= limit;
+  button.setAttribute('aria-expanded', String(expanded[key]));
+  button.textContent = expanded[key] ? 'Mostrar menos' : `Mostrar todos (${total})`;
+}
 
 function renderFrameworks() {
   if (!frameworkGrid) return;
@@ -50,19 +70,39 @@ function renderFrameworks() {
       <p>${item.summary}</p>
       <small>${item.categoryLabel} →</small>
     </a>`).join('');
+  if (frameworkStatus) frameworkStatus.textContent = `Exibindo ${visible.length} de ${frameworks.length} frameworks.`;
 }
 
+// Estado do filtro exposto por semântica (aria-pressed), não só por classe CSS.
 filterButtons.forEach((button) => button.addEventListener('click', () => {
   activeFilter = button.dataset.filter;
-  filterButtons.forEach((item) => item.classList.toggle('active', item === button));
+  filterButtons.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
   renderFrameworks();
 }));
 renderFrameworks();
+
+// Fig. 03 — frameworks por categoria, derivado de content.mjs (sem números
+// duplicados à mão). Barras ordenadas da maior para a menor; o valor fica na
+// ponta da barra e o nome da categoria em texto, nunca só na cor.
+function renderFrameworkChart() {
+  const figure = document.querySelector('#framework-chart');
+  const list = document.querySelector('#framework-chart-list');
+  if (!figure || !list) return;
+  const counts = new Map();
+  for (const item of frameworks) counts.set(item.categoryLabel, (counts.get(item.categoryLabel) || 0) + 1);
+  const rows = [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'pt-BR'));
+  const max = rows[0]?.[1] || 1;
+  list.innerHTML = rows.map(([label, count]) => `
+    <li><span>${label}</span><span class="bar"><i style="--w:${Math.round((count / max) * 100)}%" aria-hidden="true"></i><b>${count}</b></span></li>`).join('');
+  figure.hidden = rows.length === 0;
+}
+renderFrameworkChart();
 
 const lexiconSearch = document.querySelector('#lexicon-search');
 const lexiconCategory = document.querySelector('#lexicon-category');
 const lexiconGrid = document.querySelector('#lexicon-grid');
 const lexiconCount = document.querySelector('#lexicon-count');
+const lexiconToggle = bindToggle('#lexicon-toggle', 'lexicon', () => renderLexicon());
 
 function normalize(value) {
   return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
@@ -77,14 +117,17 @@ function renderLexicon() {
     const searchable = normalize(`${item.term} ${item.definition} ${item.synthesis}`);
     return matchesCategory && (!query || searchable.includes(query));
   });
-  lexiconGrid.innerHTML = visible.map((item) => `
+  const searching = Boolean(query) || category !== 'all';
+  const shown = searching || expanded.lexicon ? visible : visible.slice(0, PREVIEW_LIMIT.lexicon);
+  lexiconGrid.innerHTML = shown.map((item) => `
     <article class="lexicon-card">
       <div><span>${String(item.id).padStart(2, '0')}</span><small>${item.category}</small></div>
       <h3>${item.term}</h3>
       <p>${item.definition}</p>
       <blockquote>${item.synthesis}</blockquote>
     </article>`).join('') || '<p class="empty-state">Nenhum conceito encontrado para esta busca.</p>';
-  if (lexiconCount) lexiconCount.textContent = `${visible.length} de ${lexicon.length} conceitos`;
+  if (lexiconCount) lexiconCount.textContent = shown.length < visible.length ? `Exibindo ${shown.length} de ${lexicon.length} conceitos` : `${visible.length} de ${lexicon.length} conceitos`;
+  if (lexiconToggle) { syncToggle(lexiconToggle, 'lexicon', visible.length); if (searching) lexiconToggle.hidden = true; }
 }
 
 lexiconSearch?.addEventListener('input', renderLexicon);
@@ -92,8 +135,12 @@ lexiconCategory?.addEventListener('change', renderLexicon);
 renderLexicon();
 
 const diagramGrid = document.querySelector('#diagram-grid');
-if (diagramGrid) {
-  diagramGrid.innerHTML = frameworks.map((item) => `
+const diagramToggle = bindToggle('#diagram-toggle', 'diagrams', () => renderDiagrams());
+function renderDiagrams() {
+  if (!diagramGrid) return;
+  const shown = expanded.diagrams ? frameworks : frameworks.slice(0, PREVIEW_LIMIT.diagrams);
+  syncToggle(diagramToggle, 'diagrams', frameworks.length);
+  diagramGrid.innerHTML = shown.map((item) => `
     <a class="diagram-card" href="./frameworks/${item.slug}.html">
       <div class="diagram-card-head"><span>${String(item.id).padStart(2, '0')}</span><strong>${item.name}</strong></div>
       <div class="mini-flow" aria-label="${item.name}: ${item.flow.join(' para ')}">
@@ -101,6 +148,7 @@ if (diagramGrid) {
       </div>
     </a>`).join('');
 }
+renderDiagrams();
 
 const insightsGrid = document.querySelector('#insights-grid');
 if (insightsGrid) {
