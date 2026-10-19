@@ -91,4 +91,5 @@ Escolhida pelo autor entre quatro propostas desenhadas num canvas: A editorial v
   - Claro: texto 13,2; secundário 6,0; traço 5,8; acento 5,0; GO 5,1 (antes 4,46, corrigido); NO-GO 5,5; borda de controle 3,5; texto sobre botão 6,0.
   - Escuro: texto 12,8; secundário 9,0; traço 8,8; acento 8,3; GO 9,2; NO-GO 6,4; borda 3,8; texto sobre botão 10,0.
 - **Verificado (Chromium, local):** `npm run check` PASS; reflow em 8 páginas × 7 larguras (320 a 1920) PASS; heurística de contraste de texto PASS nos dois temas; console sem erros; Analisador mantém a ordem do resultado, o foco no resultado e o erro de JSON com `role=alert`; os filtros mantêm `aria-pressed`.
-- **NOT_RUN:** axe nesta branch, leitor de tela, zoom real do navegador, outros navegadores, Lighthouse. Conformidade WCAG não declarada.
+- **axe-core (notebook do autor, Chrome 155, commit 526ac67):** 8 páginas (index, analyze, assessment, como-usar, preview, insights, evidence-pyramid, um insight) × tema claro e escuro, viewport 1280×900, tags wcag2a/2aa/21a/21aa/22aa → **0 violações nas 16 combinações**.
+- **NOT_RUN:** leitor de tela, zoom real do navegador, outros navegadores, Lighthouse. O axe detecta só parte dos problemas; conformidade WCAG não declarada.
