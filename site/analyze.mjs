@@ -113,113 +113,143 @@ function readInput(formData) {
   };
 }
 
-function renderError(message) {
-  result.replaceChildren(el('p', { className: 'analyze-error', text: `Não foi possível analisar: ${message}` }));
+function showResult(nodes, { focusId } = {}) {
+  result.replaceChildren(...nodes);
   result.hidden = false;
+  const target = focusId ? result.querySelector(`#${focusId}`) : null;
+  if (target) {
+    target.setAttribute('tabindex', '-1');
+    target.focus({ preventScroll: true });
+  }
+  result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function renderError(message, field) {
+  const evidenceJsonField = document.querySelector('#evidence-json');
+  evidenceJsonField?.removeAttribute('aria-invalid');
+  if (field === 'evidence-json' && evidenceJsonField) evidenceJsonField.setAttribute('aria-invalid', 'true');
+  const hint = field === 'evidence-json'
+    ? ' Corrija o JSON do modo avançado ou esvazie o campo para usar a lista simples de evidências.'
+    : '';
+  const error = el('p', { className: 'analyze-error', text: `Não foi possível analisar: ${message}${hint}` });
+  error.id = 'analyze-error';
+  error.setAttribute('role', 'alert');
+  showResult([error], { focusId: 'analyze-error' });
 }
 
 function recommendationClass(recommendation) {
   return recommendation.toLowerCase().replaceAll(' ', '-');
 }
 
+function section(id, title, children) {
+  const heading = el('h2', { text: title });
+  heading.id = id;
+  const node = document.createElement('section');
+  node.setAttribute('aria-labelledby', id);
+  node.append(heading, ...children);
+  return node;
+}
+
+function riskCard(risk, { top = false } = {}) {
+  return el('article', { className: `analyze-risk ${risk.level.toLowerCase()} ${top ? 'analyze-top-risk' : ''}`.trim() }, [
+    el('p', { className: 'analyze-muted', text: `${top ? 'Maior risco · ' : ''}${risk.id} · ${risk.category} · nível ${risk.level} · ${risk.score}/100` }),
+    el('h3', { text: risk.statement }),
+    el('p', { text: risk.inference })
+  ]);
+}
+
+// Ordem de leitura: Recomendação → Riscos → Evidências → Lacunas →
+// Próximas verificações → Explicabilidade. Todo o conteúdo vem do relatório do
+// core; esta camada apenas organiza e rotula (fato declarado / inferência / UNKNOWN).
 function renderReport(report) {
-  const nodes = [];
-  const topRisk = report.risks[0];
+  const { strategy, qualityConfidence, framework } = report;
+  const sections = [];
 
-  nodes.push(el('span', { className: 'kicker', text: 'RESULTADO DA ANÁLISE' }));
+  sections.push(section('res-recomendacao', 'Recomendação', [
+    el('p', { className: `analyze-decision ${recommendationClass(strategy.recommendation)}`, text: strategy.recommendation }),
+    el('p', { text: strategy.rationale }),
+    el('p', {
+      className: 'analyze-muted',
+      text: `Política: ${strategy.policy.name} (${strategy.policy.id} · v${strategy.policy.version})${strategy.decisionReasonCode ? ` · ${strategy.decisionReasonCode}` : ''}`
+    }),
+    el('p', { className: 'analyze-human', text: 'Revisão humana necessária: esta recomendação é uma inferência determinística a partir do que foi declarado. Ela não aprova nem bloqueia um release por conta própria.' })
+  ]));
 
-  const decision = el('p', { className: `analyze-decision ${recommendationClass(report.strategy.recommendation)}`, text: report.strategy.recommendation });
-  nodes.push(decision);
-  nodes.push(el('p', { text: report.strategy.rationale }));
-  nodes.push(el('p', {
-    className: 'analyze-muted',
-    text: `Política: ${report.strategy.policy.name} (${report.strategy.policy.id} · v${report.strategy.policy.version})${report.strategy.decisionReasonCode ? ` · ${report.strategy.decisionReasonCode}` : ''}`
-  }));
-  nodes.push(el('p', { text: `Quality Confidence experimental: ${report.qualityConfidence.score}/100` }));
-  nodes.push(el('p', { className: 'analyze-muted', text: 'Quality Confidence ≠ Recomendação: a recomendação vem da política acima, não do score de Quality Confidence.' }));
+  const riskChildren = [];
+  if (report.risks[0]) riskChildren.push(riskCard(report.risks[0], { top: true }));
+  const otherRisks = report.risks.slice(1);
+  if (otherRisks.length) riskChildren.push(el('div', { className: 'analyze-risks' }, otherRisks.map((risk) => riskCard(risk))));
+  sections.push(section('res-riscos', 'Riscos', riskChildren));
 
-  if (topRisk) {
-    nodes.push(el('div', { className: `analyze-risk analyze-top-risk ${topRisk.level.toLowerCase()}` }, [
-      el('p', { className: 'analyze-muted', text: `Maior risco · ${topRisk.id} · ${topRisk.score}/100` }),
-      el('h3', { text: topRisk.statement }),
-      el('p', { text: topRisk.inference })
-    ]));
-  }
+  const table = el('table', { className: 'analyze-ledger' });
+  table.append(
+    el('caption', { className: 'sr-only', text: 'Evidências utilizadas na análise' }),
+    el('thead', {}, [el('tr', {}, ['ID', 'Tipo', 'Origem', 'Declaração'].map((label) => {
+      const th = el('th', { text: label });
+      th.scope = 'col';
+      return th;
+    }))]),
+    el('tbody', {}, report.evidenceLedger.map((item) => el('tr', { className: `analyze-kind-${item.kind}` }, [
+      el('td', { text: item.id }), el('td', { text: item.kind }), el('td', { text: item.source }), el('td', { text: item.statement })
+    ])))
+  );
+  sections.push(section('res-evidencias', 'Evidências', [
+    el('p', { className: 'analyze-muted', text: 'Cada linha é um fato declarado, uma inferência do motor ou um UNKNOWN. Evidência declarada não foi verificada pelo AIMA.' }),
+    el('div', { className: 'analyze-table-wrap' }, [table]),
+    el('p', { className: 'article-note', text: report.evidenceBoundary })
+  ]));
 
-  nodes.push(el('h3', { text: `Framework executável sugerido: ${report.framework.name}` }));
-  nodes.push(el('p', { className: 'analyze-muted', text: 'O motor executável utiliza atualmente um subconjunto machine-readable da biblioteca pública de frameworks.' }));
-  const frameworkEvidence = el('ul', {}, report.framework.selectionEvidence.map((item) => el('li', { text: item })));
-  nodes.push(frameworkEvidence);
+  sections.push(section('res-lacunas', 'Lacunas', [
+    strategy.missingEvidence.length
+      ? el('ul', {}, strategy.missingEvidence.map((item) => el('li', { className: 'analyze-unknown', text: item })))
+      : el('p', { className: 'analyze-muted', text: 'Nenhuma incerteza declarada. Isso não significa que não existam lacunas — apenas que nenhuma foi informada.' })
+  ]));
 
-  nodes.push(el('h3', { text: 'Por que esse resultado?' }));
-  for (const factor of report.qualityConfidence.factors) nodes.push(el('p', { className: 'analyze-muted', text: factor }));
+  sections.push(section('res-verificacoes', 'Próximas verificações', [
+    el('ol', {}, strategy.recommendedTests.map((test) => el('li', { text: test })))
+  ]));
 
-  const { model, calculation } = report.qualityConfidence;
+  const explain = [
+    el('h3', { text: `Framework executável sugerido: ${framework.name}` }),
+    el('p', { className: 'analyze-muted', text: 'O motor executável utiliza atualmente um subconjunto machine-readable da biblioteca pública de frameworks.' }),
+    el('ul', {}, framework.selectionEvidence.map((item) => el('li', { text: item }))),
+    el('h3', { text: 'Por que esse resultado?' }),
+    el('p', { text: `Quality Confidence experimental: ${qualityConfidence.score}/100` }),
+    el('p', { className: 'analyze-muted', text: 'Quality Confidence ≠ Recomendação: a recomendação vem da política, não do score de Quality Confidence.' })
+  ];
+  for (const factor of qualityConfidence.factors) explain.push(el('p', { className: 'analyze-muted', text: factor }));
+  const { model, calculation } = qualityConfidence;
   if (model && calculation) {
-    const details = el('details', { className: 'analyze-calculation' }, [
+    explain.push(el('details', { className: 'analyze-calculation' }, [
       el('summary', { text: 'Como este resultado foi calculado?' }),
       el('p', { text: `Modelo: ${model.id} v${model.version}` }),
       el('p', { text: `Maior risco: ${calculation.highestRiskScore}/100` }),
       el('p', { text: `Penalidade de risco: ${calculation.riskPenalty} ponto(s) (limite: ${calculation.caps.riskPenalty})` }),
       el('p', { text: `UNKNOWNs declarados: ${calculation.unknownCount}` }),
       el('p', { text: `Penalidade de incerteza: ${calculation.unknownPenalty} ponto(s) (limite: ${calculation.caps.unknownPenalty})` }),
-      el('p', { text: `Total: 100 − ${calculation.riskPenalty} − ${calculation.unknownPenalty} = ${report.qualityConfidence.score}` }),
+      el('p', { text: `Total: 100 − ${calculation.riskPenalty} − ${calculation.unknownPenalty} = ${qualityConfidence.score}` }),
       el('p', { className: 'analyze-muted', text: 'Quality Confidence não é probabilidade, não aumenta com evidências positivas nesta versão e não aprova releases.' })
-    ]);
-    nodes.push(details);
+    ]));
   }
-
-  nodes.push(el('h3', { text: 'O que testar agora?' }));
-  const riskList = el('div', { className: 'analyze-risks' }, report.risks.map((risk) => el('article', { className: `analyze-risk ${risk.level.toLowerCase()}` }, [
-    el('p', { className: 'analyze-muted', text: `${risk.id} · ${risk.category} · ${risk.score}/100` }),
-    el('h4', { text: risk.statement }),
-    el('p', { text: risk.inference })
-  ])));
-  nodes.push(riskList);
-  nodes.push(el('ol', {}, report.strategy.recommendedTests.map((test) => el('li', { text: test }))));
-
-  nodes.push(el('h3', { text: 'O que ainda não sabemos?' }));
-  nodes.push(
-    report.strategy.missingEvidence.length
-      ? el('ul', {}, report.strategy.missingEvidence.map((item) => el('li', { className: 'analyze-unknown', text: item })))
-      : el('p', { className: 'analyze-muted', text: 'Nenhuma incerteza declarada.' })
-  );
-
-  nodes.push(el('h3', { text: 'Evidências utilizadas' }));
-  const table = el('table', { className: 'analyze-ledger' });
-  const thead = el('thead', {}, [el('tr', {}, [
-    el('th', { text: 'ID' }),
-    el('th', { text: 'Tipo' }),
-    el('th', { text: 'Origem' }),
-    el('th', { text: 'Declaração' })
-  ])]);
-  const tbody = el('tbody', {}, report.evidenceLedger.map((item) => el('tr', { className: `analyze-kind-${item.kind}` }, [
-    el('td', { text: item.id }),
-    el('td', { text: item.kind }),
-    el('td', { text: item.source }),
-    el('td', { text: item.statement })
-  ])));
-  table.append(thead, tbody);
-  nodes.push(el('div', { className: 'analyze-table-wrap' }, [table]));
-
-  nodes.push(el('p', { className: 'article-note', text: report.evidenceBoundary }));
+  sections.push(section('res-explicabilidade', 'Explicabilidade', explain));
 
   const interpretLink = el('a', { text: 'Como interpretar este resultado' });
   interpretLink.href = './como-usar.html#como-interpretar-o-resultado';
-  nodes.push(el('p', {}, [interpretLink]));
+  sections.push(el('p', { className: 'analyze-nextlinks' }, [interpretLink]));
 
-  result.replaceChildren(...nodes);
-  result.hidden = false;
-  result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  showResult(sections, { focusId: 'res-recomendacao' });
 }
 
 form?.addEventListener('submit', (event) => {
   event.preventDefault();
   try {
+    document.querySelector('#evidence-json')?.removeAttribute('aria-invalid');
     const input = readInput(new FormData(form));
     const report = analyzeChange(input, { frameworks, releasePolicy });
     renderReport(report);
   } catch (error) {
-    renderError(error instanceof Error ? error.message : String(error));
+    const message = error instanceof Error ? error.message : String(error);
+    const jsonProblem = error instanceof SyntaxError && Boolean(evidenceJson?.value.trim());
+    renderError(message, jsonProblem ? 'evidence-json' : undefined);
   }
 });

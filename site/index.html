@@ -4,7 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="AIMA 2.0 — método de Engenharia de Qualidade para transformar contexto, riscos e evidências em decisões mais confiáveis. Explore 20 frameworks, 28 conceitos, diagramas, assessment e insights." />
-  <meta name="theme-color" content="#111111" />
+  <meta name="theme-color" content="#f5f3ee" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#121416" media="(prefers-color-scheme: dark)" />
   <link rel="canonical" href="https://aima20.dev/" />
   <meta property="og:title" content="AIMA 2.0 — Engenharia de Qualidade baseada em decisões" />
   <meta property="og:description" content="28 conceitos, 20 frameworks, 20 diagramas e ferramentas práticas para apoiar decisões de Qualidade com contexto, evidências e pensamento crítico." />
@@ -36,12 +37,25 @@
           <strong>Menos achismo.<br />Mais inteligência.</strong>
           <p>IA amplia a capacidade de decisão do profissional de Qualidade. Não substitui pensamento crítico.</p>
         </aside>
+        <aside class="demo-card" aria-label="Exemplo ilustrativo de análise">
+          <span class="kicker">EXEMPLO ILUSTRATIVO</span>
+          <p class="demo-input"><strong>Entrada:</strong> mudança em <code>src/payments/authorization.js</code>, impacto médio, teste de regressão não fornecido.</p>
+          <p class="demo-output"><strong>Resultado do analisador:</strong> <span class="demo-badge">▲ GO WITH RISKS</span></p>
+          <p class="demo-note">Reproduza com os mesmos dados no <a href="./analyze.html">Analisador</a>. A recomendação é para revisão humana.</p>
+        </aside>
       </div>
       <div class="metrics" aria-label="Conteúdo da Preview Edition">
         <div><strong data-edition-concepts-count>28</strong><span>conceitos</span></div>
         <div><strong data-edition-frameworks-count>20</strong><span>frameworks</span></div>
         <div><strong data-edition-diagrams-count>20</strong><span>diagramas</span></div>
         <div><strong>1</strong><span>ciclo de validação pública</span></div>
+      </div>
+    </section>
+
+    <section id="problema" class="section-shell section-dark">
+      <div class="section-heading split-heading">
+        <div><span class="kicker">O PROBLEMA</span><h2>Rodar testes não é o mesmo que ter qualidade.</h2></div>
+        <p>Automação sem estratégia, cobertura sem confiança e métricas sem decisão produzem relatórios, não clareza. IA amplia o que o time já faz — inclusive os erros — e ausência de evidência não é evidência positiva.</p>
       </div>
     </section>
 
@@ -61,21 +75,37 @@
       </ol>
     </section>
 
+    <section id="comecar" class="section-shell section-dark product-grid-section">
+      <div class="section-heading"><span class="kicker">COMECE POR AQUI</span><h2>Escolha como entrar.</h2><p>Três caminhos, do mais prático ao mais conceitual. Nenhum exige cadastro; a análise roda no seu navegador.</p></div>
+      <div class="product-grid">
+        <a href="./analyze.html"><span>ANALISADOR DE MUDANÇAS</span><h3>Analise uma mudança agora</h3><p>Informe arquivos, impacto e incertezas e receba riscos, evidências, lacunas e uma recomendação para revisão humana.</p></a>
+        <a href="./assessment.html"><span>ASSESSMENT</span><h3>Descubra onde começar</h3><p>Um diagnóstico inicial, local e sem benchmark para sugerir frameworks úteis ao seu contexto.</p></a>
+        <a href="./preview.html"><span>PREVIEW EDITION <span data-edition-version>0.9</span></span><h3>Leia a arquitetura do método</h3><p>Uma visão web da Release <span data-edition-version>0.9</span>: fundamentos, léxico, frameworks, diagramas e ciclo de validação.</p></a>
+        <a href="./insights.html"><span>AIMA INSIGHTS</span><h3>Aprofunde decisões de Qualidade</h3><p>Ensaios curtos sobre cobertura, automação, release, confiança e pensamento crítico.</p></a>
+      </div>
+    </section>
+
+    <nav class="library-nav" aria-label="Biblioteca do AIMA">
+      <span class="kicker">BIBLIOTECA</span>
+      <a href="#frameworks">Frameworks</a><a href="#lexico">Léxico</a><a href="#diagramas">Diagramas</a>
+    </nav>
+
     <section id="frameworks" class="section-shell">
       <div class="section-heading split-heading">
         <div><span class="kicker">GUIA DE USO</span><h2><span data-edition-frameworks-count>20</span> frameworks para decisões diferentes.</h2></div>
         <p>Escolha pela pergunta e pelo tipo de incerteza. Cada card agora abre uma página própria com finalidade, aplicação, exemplo, anti-padrões e métricas.</p>
       </div>
       <div class="framework-toolbar" role="group" aria-label="Filtrar frameworks">
-        <button class="filter-button active" type="button" data-filter="all">Todos</button>
-        <button class="filter-button" type="button" data-filter="decisao">Decisão</button>
-        <button class="filter-button" type="button" data-filter="risco">Risco</button>
-        <button class="filter-button" type="button" data-filter="confianca">Confiança</button>
-        <button class="filter-button" type="button" data-filter="fluxo">Fluxo</button>
-        <button class="filter-button" type="button" data-filter="capacidade">Capacidade</button>
-        <button class="filter-button" type="button" data-filter="ia">IA e aprendizado</button>
+        <button class="filter-button" type="button" data-filter="all" aria-pressed="true">Todos</button>
+        <button class="filter-button" type="button" data-filter="decisao" aria-pressed="false">Decisão</button>
+        <button class="filter-button" type="button" data-filter="risco" aria-pressed="false">Risco</button>
+        <button class="filter-button" type="button" data-filter="confianca" aria-pressed="false">Confiança</button>
+        <button class="filter-button" type="button" data-filter="fluxo" aria-pressed="false">Fluxo</button>
+        <button class="filter-button" type="button" data-filter="capacidade" aria-pressed="false">Capacidade</button>
+        <button class="filter-button" type="button" data-filter="ia" aria-pressed="false">IA e aprendizado</button>
       </div>
-      <div class="framework-grid" id="framework-grid" aria-live="polite"></div>
+      <p class="framework-status" id="framework-status" role="status"></p>
+      <div class="framework-grid" id="framework-grid"></div>
     </section>
 
     <section id="lexico" class="section-shell section-paper">
@@ -98,6 +128,7 @@
         <span id="lexicon-count" class="search-count" aria-live="polite"></span>
       </div>
       <div id="lexicon-grid" class="lexicon-grid"></div>
+      <div class="hero-actions"><button class="button" type="button" id="lexicon-toggle" aria-expanded="false" aria-controls="lexicon-grid" hidden>Mostrar todos</button></div>
     </section>
 
     <section id="diagramas" class="section-shell section-dark">
@@ -106,20 +137,27 @@
         <p>Cada diagrama deriva do fluxo conceitual do framework correspondente e leva à sua página detalhada.</p>
       </div>
       <div id="diagram-grid" class="diagram-grid"></div>
+      <div class="hero-actions"><button class="button" type="button" id="diagram-toggle" aria-expanded="false" aria-controls="diagram-grid" hidden>Mostrar todos</button></div>
+    </section>
+
+    <section id="transparencia" class="section-shell section-dark">
+      <div class="section-heading split-heading">
+        <div><span class="kicker">TRANSPARÊNCIA</span><h2>O que o AIMA faz — e o que não faz.</h2></div>
+        <p>Limites declarados fazem parte do produto.</p>
+      </div>
+      <ul class="transparency-list">
+        <li><strong>Preview Edition.</strong> Conteúdo em validação pública; pode mudar.</li>
+        <li><strong>Subconjunto executável.</strong> Os frameworks editoriais não são todos executáveis; o Analisador usa um subconjunto estruturado.</li>
+        <li><strong>Quality Confidence é experimental.</strong> Não é probabilidade científica nem aprova releases.</li>
+        <li><strong>Decisão humana.</strong> Recomendações automáticas não substituem aprovação humana.</li>
+        <li><strong>Local e sem telemetria.</strong> Analisador e Assessment rodam no navegador e não enviam dados.</li>
+        <li><strong>Assessment não é certificação</strong> nem benchmark entre equipes.</li>
+      </ul>
     </section>
 
     <section id="aplicar" class="section-shell">
       <div class="section-heading"><span class="kicker">COMO USAR</span><h2>Leia por decisão, não por sequência.</h2><p>Nomeie a decisão, alinhe a linguagem, escolha um framework, registre evidências e feche o ciclo — o guia completo, com exemplo prático e o Analisador de Mudanças, está em um só lugar.</p></div>
       <div class="hero-actions"><a class="button button-primary" href="./como-usar.html">Ver guia completo</a></div>
-    </section>
-
-    <section class="section-shell section-dark product-grid-section">
-      <div class="section-heading"><span class="kicker">APLICAÇÃO</span><h2>Do conceito para a prática.</h2></div>
-      <div class="product-grid">
-        <a href="./assessment.html"><span>ASSESSMENT</span><h3>Descubra onde começar</h3><p>Um diagnóstico inicial, local e sem benchmark para sugerir frameworks úteis ao seu contexto.</p></a>
-        <a href="./preview.html"><span>PREVIEW EDITION <span data-edition-version>0.9</span></span><h3>Leia a arquitetura do método</h3><p>Uma visão web da Release <span data-edition-version>0.9</span>: fundamentos, léxico, frameworks, diagramas e ciclo de validação.</p></a>
-        <a href="./insights.html"><span>AIMA INSIGHTS</span><h3>Aprofunde decisões de Qualidade</h3><p>Ensaios curtos sobre cobertura, automação, release, confiança e pensamento crítico.</p></a>
-      </div>
     </section>
 
     <section id="insights" class="section-shell">

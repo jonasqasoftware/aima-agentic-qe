@@ -3,7 +3,8 @@ import { edition } from './edition.mjs';
 const NAV_ITEMS = [
   { label: 'Método', href: 'index.html#metodo' },
   { label: 'Como usar', href: 'como-usar.html', current: 'como-usar' },
-  { label: 'Frameworks', href: 'index.html#frameworks' },
+  { label: 'Biblioteca', href: 'index.html#frameworks' },
+  { label: 'Assessment', href: 'assessment.html', current: 'assessment' },
   { label: 'Insights', href: 'insights.html', current: 'insights' }
 ];
 
