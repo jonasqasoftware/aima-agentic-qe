@@ -65,7 +65,7 @@ export function mountChrome({ base, rootId, current }) {
 
   skipLink.insertAdjacentHTML('afterend', `
     <header class="topbar">
-      <a class="brand" href="${base}index.html" aria-label="AIMA 2.0 — início"><span class="brand-mark">AIMA</span><span class="brand-version">2.0</span></a>
+      <a class="brand" href="${base}index.html" aria-label="AIMA 2.0 — início">AIMA <span class="brand-version">2.0</span></a>
       <nav class="nav" id="site-nav" aria-label="Navegação principal">${navLinks}${ctaLink}</nav>
       <button class="menu-button" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="site-nav">Menu</button>
     </header>`);

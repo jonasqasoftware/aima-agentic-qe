@@ -42,7 +42,7 @@ Contrato `check:site` (contadores `data-edition-*`, badges, head, sem rede) pres
 | Filtros `aria-pressed` + status | PASS |
 | Erros de console (claro/escuro) | PASS (0) |
 | Contraste computado (heurística própria, claro+escuro) | PASS — **não substitui axe** |
-| axe-core | **BLOCKED** (registro npm inacessível no sandbox) |
+| axe-core 4.x (regras WCAG 2.0/2.1/2.2 A e AA), Chrome 155 do notebook do autor, 8 páginas × claro/escuro | **PASS após correção** (ver §10); ferramenta automática não cobre todos os critérios WCAG |
 | Teclado completo, leitor de tela, zoom 200/400% real, teclado virtual, orientação | **NOT_RUN** (manual) |
 | Lighthouse/LCP/CLS/INP | **NOT_RUN** |
 | Conformidade WCAG 2.2 AA | **Não declarada**; só testes parciais acima |
@@ -70,3 +70,9 @@ Publicação só via PR → revisão independente → merge autorizado (o merge 
 - PASS: âncoras (#metodo, #comecar, #frameworks, #lexico, #diagramas, #transparencia, #insights) pousam a 80px, abaixo do cabeçalho de 64px; foco não obscurecido em 76 paradas de Tab na home; menu móvel por teclado (`aria-expanded` abre/fecha); filtro por Espaço; botão "Mostrar todos" mantém o foco; forced-colors sem overflow; nenhum alvo interativo <24px na home desktop.
 - FAIL → corrigido: com fonte a 200% em 320px o cabeçalho (botão Menu a 453px) e o nome "Confidence Model" nos diagramas estouravam a largura. Agora 320px em analyze, index e assessment.
 - Continua NOT_RUN: leitor de tela, zoom real do navegador, outros navegadores, axe (BLOCKED), Lighthouse.
+
+## 10. axe-core executado (notebook do autor, Chrome 155)
+- Escopo: index, analyze, assessment, como-usar, preview, insights, uma página de framework e uma de insight; tema claro e escuro; viewport 1280×900; tags wcag2a, wcag2aa, wcag21a, wcag21aa, wcag22aa.
+- 1ª execução: 1 violação serious em todas as 16 combinações — `label-content-name-mismatch` no logo (`aria-label` "AIMA 2.0 — início" vs texto visível "AIMA2.0"; WCAG 2.5.3). Um `<span>` oculto com espaço não resolveu (o axe o ignora).
+- Correção: texto visível único "AIMA 2.0" em `site/layout.mjs`. 2ª execução: **0 violações nas 16 combinações**.
+- Limites: axe detecta só parte dos problemas; teclado completo, leitor de tela, zoom real do navegador e Lighthouse permanecem NOT_RUN. Conformidade WCAG 2.2 AA **não declarada**.
