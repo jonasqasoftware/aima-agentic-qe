@@ -67,8 +67,8 @@ h3 { font-size: var(--step-1); }
 .skip-link:focus { top: var(--space-4); }
 
 /* Cabeçalho */
-.topbar { position: sticky; top: 0; z-index: 50; min-height: 64px; padding: 0 max(var(--space-5), calc((100vw - var(--max)) / 2)); display: flex; align-items: center; justify-content: space-between; gap: var(--space-5); background: var(--paper); border-bottom: 1px solid var(--line); }
-.brand { display: inline-flex; align-items: center; gap: .55rem; color: var(--ink); text-decoration: none; font-family: var(--font-display); font-weight: 800; font-size: 1.3rem; letter-spacing: -.01em; }
+.topbar { position: sticky; top: 0; z-index: 50; min-height: 64px; padding: 0 max(var(--space-5), calc((100vw - var(--max)) / 2)); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-2) var(--space-5); padding-block: var(--space-2); background: var(--paper); border-bottom: 1px solid var(--line); }
+.brand { min-width: 0; display: inline-flex; align-items: center; gap: .55rem; color: var(--ink); text-decoration: none; font-family: var(--font-display); font-weight: 800; font-size: 1.3rem; letter-spacing: -.01em; }
 .brand::before { content: ""; width: 1.15rem; height: 1.15rem; flex: none; background:
   conic-gradient(from 0deg, var(--signal) 0 60deg, transparent 60deg 72deg, var(--signal) 72deg 132deg, transparent 132deg 144deg, var(--signal) 144deg 204deg, transparent 204deg 216deg, var(--signal) 216deg 276deg, transparent 276deg 288deg, var(--signal) 288deg 348deg, transparent 348deg 360deg);
   -webkit-mask: radial-gradient(circle, transparent 38%, #000 40%); mask: radial-gradient(circle, transparent 38%, #000 40%); }
@@ -152,7 +152,8 @@ h3 { font-size: var(--step-1); }
 .diagram-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .diagram-card { display: block; color: var(--ink); text-decoration: none; }
 .diagram-card:hover { background: var(--signal-soft); }
-.diagram-card-head { display: flex; gap: var(--space-4); align-items: baseline; }
+.diagram-card-head { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-4); align-items: baseline; }
+.diagram-card-head strong { min-width: 0; overflow-wrap: anywhere; }
 .diagram-card-head strong { font-family: var(--font-display); font-size: var(--step-1); }
 .mini-flow, .diagram-flow { display: flex; gap: var(--space-2); flex-wrap: wrap; align-items: center; margin-top: var(--space-5); }
 .mini-flow span { border: 1px solid var(--line-strong); padding: .4rem .6rem; font-size: var(--step--1); background: var(--paper); }

@@ -65,3 +65,8 @@ Publicação só via PR → revisão independente → merge autorizado (o merge 
 - **Atualização A4:** léxico mostra 9 de 28 e diagramas 6 de 20, com botão `aria-expanded` "Mostrar todos"; busca/filtro varrem o conjunto completo. Verificado em Chromium 390px: altura da home caiu de ~25.400 px para ~17.700 px, sem overflow nem erros. Resta a grade de 20 frameworks (1 coluna no celular) — candidata a layout compacto.
 
 - **Revisão independente (aima-qe-reviewer): 0 bloqueadores, 7 achados médios.** Corrigidos: card de maior risco (h3, rótulo, sem duplicar), `scroll-margin-top`, contador do léxico, alvos de nav, doc. Pendente: capturas de como-usar, preview, insights e páginas de framework/insight em claro e escuro.
+
+## 9. Verificações manuais automatizadas parcialmente (Chromium, local)
+- PASS: âncoras (#metodo, #comecar, #frameworks, #lexico, #diagramas, #transparencia, #insights) pousam a 80px, abaixo do cabeçalho de 64px; foco não obscurecido em 76 paradas de Tab na home; menu móvel por teclado (`aria-expanded` abre/fecha); filtro por Espaço; botão "Mostrar todos" mantém o foco; forced-colors sem overflow; nenhum alvo interativo <24px na home desktop.
+- FAIL → corrigido: com fonte a 200% em 320px o cabeçalho (botão Menu a 453px) e o nome "Confidence Model" nos diagramas estouravam a largura. Agora 320px em analyze, index e assessment.
+- Continua NOT_RUN: leitor de tela, zoom real do navegador, outros navegadores, axe (BLOCKED), Lighthouse.
