@@ -4,8 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="AIMA 2.0 — método de Engenharia de Qualidade para transformar contexto, riscos e evidências em decisões mais confiáveis. Explore 20 frameworks, 28 conceitos, diagramas, assessment e insights." />
-  <meta name="theme-color" content="#f5f3ee" media="(prefers-color-scheme: light)" />
-  <meta name="theme-color" content="#121416" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#0a1a2f" />
   <link rel="canonical" href="https://aima20.dev/" />
   <meta property="og:title" content="AIMA 2.0 — Engenharia de Qualidade baseada em decisões" />
   <meta property="og:description" content="28 conceitos, 20 frameworks, 20 diagramas e ferramentas práticas para apoiar decisões de Qualidade com contexto, evidências e pensamento crítico." />
@@ -14,6 +13,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <title>AIMA 2.0 — Engenharia de Qualidade baseada em decisões</title>
   <link rel="stylesheet" href="./styles.css" />
+  <script src="./theme-init.js"></script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"AIMA 2.0","url":"https://aima20.dev/","description":"Método de Engenharia de Qualidade baseado em contexto, riscos, evidências e decisões.","author":{"@type":"Person","name":"Jonas Dávila da Silva","url":"https://jonasdavila.com.br/"}}</script>
 </head>
 <body data-page="index">
@@ -75,6 +75,60 @@
       </ol>
     </section>
 
+    <section id="mecanismo" class="section-shell section-dark">
+      <div class="section-heading split-heading">
+        <div><span class="kicker">FIG. 01 · O MOTOR</span><h2>Da mudança declarada à recomendação.</h2></div>
+        <p>Oito estágios determinísticos. Cada um deixa rastro no ledger de evidências; a política de release só entra na decisão.</p>
+      </div>
+      <figure class="pipeline-figure">
+        <ol class="pipeline" aria-label="Estágios do motor do AIMA, em ordem">
+          <li><code>S-01</code><strong>Mudança</strong><small>JSON, Git local ou PR</small></li>
+          <li><code>S-02</code><strong>Validação</strong><small>schema de entrada</small></li>
+          <li><code>S-03</code><strong>Registry</strong><small>framework como dado</small></li>
+          <li><code>S-04</code><strong>Risco</strong><small>sinais viram riscos</small></li>
+          <li><code>S-05</code><strong>Estratégia</strong><small>verificações priorizadas</small></li>
+          <li><code>S-06</code><strong>Ledger</strong><small>fato, inferência, UNKNOWN</small></li>
+          <li class="is-decision"><code>S-07</code><strong>Decisão</strong><small>+ política de release</small></li>
+          <li><code>S-08</code><strong>Relatório</strong><small>JSON, MD, HTML, SARIF</small></li>
+        </ol>
+        <div class="pipeline-span"><p>S-02 a S-06 · núcleo puro, síncrono e sem rede</p></div>
+        <figcaption class="figure-caption">O mesmo núcleo atende a linha de comando, os agentes via MCP e o Analisador deste site, que roda inteiro no seu navegador.</figcaption>
+      </figure>
+    </section>
+
+    <section id="evidencias" class="section-shell section-dark">
+      <div class="section-heading split-heading">
+        <div><span class="kicker">FIG. 02 · EVIDENCE PYRAMID</span><h2>Nem toda evidência pesa igual.</h2></div>
+        <p>Sinais fracos, isolados ou antigos não devem ter o mesmo peso de evidências independentes e próximas do comportamento real.</p>
+      </div>
+      <figure class="pyramid-figure">
+        <svg viewBox="0 0 400 300" role="img" aria-labelledby="pyramid-title">
+          <title id="pyramid-title">Pirâmide de evidências em cinco camadas, da hipótese na base ao resultado observado no topo.</title>
+          <defs><pattern id="pyramid-hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="currentColor" stroke-width="1.5" /></pattern></defs>
+          <g class="apex"><polygon points="200,6 236,60 164,60" fill="url(#pyramid-hatch)" stroke="currentColor" stroke-width="2" /></g>
+          <g fill="none" stroke="currentColor" stroke-width="1.5">
+            <polygon points="164,60 236,60 272,118 128,118" />
+            <polygon points="128,118 272,118 308,176 92,176" />
+            <polygon points="92,176 308,176 344,234 56,234" />
+            <polygon points="56,234 344,234 380,292 20,292" />
+          </g>
+          <g fill="currentColor" font-family="JetBrains Mono, ui-monospace, monospace" font-size="16" text-anchor="middle">
+            <text x="200" y="95">4</text><text x="200" y="153">3</text><text x="200" y="211">2</text><text x="200" y="269">1</text>
+          </g>
+        </svg>
+        <figcaption>
+          <ol class="pyramid-legend" reversed>
+            <li><b>05</b><div><strong>Resultado observado</strong><span>conversão real no checkout</span></div></li>
+            <li><b>04</b><div><strong>Telemetria</strong><span>sinais da execução em produção</span></div></li>
+            <li><b>03</b><div><strong>Canário</strong><span>exposição controlada a tráfego real</span></div></li>
+            <li><b>02</b><div><strong>Cobertura e testes</strong><span>verificação próxima do código</span></div></li>
+            <li><b>01</b><div><strong>Hipótese</strong><span>ponto de partida, sem verificação</span></div></li>
+          </ol>
+          <p class="figure-caption">Camadas a partir do exemplo do framework: uma mudança de checkout. <a href="./frameworks/evidence-pyramid.html">Abrir o Evidence Pyramid</a></p>
+        </figcaption>
+      </figure>
+    </section>
+
     <section id="comecar" class="section-shell section-dark product-grid-section">
       <div class="section-heading"><span class="kicker">COMECE POR AQUI</span><h2>Escolha como entrar.</h2><p>Três caminhos, do mais prático ao mais conceitual. Nenhum exige cadastro; a análise roda no seu navegador.</p></div>
       <div class="product-grid">
@@ -95,6 +149,10 @@
         <div><span class="kicker">GUIA DE USO</span><h2><span data-edition-frameworks-count>20</span> frameworks para decisões diferentes.</h2></div>
         <p>Escolha pela pergunta e pelo tipo de incerteza. Cada card agora abre uma página própria com finalidade, aplicação, exemplo, anti-padrões e métricas.</p>
       </div>
+      <figure class="bar-chart" id="framework-chart" hidden>
+        <figcaption>Fig. 03 · Frameworks por categoria</figcaption>
+        <ol id="framework-chart-list"></ol>
+      </figure>
       <div class="framework-toolbar" role="group" aria-label="Filtrar frameworks">
         <button class="filter-button" type="button" data-filter="all" aria-pressed="true">Todos</button>
         <button class="filter-button" type="button" data-filter="decisao" aria-pressed="false">Decisão</button>
