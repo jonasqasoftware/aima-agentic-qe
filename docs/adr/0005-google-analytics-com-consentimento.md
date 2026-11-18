@@ -19,8 +19,8 @@ O GoatCounter (ADR 0004) conta visitas e campanhas sem cookies. O Jonas quer tam
 
 ## Ativação
 
-1. Colar o ID de medição (`G-XXXXXXX`) em `GA4_MEASUREMENT_ID`, em `site/analytics-ga4.js`.
-2. No mesmo PR, atualizar a linha "Análise local" da seção Transparência da home para citar o GA4 com aceite, e regerar o snapshot visual da home.
+- ID de medição: `G-2KTCZYC51E` (fluxo web "aima20.dev", criado pelo Jonas em 18/11), em `GA4_MEASUREMENT_ID` no arquivo `site/analytics-ga4.js`.
+- A divulgação do GA4 é feita no próprio banner, no momento da escolha. A linha "Análise local" da seção Transparência da home continua verdadeira (sem aceite, só o GoatCounter conta) e não foi alterada.
 
 ## Consequências
 

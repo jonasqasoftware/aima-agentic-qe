@@ -7,7 +7,7 @@
 // - O GoatCounter (sem cookies) continua contando todas as visitas, com ou sem aceite.
 // - As páginas de ferramenta (analyze.html, assessment.html) não carregam este arquivo.
 (function () {
-  var GA4_MEASUREMENT_ID = '';
+  var GA4_MEASUREMENT_ID = 'G-2KTCZYC51E';
   var CONSENT_KEY = 'aima-ga-consent';
   var host = location.hostname;
 
