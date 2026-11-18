@@ -16,7 +16,7 @@ Separar a apresentação pública do método do núcleo executável do repositó
 
 ## Contagem de visitas
 
-As páginas editoriais carregam o contador sem cookies do GoatCounter (ver [ADR 0004](../docs/adr/0004-contagem-de-visitas-sem-cookies.md)). `analyze.html` e `assessment.html` não carregam o contador. Para criar uma página nova, copie a tag `data-goatcounter` de outra página editorial logo após `theme-init.js`; `npm run check:site` falha se ela faltar. Para ler visitas por campanha, use o widget *Campaigns* em `https://aima20.goatcounter.com`.
+As páginas editoriais carregam o contador sem cookies do GoatCounter (ver [ADR 0004](../docs/adr/0004-contagem-de-visitas-sem-cookies.md)). `analyze.html` e `assessment.html` não carregam o contador. Para criar uma página nova, copie a tag `data-goatcounter` de outra página editorial logo após `theme-init.js`; `npm run check:site` falha se ela faltar. Para ler visitas por campanha, use o widget *Campaigns* em `https://jonasdaviladasilva.goatcounter.com`.
 
 ## Fonte de conteúdo
 

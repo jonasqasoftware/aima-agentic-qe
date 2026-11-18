@@ -12,7 +12,7 @@ O site `aima20.dev` é publicado no GitHub Pages, que não oferece logs de acess
 As páginas editoriais do site carregam o contador do [GoatCounter](https://www.goatcounter.com) (serviço hospedado, código aberto, sem cookies), com a tag fixa:
 
 ```html
-<script data-goatcounter="https://aima20.goatcounter.com/count" async src="https://gc.zgo.at/count.v5.js" integrity="sha384-…" crossorigin="anonymous"></script>
+<script data-goatcounter="https://jonasdaviladasilva.goatcounter.com/count" async src="https://gc.zgo.at/count.v5.js" integrity="sha384-…" crossorigin="anonymous"></script>
 ```
 
 - O script é versionado (`count.v5.js`) e protegido por SRI: se o arquivo servido mudar, o navegador não o executa.
@@ -32,6 +32,6 @@ As páginas editoriais do site carregam o contador do [GoatCounter](https://www.
 
 ## Consequências
 
-- A conta `aima20` precisa existir em goatcounter.com; até lá as chamadas de contagem falham em silêncio, sem afetar o site.
+- A contagem usa a conta `jonasdaviladasilva` do GoatCounter. Se a conta deixar de existir, as chamadas falham em silêncio, sem afetar o site.
 - Bloqueadores de anúncio podem impedir a contagem: o número é um piso, não o total.
 - Reverter é remover a tag das páginas e a verificação em `scripts/check-site.mjs`.

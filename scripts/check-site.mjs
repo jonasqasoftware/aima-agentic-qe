@@ -113,7 +113,7 @@ checkNoNetworkApi('assessment.mjs');
 // carregam exatamente a tag versionada abaixo, com SRI, e nenhum outro
 // provedor de analytics é aceito.
 const VISIT_COUNTER_TAG =
-  '<script data-goatcounter="https://aima20.goatcounter.com/count" async src="https://gc.zgo.at/count.v5.js" ' +
+  '<script data-goatcounter="https://jonasdaviladasilva.goatcounter.com/count" async src="https://gc.zgo.at/count.v5.js" ' +
   'integrity="sha384-atnOLvQb9t+jTSipvd75X2yginT4PjVbqDdlJAmxMm+wYElFmeR6EmLP5bYeoRVQ" crossorigin="anonymous"></script>';
 const PAGES_WITHOUT_VISIT_COUNTER = new Set(['analyze.html', 'assessment.html']);
 const OTHER_ANALYTICS_PATTERN = /googletagmanager|google-analytics|gtag\(|plausible\.io|_vercel\/insights|cloudflareinsights|umami|posthog|hotjar|clarity\.ms|connect\.facebook/i;
