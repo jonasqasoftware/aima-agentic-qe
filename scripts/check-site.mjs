@@ -143,6 +143,33 @@ for (const relativePath of listSiteHtml()) {
     );
   }
   check(!OTHER_ANALYTICS_PATTERN.test(html), `site/${relativePath} contém outro provedor de analytics; só o GoatCounter sem cookies é permitido.`);
+
+  // GA4 com consentimento prévio (docs/adr/0005): só via site/analytics-ga4.js.
+  const ga4Prefix = relativePath.includes('/') ? '../' : './';
+  const ga4Tag = `<script src="${ga4Prefix}analytics-ga4.js" defer></script>`;
+  const ga4Occurrences = html.split('analytics-ga4.js').length - 1;
+  if (PAGES_WITHOUT_VISIT_COUNTER.has(relativePath)) {
+    check(ga4Occurrences === 0, `site/${relativePath} é página de ferramenta local e não pode carregar o GA4.`);
+  } else {
+    check(
+      ga4Occurrences === 1 && html.includes(ga4Tag),
+      `site/${relativePath} deve carregar exatamente uma vez ${ga4Tag}.`
+    );
+  }
+}
+
+// O GA4 só pode ser carregado depois do aceite, a partir de site/analytics-ga4.js.
+{
+  const ga4Source = readFileSync(join(site, 'analytics-ga4.js'), 'utf8');
+  const idMatch = ga4Source.match(/var GA4_MEASUREMENT_ID = '([^']*)';/);
+  check(Boolean(idMatch), 'site/analytics-ga4.js deve declarar GA4_MEASUREMENT_ID.');
+  check(!idMatch || idMatch[1] === '' || /^G-[A-Z0-9]{4,}$/.test(idMatch[1]), 'GA4_MEASUREMENT_ID deve ser vazio ou no formato G-XXXXXXX.');
+  check(
+    /if \(choice === 'granted'\) loadGa4\(\);/.test(ga4Source) && /if \(consent === 'granted'\) \{\s*loadGa4\(\);/.test(ga4Source),
+    'site/analytics-ga4.js só pode chamar loadGa4() depois do aceite.'
+  );
+  check((ga4Source.match(/(?<!function )loadGa4\(\)/g) || []).length === 2, 'site/analytics-ga4.js chama loadGa4() fora dos dois pontos de aceite.');
+  check(!/googletagmanager\.com\/gtag\/js\?id=G-/.test(ga4Source), 'site/analytics-ga4.js não pode fixar o script do Google fora de loadGa4().');
 }
 
 // --- Preview Edition consistency across site/ ------------------------------

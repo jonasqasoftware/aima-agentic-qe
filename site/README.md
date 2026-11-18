@@ -18,6 +18,8 @@ Separar a apresentação pública do método do núcleo executável do repositó
 
 As páginas editoriais carregam o contador sem cookies do GoatCounter (ver [ADR 0004](../docs/adr/0004-contagem-de-visitas-sem-cookies.md)). `analyze.html` e `assessment.html` não carregam o contador. Para criar uma página nova, copie a tag `data-goatcounter` de outra página editorial logo após `theme-init.js`; `npm run check:site` falha se ela faltar. Para ler visitas por campanha, use o widget *Campaigns* em `https://jonasdaviladasilva.goatcounter.com`.
 
+Logo depois do GoatCounter, cada página editorial carrega `<script src="./analytics-ga4.js" defer></script>` (`../` nas subpastas): o GA4 só entra depois do aceite no banner ([ADR 0005](../docs/adr/0005-google-analytics-com-consentimento.md)). Para ativar, cole o ID `G-XXXXXXX` em `GA4_MEASUREMENT_ID` no arquivo `site/analytics-ga4.js`.
+
 ## Fonte de conteúdo
 
 A página foi reconstruída a partir da Preview Edition 0.9 e do Guia de Uso dos 20 Frameworks. A migração não copia HTML do antigo ChatGPT Site: o conteúdo passa a ser mantido diretamente no GitHub.

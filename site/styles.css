@@ -447,3 +447,20 @@ h3 { font-size: var(--step-1); }
   .topbar, .skip-link, .menu-button, .theme-toggle { display: none; }
   body { background: #fff; color: #000; }
 }
+
+/* Banner de consentimento do GA4 (site/analytics-ga4.js, ADR 0005).
+   Só aparece no domínio público e com o ID de medição configurado. */
+.consent-banner {
+  position: fixed;
+  inset: auto 16px 16px 16px;
+  z-index: 50;
+  max-width: 640px;
+  margin-inline: auto;
+  padding: 16px 18px;
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  font-family: var(--font-body);
+}
+.consent-banner p { margin: 0 0 12px; }
+.consent-actions { display: flex; flex-wrap: wrap; gap: 8px; }
