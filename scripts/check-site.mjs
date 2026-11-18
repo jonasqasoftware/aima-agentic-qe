@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { dirname, join } from 'node:path';
 import { frameworks, lexicon, insights } from '../site/content.mjs';
@@ -105,6 +105,45 @@ function checkNoNetworkApi(relativePath) {
 
 checkNoNetworkApi('analyze.mjs');
 checkNoNetworkApi('assessment.mjs');
+
+// --- Contagem de visitas (GoatCounter) -------------------------------------
+// O site conta visitas sem cookies (ver docs/adr/0004). As páginas de
+// ferramenta (analyze.html, assessment.html) prometem que nada sai do
+// navegador e por isso NUNCA carregam o contador. Todas as demais páginas
+// carregam exatamente a tag versionada abaixo, com SRI, e nenhum outro
+// provedor de analytics é aceito.
+const VISIT_COUNTER_TAG =
+  '<script data-goatcounter="https://aima20.goatcounter.com/count" async src="https://gc.zgo.at/count.v5.js" ' +
+  'integrity="sha384-atnOLvQb9t+jTSipvd75X2yginT4PjVbqDdlJAmxMm+wYElFmeR6EmLP5bYeoRVQ" crossorigin="anonymous"></script>';
+const PAGES_WITHOUT_VISIT_COUNTER = new Set(['analyze.html', 'assessment.html']);
+const OTHER_ANALYTICS_PATTERN = /googletagmanager|google-analytics|gtag\(|plausible\.io|_vercel\/insights|cloudflareinsights|umami|posthog|hotjar|clarity\.ms|connect\.facebook/i;
+
+function listSiteHtml() {
+  const pages = [];
+  for (const entry of readdirSync(site, { withFileTypes: true })) {
+    if (entry.isFile() && entry.name.endsWith('.html')) pages.push(entry.name);
+    if (entry.isDirectory()) {
+      for (const child of readdirSync(join(site, entry.name))) {
+        if (child.endsWith('.html')) pages.push(`${entry.name}/${child}`);
+      }
+    }
+  }
+  return pages.sort();
+}
+
+for (const relativePath of listSiteHtml()) {
+  const html = readFileSync(join(site, relativePath), 'utf8');
+  const occurrences = html.split('data-goatcounter=').length - 1;
+  if (PAGES_WITHOUT_VISIT_COUNTER.has(relativePath)) {
+    check(occurrences === 0, `site/${relativePath} é página de ferramenta local e não pode carregar o contador de visitas.`);
+  } else {
+    check(
+      occurrences === 1 && html.includes(VISIT_COUNTER_TAG),
+      `site/${relativePath} deve carregar exatamente uma vez a tag versionada do contador de visitas (VISIT_COUNTER_TAG).`
+    );
+  }
+  check(!OTHER_ANALYTICS_PATTERN.test(html), `site/${relativePath} contém outro provedor de analytics; só o GoatCounter sem cookies é permitido.`);
+}
 
 // --- Preview Edition consistency across site/ ------------------------------
 // Guards against a release version hardcoded back into a module that
