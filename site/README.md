@@ -14,6 +14,10 @@ Separar a apresentação pública do método do núcleo executável do repositó
 - `site/analyze.html`/`site/analyze.mjs` — análise do motor determinístico executada no navegador; `analyze.mjs` não contém nenhuma regra de negócio, apenas consome `analyzeChange`, copiado automaticamente do core (`src/`) durante o build — nunca duplicado manualmente aqui;
 - `site/CNAME` — domínio pretendido `aima20.dev`.
 
+## Contagem de visitas
+
+As páginas editoriais carregam o contador sem cookies do GoatCounter (ver [ADR 0004](../docs/adr/0004-contagem-de-visitas-sem-cookies.md)). `analyze.html` e `assessment.html` não carregam o contador. Para criar uma página nova, copie a tag `data-goatcounter` de outra página editorial logo após `theme-init.js`; `npm run check:site` falha se ela faltar. Para ler visitas por campanha, use o widget *Campaigns* em `https://jonasdaviladasilva.goatcounter.com`.
+
 ## Fonte de conteúdo
 
 A página foi reconstruída a partir da Preview Edition 0.9 e do Guia de Uso dos 20 Frameworks. A migração não copia HTML do antigo ChatGPT Site: o conteúdo passa a ser mantido diretamente no GitHub.

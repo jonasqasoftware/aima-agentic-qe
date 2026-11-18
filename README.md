@@ -245,6 +245,7 @@ Este repositório usa Markdown, Mermaid e ADRs (*Architecture Decision Records*)
 - A integração com GitHub é opcional, somente de leitura e requer autenticação local prévia no GitHub CLI; o projeto não publica comentários nem altera PRs.
 - Não há LLM, memória persistente nem provider externo nesta versão. O adaptador MCP opcional em `integrations/mcp` é somente leitura e não introduz LLM nem escrita externa.
 - A recomendação de release requer revisão humana e evidências de execução no sistema alvo.
+- O site público `aima20.dev` conta visitas de forma anônima e sem cookies (GoatCounter, [ADR 0004](docs/adr/0004-contagem-de-visitas-sem-cookies.md)); o Analisador e o Assessment não carregam o contador e não enviam dados.
 
 ## Licença
 

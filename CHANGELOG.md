@@ -2,6 +2,7 @@
 
 ## Não lançado — MVP 4 em andamento
 
+- Site público passa a contar visitas sem cookies com GoatCounter (ADR 0004), registrando parâmetros de campanha (`utm_*`). `analyze.html` e `assessment.html` continuam sem nenhum envio de dados; `scripts/check-site.mjs` exige a tag versionada com SRI nas demais páginas e recusa outros provedores de analytics.
 - Adaptador MCP local e somente leitura em `integrations/mcp`, isolado do pacote raiz (dependências próprias, `package.json` da raiz inalterado).
 - Resources `aima://frameworks` (registry completo) e `aima://frameworks/{id}` (framework por id); id inexistente é erro de leitura, nunca recurso fabricado.
 - Tool `analyze_change`, reutilizando `analyzeDeclaredChange` sem duplicar a lógica de risco, estratégia ou ledger de evidências.
