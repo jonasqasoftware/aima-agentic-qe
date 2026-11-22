@@ -116,6 +116,7 @@ const VISIT_COUNTER_TAG =
   '<script data-goatcounter="https://jonasdaviladasilva.goatcounter.com/count" async src="https://gc.zgo.at/count.v5.js" ' +
   'integrity="sha384-atnOLvQb9t+jTSipvd75X2yginT4PjVbqDdlJAmxMm+wYElFmeR6EmLP5bYeoRVQ" crossorigin="anonymous"></script>';
 const PAGES_WITHOUT_VISIT_COUNTER = new Set(['analyze.html', 'assessment.html']);
+const OG_IMAGE_URL = 'https://aima20.dev/og-image.png';
 const OTHER_ANALYTICS_PATTERN = /googletagmanager|google-analytics|gtag\(|plausible\.io|_vercel\/insights|cloudflareinsights|umami|posthog|hotjar|clarity\.ms|connect\.facebook/i;
 
 function listSiteHtml() {
@@ -156,7 +157,16 @@ for (const relativePath of listSiteHtml()) {
       `site/${relativePath} deve carregar exatamente uma vez ${ga4Tag}.`
     );
   }
+
+  // Imagem de compartilhamento: toda página indexável usa a mesma og:image.
+  if (relativePath !== '404.html') {
+    check(
+      html.includes(`<meta property="og:image" content="${OG_IMAGE_URL}"`) && html.includes(`<meta name="twitter:image" content="${OG_IMAGE_URL}"`),
+      `site/${relativePath} deve declarar og:image e twitter:image apontando para ${OG_IMAGE_URL}.`
+    );
+  }
 }
+check(existsSync(join(site, 'og-image.png')), 'site/og-image.png ausente (imagem de compartilhamento usada por og:image).');
 
 // O GA4 só pode ser carregado depois do aceite, a partir de site/analytics-ga4.js.
 {
