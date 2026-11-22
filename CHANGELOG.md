@@ -2,6 +2,7 @@
 
 ## Não lançado — MVP 4 em andamento
 
+- Correções editoriais do site: a seção Transparência passa a dizer que o Google Analytics (com cookies) só carrega depois do aceite, ao lado do GoatCounter sem cookies; "Três caminhos" vira "Quatro caminhos" (são quatro cards); some o "agora" de nota de versão nos frameworks; os números da pirâmide de evidências ficam `aria-hidden` (a legenda já os descreve). Todas as páginas indexáveis ganham `og:image`/`twitter:image` (`site/og-image.png`, 1200x630), validados por `scripts/check-site.mjs`.
 - Google Analytics 4 com consentimento prévio (ADR 0005): `site/analytics-ga4.js` mostra um banner Aceitar/Recusar nas páginas editoriais de `aima20.dev` e só carrega o GA4 depois do aceite. ID de medição `G-2KTCZYC51E`. GoatCounter mantido; Analisador e Assessment seguem sem nenhum envio. `scripts/check-site.mjs` valida a tag, o formato do ID e o carregamento só após o aceite.
 - Site público passa a contar visitas sem cookies com GoatCounter (ADR 0004), registrando parâmetros de campanha (`utm_*`). `analyze.html` e `assessment.html` continuam sem nenhum envio de dados; `scripts/check-site.mjs` exige a tag versionada com SRI nas demais páginas e recusa outros provedores de analytics.
 - Adaptador MCP local e somente leitura em `integrations/mcp`, isolado do pacote raiz (dependências próprias, `package.json` da raiz inalterado).
